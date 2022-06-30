@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "CliWrap.Tests.Dummy": {
+      "commandName": "Project",
+      "commandLineArgs": "[command] print env"
+    }
+  }
+}
