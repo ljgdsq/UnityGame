@@ -58,28 +58,28 @@ namespace EditorTool
                 
                 
                 
-                async Task Comprees(string inFile,string outFile )
-                {
-                    var args = $"--f --ordered --quality={_min}-{_max} {inFile} -o {outFile}";
-                    Command command = Cli.Wrap(_exePath).WithArguments(args);
-                    
-                    Debug.Log(command.ToString());
-                    try
-                    {
-                    
-                        CommandResult executeAsync = await command.ExecuteAsync();
-                        if (executeAsync.ExitCode != 0)
-                        {
-                            errorFiles.Add(inFile);
-                        }
-                    }
-                    catch (Exception e)
-                    {
-                        Console.WriteLine(e);
-                        throw;
-                    }
-
-                };
+//                async Task Comprees(string inFile,string outFile )
+//                {
+//                    var args = $"--f --ordered --quality={_min}-{_max} {inFile} -o {outFile}";
+//                    Command command = Cli.Wrap(_exePath).WithArguments(args);
+//                    
+//                    Debug.Log(command.ToString());
+//                    try
+//                    {
+//                    
+//                        CommandResult executeAsync = await command.ExecuteAsync();
+//                        if (executeAsync.ExitCode != 0)
+//                        {
+//                            errorFiles.Add(inFile);
+//                        }
+//                    }
+//                    catch (Exception e)
+//                    {
+//                        Console.WriteLine(e);
+//                        throw;
+//                    }
+//
+//                };
 
                    
                 int count = 0;

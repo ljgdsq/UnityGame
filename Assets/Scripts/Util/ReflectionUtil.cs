@@ -4,9 +4,9 @@ using System.Reflection;
 
 namespace Util
 {
-    public static class AssemblyUtil
+    public static class ReflectionUtil
     {
-        public static List<Type> GetAllTypes(Type attribute)
+        public static List<Type> GetAllTypesHasDefineType(Type attribute)
         {
             List<Type> list=new List<Type>();
             var exportedTypes = Assembly.GetExecutingAssembly().GetExportedTypes();
@@ -17,10 +17,18 @@ namespace Util
                     list.Add(exportedType);
                 }
             }
-
             return list;
         }
-        
+
+        public static bool IsDefineAttribute<T>(Type attribute,bool inheirt=true)
+        {
+            var type = typeof(T);
+            if (type.IsDefined(attribute,inheirt))
+            {
+                return true;
+            }
+            return false;
+        }
         
     }
 }
