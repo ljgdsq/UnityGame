@@ -1,0 +1,1 @@
+del /S *.bin   del all bin file in sub dir
