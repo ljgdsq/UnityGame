@@ -19,12 +19,16 @@ namespace Save
         public object DeSerialize(string name, Type type)
         {
             var path = GameApplication.GetWriteablePath() + "/" + name + ".bin";
-            if (File.Exists(path))
+            if (File.Exists(path) )
             {
-                using (FileStream fs = File.Open(path, FileMode.OpenOrCreate))
+                var info=new FileInfo(path);
+                if (info.Length>0)
                 {
-                    BinaryFormatter formatter = new BinaryFormatter();
-                    return formatter.Deserialize(fs);
+                    using (FileStream fs = File.Open(path, FileMode.Open))
+                    {
+                        BinaryFormatter formatter = new BinaryFormatter();
+                        return formatter.Deserialize(fs);
+                    }
                 }
             }
 
