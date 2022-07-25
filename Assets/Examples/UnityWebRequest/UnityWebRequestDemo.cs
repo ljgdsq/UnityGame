@@ -22,6 +22,7 @@ public class UnityWebRequestDemo : MonoBehaviour
 //        StartCoroutine(GetPlanText());
 //        StartCoroutine(GetTexture());
         PostJson();
+        
     }
 
 
