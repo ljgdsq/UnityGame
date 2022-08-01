@@ -1,0 +1,27 @@
+ManifestFileVersion: 0
+CRC: 2649316347
+AssetBundleManifest:
+  AssetBundleInfos:
+    Info_0:
+      Name: test_prefab.ab
+      Dependencies:
+        Dependency_0: test_tex.ab
+    Info_1:
+      Name: test_tex.ab
+      Dependencies: {}
+    Info_2:
+      Name: scene.ab
+      Dependencies:
+        Dependency_0: test_tex.ab
+    Info_3:
+      Name: mt
+      Dependencies:
+        Dependency_0: test_tex.ab
+    Info_4:
+      Name: image
+      Dependencies:
+        Dependency_0: mt
+    Info_5:
+      Name: cube
+      Dependencies:
+        Dependency_0: mt
