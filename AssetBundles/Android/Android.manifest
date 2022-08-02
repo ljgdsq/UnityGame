@@ -1,27 +1,23 @@
 ManifestFileVersion: 0
-CRC: 2649316347
+CRC: 856435531
 AssetBundleManifest:
   AssetBundleInfos:
     Info_0:
-      Name: test_prefab.ab
-      Dependencies:
-        Dependency_0: test_tex.ab
-    Info_1:
-      Name: test_tex.ab
+      Name: fbbb
       Dependencies: {}
+    Info_1:
+      Name: new folder
+      Dependencies:
+        Dependency_0: textures
     Info_2:
-      Name: scene.ab
+      Name: prefabs
       Dependencies:
-        Dependency_0: test_tex.ab
+        Dependency_0: new folder
+        Dependency_1: textures
     Info_3:
-      Name: mt
-      Dependencies:
-        Dependency_0: test_tex.ab
+      Name: textures
+      Dependencies: {}
     Info_4:
-      Name: image
+      Name: streamscene
       Dependencies:
-        Dependency_0: mt
-    Info_5:
-      Name: cube
-      Dependencies:
-        Dependency_0: mt
+        Dependency_0: textures

@@ -10,7 +10,7 @@ public class TestLoadScene : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        return;
         string streamingAssetsAbPath = Path.Combine(Application.streamingAssetsPath, "StreamingAssets");
         AssetBundle streamingAssetsAb = AssetBundle.LoadFromFile(streamingAssetsAbPath);
        var  m_manifest = streamingAssetsAb.LoadAsset<AssetBundleManifest>("AssetBundleManifest");

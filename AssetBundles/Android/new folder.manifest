@@ -1,0 +1,23 @@
+ManifestFileVersion: 0
+CRC: 1575201053
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: ef49de177d8d985dc46066abb0e3c875
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: fe397485c3cec1106b49e9ff95e8f8a2
+HashAppended: 0
+ClassTypes:
+- Class: 21
+  Script: {instanceID: 0}
+- Class: 28
+  Script: {instanceID: 0}
+- Class: 48
+  Script: {instanceID: 0}
+Assets:
+- Assets/Test/New Folder/NewUnlitShader.shader
+- Assets/Test/New Folder/NewImageEffectShader.shader
+- Assets/Test/New Folder/New Material.mat
+Dependencies:
+- E:/UnityGame/AssetBundles/Android/textures
