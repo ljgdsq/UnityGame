@@ -19,8 +19,6 @@ public class GameApplication:MonoSingleton<GameApplication>
         SaveGame.Instance.SetArchive(new BinaryArchive()); 
 #endif
    
-        
-        
         SaveGame.Instance.Init();
     }
 

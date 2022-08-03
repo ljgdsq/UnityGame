@@ -160,7 +160,6 @@ public partial class AssetBundleBuildScript
         {
 
             var abPath = Path.Combine(Application.streamingAssetsPath, abName);
-
             BuildPipeline.GetCRCForAssetBundle(abPath, out uint crc);
             BuildPipeline.GetHashForAssetBundle(abPath, out Hash128 hash);
             FileInfo fileInfo=new FileInfo(abPath);

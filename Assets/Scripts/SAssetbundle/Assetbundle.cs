@@ -1,10 +1,11 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using Base;
 using Newtonsoft.Json;
 using UnityEngine;
+using UnityEngine.Networking;
 #if UNITY_EDITOR
 using UnityEditor;
 
@@ -36,7 +37,7 @@ namespace SAssetbundle
         [JsonProperty] private Dictionary<string, List<string>> SceneBundleMap = new Dictionary<string, List<string>>();
 
         
-        
+       private Dictionary<string,string> AssetBundleMap=new Dictionary<string, string>();
         
         public static BundleManifest Load()
         {
@@ -45,6 +46,7 @@ namespace SAssetbundle
             var jsonFile = assetBundle.LoadAsset<TextAsset>("main.txt");
             Debug.Log(jsonFile.text);
             var bundleManifest = JsonConvert.DeserializeObject<BundleManifest>(jsonFile.text);
+            bundleManifest.InitAssetBundleMap();
             return bundleManifest;
         }
 
@@ -60,6 +62,47 @@ namespace SAssetbundle
         }
 
 
+        private void InitAssetBundleMap()
+        {
+            AssetBundleMap.Clear();
+            
+            foreach (var assetMap in BundleAssetsMap)
+            {
+                var bundleName = assetMap.Key;
+                var assets = assetMap.Value;
+                foreach (var asset in assets)
+                {
+                    AssetBundleMap.Add(asset,bundleName);
+                }
+            }
+        }
+        
+        public string GetBundleName(string assetName)
+        {
+            if (AssetBundleMap.TryGetValue(assetName,out string bundleName))
+            {
+                return bundleName;
+            }
+            return String.Empty;
+        }
+
+        public bool IsNeedLoadDependencyBundle(string assetName)
+        {
+            return AssetDependencies.ContainsKey(assetName);
+        }
+
+
+        public List<string> GetDependencyAssets(string assetName)
+        {
+
+            if (IsNeedLoadDependencyBundle(assetName))
+            {
+                return AssetDependencies[assetName];
+            }
+
+            return null;
+        }
+        
         public List<string> GetAllAssets()
         {
             List<string> assets = new List<string>();
@@ -179,18 +222,5 @@ namespace SAssetbundle
     }
 
 
-    public class AssetBundleManager : Singleton<AssetBundleManager>
-    {
-        private BundleManifest _bundleManifest;
-
-        public void LoadManifest()
-        {
-            _bundleManifest = BundleManifest.Load();
-        }
-
-        public string GetDLCPath()
-        {
-            return Application.streamingAssetsPath;
-        }
-    }
+   
 }
