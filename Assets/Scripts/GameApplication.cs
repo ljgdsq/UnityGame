@@ -1,18 +1,35 @@
+using System.Collections;
 using Base;
+using Manager;
 using Save;
-
+using SAssetbundle;
 using UnityEngine;
+
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
+
 public class GameApplication:MonoSingleton<GameApplication>
 {
     [RuntimeInitializeOnLoadMethod]
     private static void OnFirstLoad()
     {
         Instance.Init();
+
+#if UNITY_EDITOR
+        var scenes = EditorBuildSettings.scenes;
+        foreach (var scene in scenes)
+        {
+            scene.enabled = true;
+        }
+
+        EditorBuildSettings.scenes = scenes;
+
+#endif
     }
 
-    public override void Init()
+    private IEnumerator Start()
     {
-
 #if JSON_PREFS_SAVE
         SaveGame.Instance.SetArchive(new PlayerPrefsJsonArchive());
 #else 
@@ -20,7 +37,14 @@ public class GameApplication:MonoSingleton<GameApplication>
 #endif
    
         SaveGame.Instance.Init();
+        
+        AssetBundleManager.Instance.Init();
+
+        yield return AssetManager.AssetManager.LoadSelf();
+       yield return WindowManager.Instance.Init();
     }
+
+
 
     
     /// <summary>

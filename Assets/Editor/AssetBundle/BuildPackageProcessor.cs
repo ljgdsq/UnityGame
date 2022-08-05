@@ -12,7 +12,7 @@ public class BuildPackageProcessor : IPreprocessBuildWithReport
     public void OnPreprocessBuild(BuildReport report)
     {
         
-        //TODO
+        //TODO remove all scene before build
 //        foreach (var buildSettingsScene in EditorBuildSettings.scenes)
 //        {
 //            if (!buildSettingsScene.path.Contains("splash"))
@@ -21,9 +21,7 @@ public class BuildPackageProcessor : IPreprocessBuildWithReport
 //            }
 //        }
         
-        var reportFiles = report.files;
-        var reportSteps = report.steps;
-        Debug.LogError("BuildPackageProcessor");
+//        Debug.LogError("BuildPackageProcessor");
 
         var streamingAssetsPath = Application.streamingAssetsPath;
 

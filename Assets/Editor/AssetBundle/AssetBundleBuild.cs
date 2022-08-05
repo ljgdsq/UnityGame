@@ -1,17 +1,9 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
 using System.Linq;
 using Newtonsoft.Json;
 using SAssetbundle;
-using Unity.EditorCoroutines.Editor;
 using UnityEditor;
-using UnityEditor.SceneManagement;
 using UnityEngine;
-using UnityEngine.SceneManagement;
-using Object = UnityEngine.Object;
-
 
 public partial class AssetBundleBuildScript
 {
@@ -167,16 +159,16 @@ public partial class AssetBundleBuildScript
 
             var bundle = AssetBundle.LoadFromFile(abPath);
         
-            if (!bundle.isStreamedSceneAssetBundle)
-            {
-                var allScenePaths = bundle.GetAllAssetNames();
-                bundleManifest.AddBundleAsset(abName, allScenePaths.ToList());
-            }
-            else
+            
+            var allScenePaths = bundle.GetAllAssetNames();
+            bundleManifest.AddBundleAsset(abName, allScenePaths.ToList());
+            
+            if (bundle.isStreamedSceneAssetBundle)
             {
                 var allAssetNames = bundle.GetAllScenePaths();
                 bundleManifest.AddBundleScene(abName, allAssetNames.ToList());
             }
+      
       
             bundle.Unload(true);
             Object.DestroyImmediate(bundle);
@@ -190,7 +182,7 @@ public partial class AssetBundleBuildScript
         File.WriteAllText(Path.Combine(Application.dataPath, "../","AssetBundles","main.json"), json);
 
         Debug.Log(json);
-        var assetPath = Path.Combine(Application.dataPath, "Manifest", "main.txt");
+        var assetPath = Path.Combine(Application.dataPath, "Manifest", BundleManifest.ManifestName);
         File.WriteAllText(assetPath,json);
         AssetDatabase.ImportAsset("Assets/Manifest/main.txt");
         AssetDatabase.SaveAssets();
@@ -210,6 +202,28 @@ public partial class AssetBundleBuildScript
     public static void TestLoadManifest()
     {
         AssetBundleManager.Instance.LoadManifest();
+    }
+
+    [MenuItem("Build/ExportPackage")]
+
+    public static void ExportPackage()
+    {
+       EditorUserBuildSettings.exportAsGoogleAndroidProject = true;
+       BuildPipeline.BuildPlayer(EditorBuildSettings.scenes, Application.dataPath +"/../Build/", BuildTarget.Android, BuildOptions.None);
+        
+    }
+    [MenuItem("Build/UploadDLC")]
+    public static void UploadDLC()
+    {
+        //todo 
+        var dlcPath = Application.streamingAssetsPath;
+        var hostPath = "E://FileServer/V1.0/";
+        if (Directory.Exists(hostPath))
+        {
+            Directory.Delete(hostPath,true);
+        }
+        Directory.Move(dlcPath,hostPath);
+        
     }
     
     private static void ClearPath()

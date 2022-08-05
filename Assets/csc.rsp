@@ -1,2 +1,0 @@
--r:System.Runtime.InteropServices.RuntimeInformation.dll
--define:USE_ENCRYPT

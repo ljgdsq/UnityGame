@@ -1,0 +1,35 @@
+ManifestFileVersion: 0
+CRC: 2220198069
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: a9c9ff5a1fe2223f401d6fafcd19fa86
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: 0ff95b15119dbeb443c1ea7822301e85
+HashAppended: 0
+ClassTypes:
+- Class: 28
+  Script: {instanceID: 0}
+- Class: 74
+  Script: {instanceID: 0}
+- Class: 91
+  Script: {instanceID: 0}
+- Class: 115
+  Script: {instanceID: 0}
+- Class: 213
+  Script: {instanceID: 0}
+Assets:
+- Assets/Textures/ConnectingView/connecting_controller.controller
+- Assets/Textures/ConnectingView/loading.png
+- Assets/Textures/ConnectingView/Connecting_chara_00.png
+- Assets/Textures/ConnectingView/efc_vignette_Connecting.png
+- Assets/Textures/ConnectingView/Connecting_chara_05.png
+- Assets/Textures/ConnectingView/walk.anim
+- Assets/Textures/ConnectingView/Connecting_chara_03.png
+- Assets/Textures/ConnectingView/Connecting_chara_06.png
+- Assets/Textures/ConnectingView/Connecting_chara_01.png
+- Assets/Textures/ConnectingView/Connecting_chara_02.png
+- Assets/Textures/ConnectingView/Connecting_line.png
+- Assets/Textures/ConnectingView/Connecting_chara_04.png
+Dependencies: []

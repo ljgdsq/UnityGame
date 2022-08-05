@@ -1,86 +1,81 @@
 {
   "Bundles": [
     {
-      "Name": "fbbb",
-      "CRC": 1199550319,
-      "hash": "a81a52bd995ed175b1da37d3bb3c7888",
-      "Size": 47734
+      "Name": "prefabs.ab",
+      "CRC": 3554431421,
+      "hash": "665d657e4e4fe44a05da9532384ef5be",
+      "Size": 383406
     },
     {
-      "Name": "new folder",
-      "CRC": 1575201053,
-      "hash": "ef49de177d8d985dc46066abb0e3c875",
-      "Size": 72881
+      "Name": "scenes",
+      "CRC": 1211325502,
+      "hash": "58c8c91a5d779dc5c3efc9f1941b2d40",
+      "Size": 105221
     },
     {
-      "Name": "prefabs",
-      "CRC": 2092152690,
-      "hash": "240922d3ff4ea4614509e8b6862f84bf",
-      "Size": 6206
-    },
-    {
-      "Name": "streamscene",
-      "CRC": 1006960713,
-      "hash": "972a3154dd80091d06fcbe2ce7540554",
-      "Size": 8870
-    },
-    {
-      "Name": "textures",
-      "CRC": 1029856702,
-      "hash": "969e8fa0f8eed615acfda845c3f0e4a9",
-      "Size": 218993
+      "Name": "textures.ab",
+      "CRC": 2220198069,
+      "hash": "a9c9ff5a1fe2223f401d6fafcd19fa86",
+      "Size": 38773
     }
   ],
   "BundleAssetsMap": {
-    "fbbb": [
-      "assets/test/fbbb/icon_playinwindow_512x.png"
+    "prefabs.ab": [
+      "assets/prefabs/systemui.prefab",
+      "assets/prefabs/ui/connectwindow.prefab",
+      "assets/prefabs/ui/dialog.prefab",
+      "assets/prefabs/ui/uiroot.prefab"
     ],
-    "new folder": [
-      "assets/test/new folder/new material.mat",
-      "assets/test/new folder/newimageeffectshader.shader",
-      "assets/test/new folder/newunlitshader.shader"
-    ],
-    "prefabs": [
-      "assets/test/prefabs/chess.prefab",
-      "assets/test/prefabs/cube.prefab",
-      "assets/test/prefabs/eye.prefab",
-      "assets/test/prefabs/image.prefab",
-      "assets/test/prefabs/image2.prefab",
-      "assets/test/prefabs/player.prefab"
-    ],
-    "textures": [
-      "assets/test/textures/icon_play_512px.png",
-      "assets/test/textures/icon_staticmeshed_collision_512x.png",
-      "assets/test/textures/icon_staticmeshed_showsockets_512x.png",
-      "assets/test/textures/icon_view_512px.png"
+    "textures.ab": [
+      "assets/textures/connectingview/connecting_chara_00.png",
+      "assets/textures/connectingview/connecting_chara_01.png",
+      "assets/textures/connectingview/connecting_chara_02.png",
+      "assets/textures/connectingview/connecting_chara_03.png",
+      "assets/textures/connectingview/connecting_chara_04.png",
+      "assets/textures/connectingview/connecting_chara_05.png",
+      "assets/textures/connectingview/connecting_chara_06.png",
+      "assets/textures/connectingview/connecting_controller.controller",
+      "assets/textures/connectingview/connecting_line.png",
+      "assets/textures/connectingview/efc_vignette_connecting.png",
+      "assets/textures/connectingview/loading.png",
+      "assets/textures/connectingview/walk.anim"
     ]
   },
   "AssetDependencies": {
-    "assets/test/new folder/new material.mat": [
-      "assets/test/textures/icon_staticmeshed_collision_512x.png"
+    "assets/prefabs/ui/connectwindow.prefab": [
+      "assets/textures/connectingview/connecting_controller.controller",
+      "assets/textures/connectingview/loading.png",
+      "assets/textures/connectingview/connecting_chara_00.png",
+      "assets/textures/connectingview/efc_vignette_connecting.png",
+      "assets/textures/connectingview/connecting_chara_05.png",
+      "assets/textures/connectingview/walk.anim",
+      "assets/textures/connectingview/connecting_chara_03.png",
+      "assets/textures/connectingview/connecting_chara_06.png",
+      "assets/textures/connectingview/connecting_chara_01.png",
+      "assets/textures/connectingview/connecting_line.png",
+      "assets/textures/connectingview/connecting_chara_04.png"
     ],
-    "assets/test/prefabs/chess.prefab": [
-      "assets/test/textures/icon_staticmeshed_collision_512x.png"
+    "assets/textures/connectingview/connecting_controller.controller": [
+      "assets/textures/connectingview/connecting_chara_00.png",
+      "assets/textures/connectingview/connecting_chara_05.png",
+      "assets/textures/connectingview/walk.anim",
+      "assets/textures/connectingview/connecting_chara_03.png",
+      "assets/textures/connectingview/connecting_chara_06.png",
+      "assets/textures/connectingview/connecting_chara_01.png",
+      "assets/textures/connectingview/connecting_chara_04.png"
     ],
-    "assets/test/prefabs/cube.prefab": [
-      "assets/test/textures/icon_staticmeshed_collision_512x.png",
-      "assets/test/new folder/new material.mat"
-    ],
-    "assets/test/prefabs/eye.prefab": [
-      "assets/test/textures/icon_view_512px.png"
-    ],
-    "assets/test/prefabs/image.prefab": [
-      "assets/test/textures/icon_staticmeshed_collision_512x.png",
-      "assets/test/new folder/new material.mat"
-    ],
-    "assets/test/prefabs/player.prefab": [
-      "assets/test/textures/icon_play_512px.png"
+    "assets/textures/connectingview/walk.anim": [
+      "assets/textures/connectingview/connecting_chara_00.png",
+      "assets/textures/connectingview/connecting_chara_05.png",
+      "assets/textures/connectingview/connecting_chara_03.png",
+      "assets/textures/connectingview/connecting_chara_06.png",
+      "assets/textures/connectingview/connecting_chara_01.png",
+      "assets/textures/connectingview/connecting_chara_04.png"
     ]
   },
   "SceneBundleMap": {
-    "streamscene": [
-      "Assets/StreamScene/SceneA.unity",
-      "Assets/StreamScene/SceneB.unity"
+    "scenes": [
+      "assets/scenes/main.unity"
     ]
   }
 }

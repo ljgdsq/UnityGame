@@ -1,1 +1,1 @@
-#define LOAD_ASSETBUNDLE_EDITOR
+#define Editor_Bundle

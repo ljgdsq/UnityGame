@@ -28,15 +28,25 @@ namespace Base
                     var obj = new GameObject();
                     _instance = obj.AddComponent<T>();
                     obj.name = typeof(T).Name;
-                    DontDestroyOnLoad(obj);
                 }
+                
+#if !UNITY_EDITOR
+    DontDestroyOnLoad(_instance.gameObject);
+#else
+                if (Application.isPlaying)
+                {
+                    DontDestroyOnLoad(_instance.gameObject);
+                }
+#endif
             }
 
             return _instance;
         }
 
-        public virtual void Init()
+
+        public virtual IEnumerator Init()
         {
+            yield return null;
         }
     }
 }
