@@ -15,17 +15,6 @@ public class GameApplication:MonoSingleton<GameApplication>
     private static void OnFirstLoad()
     {
         Instance.Init();
-
-#if UNITY_EDITOR
-        var scenes = EditorBuildSettings.scenes;
-        foreach (var scene in scenes)
-        {
-            scene.enabled = true;
-        }
-
-        EditorBuildSettings.scenes = scenes;
-
-#endif
     }
 
     private IEnumerator Start()
@@ -36,15 +25,22 @@ public class GameApplication:MonoSingleton<GameApplication>
         SaveGame.Instance.SetArchive(new BinaryArchive()); 
 #endif
    
-        SaveGame.Instance.Init();
+       SaveGame.Instance.Init();
         
-        AssetBundleManager.Instance.Init();
-
-        yield return AssetManager.AssetManager.LoadSelf();
+       AssetBundleManager.Instance.Init();
+       yield return SystemManager.Instance.Init();
        yield return WindowManager.Instance.Init();
     }
 
 
+    public IEnumerator ReloadApplication()
+    {
+        AssetBundleManager.Instance.Init();
+        SystemManager.Instance.DestroySingleTon();
+        yield return SystemManager.Instance.Init();
+        WindowManager.Instance.DestroySingleTon();
+        yield return WindowManager.Instance.Init();
+    }
 
     
     /// <summary>

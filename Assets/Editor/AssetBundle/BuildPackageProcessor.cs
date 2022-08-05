@@ -11,31 +11,35 @@ public class BuildPackageProcessor : IPreprocessBuildWithReport
 
     public void OnPreprocessBuild(BuildReport report)
     {
-        
-        //TODO remove all scene before build
-//        foreach (var buildSettingsScene in EditorBuildSettings.scenes)
-//        {
-//            if (!buildSettingsScene.path.Contains("splash"))
-//            {
-//                buildSettingsScene.enabled = false;
-//            }
-//        }
-        
+        var scenes = EditorBuildSettings.scenes;
+        foreach (var buildSettingsScene in scenes)
+        {
+            if (!buildSettingsScene.path.Contains("splash"))
+            {
+                buildSettingsScene.enabled = false;
+            }
+        }
+
+        EditorBuildSettings.scenes = scenes;
+
+
 //        Debug.LogError("BuildPackageProcessor");
 
         var streamingAssetsPath = Application.streamingAssetsPath;
-
-        var files = Directory.GetFiles(streamingAssetsPath, "*.manifest");
-        foreach (var file in files)
+        if (Directory.Exists(streamingAssetsPath))
         {
-            File.Delete(file);
-        }
+            var files = Directory.GetFiles(streamingAssetsPath, "*.manifest");
+            foreach (var file in files)
+            {
+                File.Delete(file);
+            }
 
 
-        files = Directory.GetFiles(streamingAssetsPath, "*.meta");
-        foreach (var file in files)
-        {
-            File.Delete(file);
+            files = Directory.GetFiles(streamingAssetsPath, "*.meta");
+            foreach (var file in files)
+            {
+                File.Delete(file);
+            }
         }
     }
 }

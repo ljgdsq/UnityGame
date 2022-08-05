@@ -48,5 +48,11 @@ namespace Base
         {
             yield return null;
         }
+
+
+        public virtual void DestroySingleTon()
+        {
+            DestroyImmediate(this.gameObject);
+        }
     }
 }

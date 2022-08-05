@@ -92,7 +92,7 @@ public class UnityWebRequestDemo : MonoBehaviour
 
     IEnumerator GetAssetBundle()
     {
-        //TODO
+    
         var unityWebRequest = UnityWebRequestAssetBundle.GetAssetBundle("");
         yield return unityWebRequest.SendWebRequest();
         if (CheckIsError(unityWebRequest))

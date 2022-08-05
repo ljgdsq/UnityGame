@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using AssetManager;
 using Base;
 using TMPro;
 using UnityEngine;
@@ -12,7 +11,6 @@ namespace SAssetbundle
     {
 
         public BundleManifest BundleManifest { get; private set; }
-//        private AssetBundleLoader _assetBundleLoader;
         private AssetBundleLoadCache _assetBundleCache=new AssetBundleLoadCache();
 
         public override void Init()
@@ -29,18 +27,6 @@ namespace SAssetbundle
         {
             return Path.Combine(GameApplication.GetWriteablePath(),"dlc/");
         }
-
-//        public T LoadAsset<T>(string assetPath) where T : Object
-//        {
-//            return _assetBundleLoader.LoadAsset<T>(assetPath);
-//        }
-//
-//        public AssetLoadRequest LoadAssetAsync(string assetPath)
-//        {
-//            var req = new AssetLoadRequest(assetPath);
-//            _assetBundleLoader.LoadAssetAsync(req);
-//            return req;
-//        }
 
         public string GetScenePath(string sceneName)
         {

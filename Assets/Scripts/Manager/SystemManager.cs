@@ -1,4 +1,4 @@
-using AssetManager;
+using System.Collections;
 using Base;
 using DG.Tweening;
 using UnityEngine;
@@ -7,30 +7,43 @@ namespace Manager
 {
     public class SystemManager : MonoSingleton<SystemManager>
     {
-        [SerializeField]
         private Transform root;
-
         private GameObject ConnectWindow;
         private AssetLoadRequest _connectLoadRequest;
 
 
-        private void LoadConnectWindow()
+        public override IEnumerator Init()
         {
-            if (ConnectWindow==null)
+            yield return LoadSystemUi();
+        }
+
+        private IEnumerator LoadSystemUi()
+        {
+            var req = AssetManager.Instance.LoadAsset("Assets/Prefabs/SystemUI.prefab");
+            yield return req;
+            Instantiate(req.AssetObject.asset, Instance.transform);
+            root = GetComponentInChildren<Canvas>().transform;
+        }
+
+        private IEnumerator LoadConnectWindow()
+        {
+            if (ConnectWindow == null)
             {
-                if (_connectLoadRequest==null)
+                if (_connectLoadRequest == null)
                 {
-                    _connectLoadRequest = AssetManager.AssetManager.Instance.LoadAsset("Assets/Prefabs/UI/ConnectWindow.prefab");
+                    _connectLoadRequest = AssetManager.Instance.LoadAsset("Assets/Prefabs/UI/ConnectWindow.prefab");
+                    yield return _connectLoadRequest;
                 }
             }
+
+            yield return null;
         }
 
         public void ShowConnectWindow()
         {
-            
-            if (ConnectWindow==null&& _connectLoadRequest.isDone)
+            if (ConnectWindow == null && _connectLoadRequest.isDone)
             {
-                ConnectWindow =Instantiate(_connectLoadRequest.AssetObject.asset as GameObject,root);
+                ConnectWindow = Instantiate(_connectLoadRequest.AssetObject.asset as GameObject, root);
             }
 
             if (ConnectWindow)
@@ -44,14 +57,13 @@ namespace Manager
             if (ConnectWindow)
             {
                 ConnectWindow.SetActive(false);
-            } 
+            }
         }
 
 
-        private void Awake()
+        private IEnumerator Start()
         {
-            LoadConnectWindow();
+           yield return LoadConnectWindow();
         }
-
     }
 }

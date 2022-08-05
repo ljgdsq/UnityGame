@@ -10,30 +10,16 @@ using UnityEngine;
 
 public class Splash : MonoBehaviour
 {
-    [SerializeField]
-    private FadeAnimation _animation;
-    // Start is called before the first frame update
+
     void Start()
     {
-        _animation.OnComplete = () =>
+        DotweenEx.DoTime(1.0f).OnComplete(() =>
         {
             SystemManager.Instance.ShowConnectWindow();
 
-            DotweenEx.DoTime(1).OnComplete(() =>
-            {
-                SystemManager.Instance.HideConnectWindow();
-            });
-//            WebApiManager.Instance.Post(new HelloProtocol("hello"));
+            DotweenEx.DoTime(1).OnComplete(() => { SystemManager.Instance.HideConnectWindow(); });
             DLCManager.Instance.CheckVersion();
-            
-    
-        };
-    }
-
-
-    private void CheckVersion()
-    {
-        
+        });
     }
    
 }

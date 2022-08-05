@@ -219,7 +219,7 @@ namespace Manager
                 {
                     entry.DownloadState = DownloadEntry.State.Downloading;
                     DownloadEntryFile(entry);
-                    //todo 
+             
                 }
                 else if (entry.DownloadState == DownloadEntry.State.Error)
                 {

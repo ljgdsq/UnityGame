@@ -43,8 +43,8 @@ namespace Manager
         
         private IEnumerator ToMainScene()
         {
-            var req= AssetManager.AssetManager.Instance.LoadScene("main");
-            yield return req;
+            yield return GameApplication.Instance.ReloadApplication();
+            yield return  AssetManager.Instance.LoadScene("main");
             SceneManager.LoadScene("main");
         }
 

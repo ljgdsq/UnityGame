@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using AssetManager;
 using Base;
 using UnityEngine;
 using Window;
@@ -45,7 +44,7 @@ namespace Manager
 
         private AssetLoadRequest RequestOpenWindow(string path)
         {
-            var assetLoadRequest = AssetManager.AssetManager.Instance.LoadAsset(path);
+            var assetLoadRequest = AssetManager.Instance.LoadAsset(path);
             _requests.Add(assetLoadRequest);
             return assetLoadRequest;
         }
@@ -80,7 +79,7 @@ namespace Manager
                 }
             }
 
-            var request = AssetManager.AssetManager.Instance.LoadAsset("Assets/Prefabs/UI/UIRoot.prefab");
+            var request = AssetManager.Instance.LoadAsset("Assets/Prefabs/UI/UIRoot.prefab");
             yield return request;
             var uiRoot=Instantiate(request.AssetObject.asset) as GameObject;
             root = uiRoot.transform;
