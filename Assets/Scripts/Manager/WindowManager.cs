@@ -85,23 +85,5 @@ namespace Manager
             root = uiRoot.transform;
             yield return null;
         }
-
-        private void Update()
-        {
-//            if (_requests.Count>0)
-//            {
-//                var assetLoadRequest = _requests[0];
-//                if (assetLoadRequest.isError)
-//                {
-//                    _requests.Remove(assetLoadRequest);
-//                }
-//                if (assetLoadRequest.isDone)
-//                {
-//                    _requests.Remove(assetLoadRequest);
-//                    var go = assetLoadRequest.AssetObject.asset as GameObject;
-//                    Instantiate(go, root);
-//                }
-//            }
-        }
     }
 }

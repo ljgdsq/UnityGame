@@ -2,22 +2,20 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using Base;
-using TMPro;
 using UnityEngine;
 
 namespace SAssetbundle
 {
-    public class AssetBundleManager :Singleton<AssetBundleManager>
+    public class AssetBundleManager : Singleton<AssetBundleManager>
     {
-
         public BundleManifest BundleManifest { get; private set; }
-        private AssetBundleLoadCache _assetBundleCache=new AssetBundleLoadCache();
+        private AssetBundleLoadCache _assetBundleCache = new AssetBundleLoadCache();
 
         public override void Init()
         {
             LoadManifest();
         }
-        
+
         public void LoadManifest()
         {
             BundleManifest = BundleManifest.Load();
@@ -25,7 +23,7 @@ namespace SAssetbundle
 
         public string GetDLCPath()
         {
-            return Path.Combine(GameApplication.GetWriteablePath(),"dlc/");
+            return Path.Combine(GameApplication.GetWriteablePath(), "dlc/");
         }
 
         public string GetScenePath(string sceneName)
@@ -43,38 +41,45 @@ namespace SAssetbundle
             return BundleManifest.IsNeedLoadDependencyBundle(assetName);
         }
 
-        public List<string> GetDependencyAssets(string assetName)
+        public List<string> GetDependencyBundles(string assetName)
         {
-            return BundleManifest.GetDependencyAssets(assetName);
+            return BundleManifest.GetDependencyBundles(assetName);
         }
 
 
-        public IEnumerator LoadAssetInBundle(AssetObject assetObject,bool cacheBundle=true)
+        public IEnumerator LoadAssetInBundle(AssetObject assetObject, bool cacheBundle = true)
         {
             var assetName = assetObject.path;
             var bundleName = GetAssetBundleName(assetName);
 
             var cachedBundle = _assetBundleCache.GetCachedBundle(bundleName);
-            if (cachedBundle==null)
+            if (cachedBundle == null)
             {
-                var request = AssetBundle.LoadFromFileAsync(Path.Combine( GetDLCPath(),bundleName));
+                var request = AssetBundle.LoadFromFileAsync(Path.Combine(GetDLCPath(), bundleName));
                 yield return request;
                 cachedBundle = request.assetBundle;
             }
-           
-            if (IsNeedDependencyBundle(assetName))
-            {
-                var dependencyAssets = GetDependencyAssets(assetName);
 
-                foreach (var dependencyAsset in dependencyAssets)
+
+            List<AssetBundle> depsBundle = new List<AssetBundle>();
+            var dependencyBundles = GetDependencyBundles(assetName);
+            if (dependencyBundles != null && dependencyBundles.Count > 0)
+            {
+                foreach (var dependencyBundle in dependencyBundles)
                 {
-                    yield return LoadAssetInBundle(dependencyAsset);
+                    if (_assetBundleCache.GetCachedBundle(dependencyBundle)==null)
+                    {
+                        var request = AssetBundle.LoadFromFileAsync(Path.Combine(GetDLCPath(), dependencyBundle));
+                        yield return request;
+                        depsBundle.Add(request.assetBundle);  
+                    }
+             
                 }
             }
 
             if (cachedBundle)
             {
-                var assetReq=cachedBundle.LoadAssetAsync(assetName);
+                var assetReq = cachedBundle.LoadAssetAsync(assetName);
                 yield return assetReq;
                 assetObject.asset = assetReq.asset;
                 assetObject.isdone = true;
@@ -82,62 +87,75 @@ namespace SAssetbundle
                 {
                     cachedBundle.Unload(false);
                     Object.Destroy(cachedBundle);
+                    foreach (var assetBundle in depsBundle)
+                    {
+                        assetBundle.Unload(false);
+                        Object.Destroy(assetBundle);
+                    }
                 }
             }
             else
             {
-                Debug.LogError("can not load asset :"+assetName);
+                Debug.LogError("can not load asset :" + assetName);
             }
-            
         }
 
-        public IEnumerator LoadSceneInBundle(AssetObject assetObject,bool cacheBundle=true)
+        public IEnumerator LoadSceneInBundle(AssetObject assetObject, bool cacheBundle = true)
         {
             var assetName = assetObject.path;
             var bundleName = GetAssetBundleName(assetName);
 
             var cachedBundle = _assetBundleCache.GetCachedBundle(bundleName);
-            if (cachedBundle==null)
+            if (cachedBundle == null)
             {
-                var request = AssetBundle.LoadFromFileAsync(Path.Combine( GetDLCPath(),bundleName));
+                var request = AssetBundle.LoadFromFileAsync(Path.Combine(GetDLCPath(), bundleName));
                 yield return request;
                 cachedBundle = request.assetBundle;
             }
-           
-            if (IsNeedDependencyBundle(assetName))
-            {
-                var dependencyAssets = GetDependencyAssets(assetName);
 
-                foreach (var dependencyAsset in dependencyAssets)
+
+            List<AssetBundle> depsBundle = new List<AssetBundle>();
+            var dependencyBundles = GetDependencyBundles(assetName);
+            if (dependencyBundles != null && dependencyBundles.Count > 0)
+            {
+                foreach (var dependencyBundle in dependencyBundles)
                 {
-                    yield return LoadAssetInBundle(dependencyAsset);
+                    if (_assetBundleCache.GetCachedBundle(dependencyBundle) == null)
+                    {
+                        var request = AssetBundle.LoadFromFileAsync(Path.Combine(GetDLCPath(), dependencyBundle));
+                        yield return request;
+                        depsBundle.Add(request.assetBundle);
+                    }
                 }
             }
 
             if (cachedBundle)
             {
-//                var assetReq=cachedBundle.LoadAssetAsync(assetName);
-//                yield return assetReq;
                 assetObject.asset = null;
                 assetObject.isdone = true;
                 if (!cacheBundle)
                 {
                     cachedBundle.Unload(false);
                     Object.Destroy(cachedBundle);
+                    foreach (var assetBundle in depsBundle)
+                    {
+                        assetBundle.Unload(false);
+                        Object.Destroy(assetBundle);
+                    }
                 }
             }
             else
             {
-                Debug.LogError("can not load asset :"+assetName);
+                Debug.LogError("can not load asset :" + assetName);
             }
-            
         }
-        
+
+   
         public bool IsScene(string assetName)
         {
             return BundleManifest.IsScene(assetName);
         }
-        
+
         public bool IsAssetInBundle(string assetName)
         {
             var bundleName = GetAssetBundleName(assetName);
@@ -157,41 +175,5 @@ namespace SAssetbundle
                 File.Delete(path);
             }
         }
-        
-        private IEnumerator LoadAssetInBundle(string assetName)
-        {
-            var bundleName = GetAssetBundleName(assetName);
-            
-            var cachedBundle = _assetBundleCache.GetCachedBundle(bundleName);
-            if (cachedBundle == null)
-            {
-
-                var request = AssetBundle.LoadFromFileAsync(Path.Combine( GetDLCPath(),bundleName));
-                yield return request;
-                cachedBundle = request.assetBundle;
-            }
-
-
-            if (IsNeedDependencyBundle(assetName))
-            {
-                var dependencyAssets = GetDependencyAssets(assetName);
-
-                foreach (var dependencyAsset in dependencyAssets)
-                {
-                    yield return LoadAssetInBundle(dependencyAsset);
-                }
-            }
-
-            if (cachedBundle)
-            {
-                var assetReq=cachedBundle.LoadAssetAsync(assetName);
-                yield return assetReq;
-            }
-            else
-            {
-                Debug.LogError("can not load asset :"+assetName);
-            }
-        }
-        
     }
 }

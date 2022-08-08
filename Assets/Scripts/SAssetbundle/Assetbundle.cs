@@ -1,11 +1,8 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using Base;
 using Newtonsoft.Json;
 using UnityEngine;
-using UnityEngine.Networking;
 #if UNITY_EDITOR
 using UnityEditor;
 
@@ -31,21 +28,25 @@ namespace SAssetbundle
         [JsonProperty]
         private Dictionary<string, List<string>> BundleAssetsMap = new Dictionary<string, List<string>>();
 
+        
+//        [JsonProperty]
+//        private Dictionary<string, List<string>> AssetDependencies = new Dictionary<string, List<string>>();
+//       
         [JsonProperty]
-        private Dictionary<string, List<string>> AssetDependencies = new Dictionary<string, List<string>>();
+        private Dictionary<string, List<string>> AssetDependencyBundles = new Dictionary<string, List<string>>();
 
-        [JsonProperty] private Dictionary<string, List<string>> SceneBundleMap = new Dictionary<string, List<string>>();
+        [JsonProperty] private List<string> Scenes = new List<string>();
+//        [JsonProperty] private Dictionary<string, List<string>> SceneBundleMap = new Dictionary<string, List<string>>();
 
         public static string ManifestName = "main.txt";
         public static string ManifestBundleName = "manifest.ab";
         private Dictionary<string, string> AssetBundleMap = new Dictionary<string, string>();
 
-        private Dictionary<string, string> SceneAssetBundleMap = new Dictionary<string, string>();
 
         public static BundleManifest Load()
         {
             AssetBundle.UnloadAllAssetBundles(true);
-            var path = Path.Combine(AssetBundleManager.Instance.GetDLCPath(),ManifestBundleName );
+            var path = Path.Combine(AssetBundleManager.Instance.GetDLCPath(), ManifestBundleName);
             if (File.Exists(path))
             {
                 var assetBundle = AssetBundle.LoadFromFile(path);
@@ -54,6 +55,7 @@ namespace SAssetbundle
                 assetBundle.Unload(false);
                 return LoadFromJson(jsonFile.text);
             }
+
             return null;
         }
 
@@ -61,7 +63,6 @@ namespace SAssetbundle
         {
             var bundleManifest = JsonConvert.DeserializeObject<BundleManifest>(json);
             bundleManifest.InitAssetBundleMap();
-            bundleManifest.InitSceneAssetBundleMap();
             return bundleManifest;
         }
 
@@ -72,21 +73,24 @@ namespace SAssetbundle
 
         public string GetScenePath(string sceneName)
         {
-
-            var sceneFullName = sceneName + ".unity";
-            foreach (var scenePaths in SceneBundleMap.Values)
+            var sceneNameWithExt = sceneName;
+            if (!sceneNameWithExt.EndsWith(".unity"))
             {
-                foreach (var scenePath in scenePaths)
+                sceneNameWithExt = sceneName + ".unity";
+            }
+
+            foreach (var scene in Scenes)
+            {
+                if (scene.Contains(sceneNameWithExt))
                 {
-                    if (scenePath.Contains(sceneFullName))
-                    {
-                        return scenePath;
-                    }
+                    return scene;
                 }
             }
 
+
             return string.Empty;
         }
+
         public void AddBundleInfo(string name, uint crc = 0, string hash = "", long size = 0)
         {
             BundleInfo bundleInfo = new BundleInfo();
@@ -113,20 +117,6 @@ namespace SAssetbundle
             }
         }
 
-        private void InitSceneAssetBundleMap()
-        {
-            SceneAssetBundleMap.Clear();
-            foreach (var sceneMap in SceneBundleMap)
-            {
-                var bundleName = sceneMap.Key;
-                var scenesPath = sceneMap.Value;
-
-                foreach (var scenePath in scenesPath)
-                {
-                    SceneAssetBundleMap.Add(scenePath, bundleName);
-                }
-            }
-        }
 
         public string GetBundleName(string assetName)
         {
@@ -134,26 +124,20 @@ namespace SAssetbundle
             {
                 return bundleName;
             }
-
-            if (SceneAssetBundleMap.TryGetValue(assetName,out string sceneBundleName))
-            {
-                return sceneBundleName;
-            }
-            
             return String.Empty;
         }
 
         public bool IsNeedLoadDependencyBundle(string assetName)
         {
-            return AssetDependencies.ContainsKey(assetName);
+            return AssetDependencyBundles.ContainsKey(assetName);
         }
 
 
-        public List<string> GetDependencyAssets(string assetName)
+        public List<string> GetDependencyBundles(string assetName)
         {
             if (IsNeedLoadDependencyBundle(assetName))
             {
-                return AssetDependencies[assetName];
+                return AssetDependencyBundles[assetName];
             }
 
             return null;
@@ -182,6 +166,7 @@ namespace SAssetbundle
 
         private void AddBundleAsset(string bundleName, string assetName)
         {
+            assetName = assetName.ToLower();
             if (BundleAssetsMap.TryGetValue(bundleName, out List<string> assets))
             {
                 if (!assets.Contains(assetName))
@@ -200,35 +185,20 @@ namespace SAssetbundle
             }
         }
 
-        public void AddBundleScene(string sceneBundleName, List<string> scenes)
+        public void AddScenes(List<string> scenes)
         {
             foreach (var scene in scenes)
             {
-                AddBundleScene(sceneBundleName, scene);
+                AddScene(scene);
             }
         }
 
-
-        private void AddBundleScene(string sceneBundleName, string scene)
+        public void AddScene(string scene)
         {
             scene = scene.ToLower();
-            if (SceneBundleMap.TryGetValue(sceneBundleName, out List<string> sceneAssets))
-            {
-                if (!sceneAssets.Contains(scene))
-                {
-                    sceneAssets.Add(scene);
-                }
-                else
-                {
-                    Debug.LogError("duplicated scene Name: " + scene);
-                }
-            }
-            else
-            {
-                sceneAssets = new List<string> {scene};
-                SceneBundleMap.Add(sceneBundleName, sceneAssets);
-            }
+            Scenes.Add(scene);
         }
+
 
         public void AddBundleAsset(string bundleName, List<string> assets)
         {
@@ -253,39 +223,37 @@ namespace SAssetbundle
 
         public bool IsScene(string assetPath)
         {
-            foreach (var sceneMap in SceneAssetBundleMap)
-            {
-                if (sceneMap.Key.Equals(assetPath))
-                {
-                    return true;
-                }
-            }
-
-            return false;
+            return Scenes.Contains(assetPath);
         }
 
 
 #if UNITY_EDITOR
         public void GenerateDependency()
         {
-            AssetDependencies.Clear();
+            AssetDependencyBundles.Clear();
             var allAssets = GetAllAssets();
+
             foreach (var asset in allAssets)
             {
-                var assets = new List<string>();
+                List<string> bundles = new List<string>();
                 var dependencies = AssetDatabase.GetDependencies(asset);
                 foreach (var dependency in dependencies)
                 {
-                    var dep = dependency.ToLower();
-                    if (dep != asset && IsAssetInBundle(dep))
+                    if (!dependency.Equals(asset, StringComparison.OrdinalIgnoreCase))
                     {
-                        assets.Add(dep);
+                        var bundle = AssetDatabase.GetImplicitAssetBundleName(dependency);
+                        var variantName = AssetDatabase.GetImplicitAssetBundleVariantName(dependency);
+                        var bundleName = string.IsNullOrWhiteSpace(variantName) ? bundle : bundle +"."+ variantName;
+                        if (!string.IsNullOrEmpty(bundleName) && !bundles.Contains(bundleName))
+                        {
+                            bundles.Add(bundleName);
+                        }
                     }
                 }
 
-                if (assets != null && assets.Count > 0)
+                if (bundles.Count > 0)
                 {
-                    AssetDependencies.Add(asset, assets);
+                    AssetDependencyBundles.Add(asset, bundles);
                 }
             }
         }

@@ -26,8 +26,9 @@ public class GameApplication:MonoSingleton<GameApplication>
 #endif
    
        SaveGame.Instance.Init();
-        
+    
        AssetBundleManager.Instance.Init();
+        yield return null;
        yield return SystemManager.Instance.Init();
        yield return WindowManager.Instance.Init();
     }
