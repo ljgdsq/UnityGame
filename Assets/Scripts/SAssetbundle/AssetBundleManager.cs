@@ -21,7 +21,7 @@ namespace SAssetbundle
             BundleManifest = BundleManifest.LoadFromDLCPath();
         }
 
-        public string GetDLCPath()
+        public static string GetDLCPath()
         {
             return Path.Combine(GameApplication.GetWriteablePath(), "dlc/");
         }

@@ -44,7 +44,7 @@ namespace SAssetbundle
         public static BundleManifest LoadFromDLCPath()
         {
             AssetBundle.UnloadAllAssetBundles(true);
-            var path = Path.Combine(AssetBundleManager.Instance.GetDLCPath(), ManifestBundleName);
+            var path = Path.Combine(AssetBundleManager.GetDLCPath(), ManifestBundleName);
             if (File.Exists(path))
             {
                 var assetBundle = AssetBundle.LoadFromFile(path);

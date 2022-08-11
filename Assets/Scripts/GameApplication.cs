@@ -4,12 +4,12 @@ using Manager;
 using Save;
 using SAssetbundle;
 using UnityEngine;
-
 #if UNITY_EDITOR
 using UnityEditor;
+
 #endif
 
-public class GameApplication:MonoSingleton<GameApplication>
+public class GameApplication : MonoSingleton<GameApplication>
 {
     [RuntimeInitializeOnLoadMethod]
     private static void OnFirstLoad()
@@ -21,18 +21,27 @@ public class GameApplication:MonoSingleton<GameApplication>
     {
 #if JSON_PREFS_SAVE
         SaveGame.Instance.SetArchive(new PlayerPrefsJsonArchive());
-#else 
-        SaveGame.Instance.SetArchive(new BinaryArchive()); 
+#else
+        SaveGame.Instance.SetArchive(new BinaryArchive());
 #endif
-   
-       SaveGame.Instance.Init();
-    
-       AssetBundleManager.Instance.Init();
+
+        SaveGame.Instance.Init();
+
+        AssetBundleManager.Instance.Init();
         yield return null;
-       yield return SystemManager.Instance.Init();
-       yield return WindowManager.Instance.Init();
+
+        CreateManager("SystemManager");
+
+        yield return WindowManager.Instance.Init();
     }
 
+
+    private void CreateManager(string name)
+    {
+        var managerAsset = Resources.Load(name);
+        var manager = Instantiate(managerAsset);
+        DontDestroyOnLoad(manager);
+    }
 
     public IEnumerator ReloadApplication()
     {
@@ -43,7 +52,7 @@ public class GameApplication:MonoSingleton<GameApplication>
         yield return WindowManager.Instance.Init();
     }
 
-    
+
     /// <summary>
     /// get a Writeable path
     /// </summary>
@@ -52,5 +61,4 @@ public class GameApplication:MonoSingleton<GameApplication>
     {
         return Application.persistentDataPath;
     }
-    
 }

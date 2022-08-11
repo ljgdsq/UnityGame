@@ -7,23 +7,10 @@ namespace Manager
 {
     public class SystemManager : MonoSingleton<SystemManager>
     {
-        private Transform root;
+        [SerializeField]
+        private Transform _systemUIRoot;
         private GameObject ConnectWindow;
         private AssetLoadRequest _connectLoadRequest;
-
-
-        public override IEnumerator Init()
-        {
-            yield return LoadSystemUi();
-        }
-
-        private IEnumerator LoadSystemUi()
-        {
-            var req = AssetManager.Instance.LoadAsset("Assets/Prefabs/SystemUI.prefab");
-            yield return req;
-            Instantiate(req.AssetObject.asset, Instance.transform);
-            root = GetComponentInChildren<Canvas>().transform;
-        }
 
         private IEnumerator LoadConnectWindow()
         {
@@ -43,7 +30,7 @@ namespace Manager
         {
             if (ConnectWindow == null && _connectLoadRequest.isDone)
             {
-                ConnectWindow = Instantiate(_connectLoadRequest.AssetObject.asset as GameObject, root);
+                ConnectWindow = Instantiate(_connectLoadRequest.AssetObject.asset as GameObject, _systemUIRoot);
             }
 
             if (ConnectWindow)
@@ -65,5 +52,7 @@ namespace Manager
         {
            yield return LoadConnectWindow();
         }
+        
+        
     }
 }

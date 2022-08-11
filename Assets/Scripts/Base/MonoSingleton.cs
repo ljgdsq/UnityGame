@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Base
 {
-    public abstract class MonoSingleton<T> : MonoBehaviour where T : MonoBehaviour
+    public abstract class MonoSingleton<T> : MonoBehaviour where T : MonoSingleton<T>
     {
         private static T _instance;
 
@@ -44,6 +44,14 @@ namespace Base
         }
 
 
+        private void Awake()
+        {
+            if (_instance==null)
+            {
+                _instance =(T) this;
+            }
+        }
+
         public virtual IEnumerator Init()
         {
             yield return null;
@@ -54,5 +62,7 @@ namespace Base
         {
             DestroyImmediate(this.gameObject);
         }
+        
+        
     }
 }

@@ -42,5 +42,14 @@ namespace Net.Packet
                 }
             }
         }
+
+        protected override void InitFakeResponse()
+        {
+            base.InitFakeResponse();
+            var resp = response as CheckVersionResp;
+            resp.ForceUpdate = false;
+            resp.HasNew = true;
+            resp.NewVer = "V1.0";
+        }
     }
 }

@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using System.Text;
 using Newtonsoft.Json;
 
@@ -43,7 +44,20 @@ namespace Net.Protocol
             OnSuccess((Response) resp);
         }
 
+
+        public void OnGetFakeResult()
+        {
+            InitFakeResponse();
+            OnSuccess(response);
+        }
+
+
         public virtual void OnSuccess(Response value)
+        {
+        }
+
+        [Conditional("UNITY_EDITOR")]
+        protected virtual void InitFakeResponse()
         {
         }
     }

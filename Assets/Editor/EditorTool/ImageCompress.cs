@@ -91,7 +91,7 @@ namespace EditorTool
 //                    Task.WaitAll(task);
                     var cmd = $"{_exePath} --f --ordered --quality={_min}-{_max} {file} -o {outFile}";
 
-                    var ret=CMDer.Run(".", cmd, 0);
+                    var ret=CMDer.Run(".", cmd);
                     if (!ret)
                     {
                         Debug.LogError(cmd);

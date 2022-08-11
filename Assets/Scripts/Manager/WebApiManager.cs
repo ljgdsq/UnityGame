@@ -39,6 +39,16 @@ namespace Manager
 
         public void Get(ProtocolBase protocol)
         {
+
+#if UNITY_EDITOR
+            if (StaticConfig.EnableOffline)
+            {
+                protocol.OnGetFakeResult();
+                return;
+            }       
+#endif
+      
+            
             var url = host + protocol.GetURL();
             var webRequest = WebRequest.Create(url);
             webRequest.Method = "GET";
@@ -54,8 +64,5 @@ namespace Manager
                 }
             }
         }
-
-        
-        
     }
 }

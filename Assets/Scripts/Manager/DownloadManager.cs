@@ -113,7 +113,7 @@ namespace Manager
 
                 if (needUpdate)
                 {
-                    var manifestPath = Path.Combine(AssetBundleManager.Instance.GetDLCPath(),
+                    var manifestPath = Path.Combine(AssetBundleManager.GetDLCPath(),
                         BundleManifest.ManifestBundleName);
                     if (File.Exists(manifestPath))
                     {
@@ -135,7 +135,7 @@ namespace Manager
             webRequest.Method = "GET";
             webRequest.ContentType = "application/octet-stream";
 
-            var localPath = Path.Combine(AssetBundleManager.Instance.GetDLCPath(), file);
+            var localPath = Path.Combine(AssetBundleManager.GetDLCPath(), file);
             var parentPath = Path.GetDirectoryName(localPath);
             if (!Directory.Exists(parentPath))
             {

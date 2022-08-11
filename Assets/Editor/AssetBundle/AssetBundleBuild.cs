@@ -1,9 +1,11 @@
 ﻿using System.IO;
 using System.Linq;
+using EditorTool;
 using Newtonsoft.Json;
 using SAssetbundle;
 using UnityEditor;
 using UnityEngine;
+using FileUtil = Util.FileUtil;
 
 public partial class AssetBundleBuildScript
 {
@@ -201,6 +203,22 @@ public partial class AssetBundleBuildScript
 
     }
 
+    [MenuItem("Build/BuildInfoAndCopyToDlcPath")]
+    public static void BuildInfoAndCopyToDlcPath()
+    {
+        BuildInfo();
+        var dlcPath = AssetBundleManager.GetDLCPath();
+        FileUtil.CopyDirectory(Application.streamingAssetsPath,dlcPath);
+
+    }
+
+    [MenuItem("Build/OpenDlcPath")]
+    public static void OpenDlcPath()
+    {
+        var dlcPath = AssetBundleManager.GetDLCPath();
+        CMDer.Run(dlcPath, "explorer ." );
+    }
+    
     [MenuItem("Build/LoadManifest")]
 
     public static void TestLoadManifest()

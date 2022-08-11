@@ -15,7 +15,7 @@ namespace Manager
         {
             var checkVersion = new CheckVersion();
             WebApiManager.Instance.Get(checkVersion);
-            if (checkVersion.HasNew&&checkVersion.ForceUpdate )
+            if (checkVersion.HasNew)
             {
                 NewVer = checkVersion.NewVer;
                 DownloadManager.Instance.DownloadURL = checkVersion.DownloadURL;

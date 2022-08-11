@@ -38,7 +38,7 @@ namespace EditorTool
         }
 
 
-        public static bool Run(string path, string cmd,int flag)
+        public static bool Run(string path, string cmd)
         {
             Process process = new Process();
 
