@@ -160,14 +160,17 @@ public partial class AssetBundleBuildScript
             var bundle = AssetBundle.LoadFromFile(abPath);
         
             
-            var allAssetNames = bundle.GetAllAssetNames();
-            bundleManifest.AddBundleAsset(abName, allAssetNames.ToList());
+
             
             if (bundle.isStreamedSceneAssetBundle)
             {
                 var allScenePaths = bundle.GetAllScenePaths();
-                bundleManifest.AddScenes(allScenePaths.ToList());
-                bundleManifest.AddBundleAsset(abName, allScenePaths.ToList());
+                bundleManifest.AddBundleAsset(abName, allScenePaths.ToList(),true);
+            }
+            else
+            {
+                var allAssetNames = bundle.GetAllAssetNames();
+                bundleManifest.AddBundleAsset(abName, allAssetNames.ToList());
             }
       
       

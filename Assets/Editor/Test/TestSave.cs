@@ -4,6 +4,7 @@ using Base;
 using Extension;
 using Save;
 using UnityEditor;
+using UnityEditor.Build.Pipeline;
 
 namespace Test
 {
@@ -41,7 +42,6 @@ namespace Test
             orCreate.Level = 99;
             orCreate.Tag = 1000;
             saveGame.SaveAll();
-
 
 //            saveGame.Save<TestSave>();
             var testPlayer = saveGame.GetOrCreate<TestPlayer>(out isNew);

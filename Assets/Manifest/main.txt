@@ -1,20 +1,32 @@
 {
   "Bundles": [
     {
+      "Name": "mt",
+      "CRC": 892744976,
+      "hash": "146704bd258529797f6be727c32c3abb",
+      "Size": 337225
+    },
+    {
+      "Name": "packtextures",
+      "CRC": 3407137993,
+      "hash": "83205ab47a578c21a5abb8d5d95560cc",
+      "Size": 167789
+    },
+    {
       "Name": "prefabs.ab",
       "CRC": 2690601126,
-      "hash": "e074c86adf58aca6c6aca8ddcf0995db",
+      "hash": "2fc0a636b5abafde8f2aa3258c8e20ba",
       "Size": 383385
     },
     {
       "Name": "prefabs1",
-      "CRC": 1747925648,
-      "hash": "209be12937637abf4acdaf3aed90d65b",
-      "Size": 53276
+      "CRC": 94601103,
+      "hash": "d9ce868057bcb764674dc486e427d620",
+      "Size": 53493
     },
     {
       "Name": "scenes",
-      "CRC": 1977224271,
+      "CRC": 481426032,
       "hash": "4875bcb37cfa05cf7bd3fe4c85fbfbb4",
       "Size": 5459
     },
@@ -26,12 +38,51 @@
     },
     {
       "Name": "textures1",
-      "CRC": 1671289835,
-      "hash": "91d004f76d950653a91a54199a9d8582",
-      "Size": 161062
+      "CRC": 119842738,
+      "hash": "474af8aae8cad355fcf4fd582d497c33",
+      "Size": 471541
+    },
+    {
+      "Name": "unpacktexture",
+      "CRC": 732274455,
+      "hash": "610cea6438d12b2d8c68262433e29c2b",
+      "Size": 134073
     }
   ],
   "BundleAssetsMap": {
+    "mt": [
+      "assets/test/mt/bgmt.mat"
+    ],
+    "packtextures": [
+      "assets/test/packtextures/new sprite atlas.spriteatlas",
+      "assets/test/packtextures/tex/itemicon_bag_0.png",
+      "assets/test/packtextures/tex/itemicon_bag_1.png",
+      "assets/test/packtextures/tex/itemicon_battery.png",
+      "assets/test/packtextures/tex/itemicon_battery_booster.png",
+      "assets/test/packtextures/tex/itemicon_bell.png",
+      "assets/test/packtextures/tex/itemicon_bomb.png",
+      "assets/test/packtextures/tex/itemicon_bomb_red.png",
+      "assets/test/packtextures/tex/itemicon_bone.png",
+      "assets/test/packtextures/tex/itemicon_book_blue.png",
+      "assets/test/packtextures/tex/itemicon_book_purple.png",
+      "assets/test/packtextures/tex/itemicon_boss.png",
+      "assets/test/packtextures/tex/itemicon_box.png",
+      "assets/test/packtextures/tex/itemicon_bulb.png",
+      "assets/test/packtextures/tex/itemicon_bullet.png",
+      "assets/test/packtextures/tex/itemicon_burger.png",
+      "assets/test/packtextures/tex/itemicon_cactus.png",
+      "assets/test/packtextures/tex/itemicon_calendar.png",
+      "assets/test/packtextures/tex/itemicon_camera_blue.png",
+      "assets/test/packtextures/tex/itemicon_camera_red.png",
+      "assets/test/packtextures/tex/itemicon_card.png",
+      "assets/test/packtextures/tex/itemicon_castle.png",
+      "assets/test/packtextures/tex/itemicon_chat.png",
+      "assets/test/packtextures/tex/itemicon_chat_talk.png",
+      "assets/test/packtextures/tex/itemicon_chest_blue.png",
+      "assets/test/packtextures/tex/itemicon_chest_blue_open.png",
+      "assets/test/packtextures/tex/itemicon_chest_brown.png",
+      "assets/test/packtextures/tex/itemicon_chest_brown_open.png"
+    ],
     "prefabs.ab": [
       "assets/prefabs/systemui.prefab",
       "assets/prefabs/ui/connectwindow.prefab",
@@ -39,6 +90,7 @@
       "assets/prefabs/ui/uiroot.prefab"
     ],
     "prefabs1": [
+      "assets/test/prefabs/bag.prefab",
       "assets/test/prefabs/chess.prefab",
       "assets/test/prefabs/cube.prefab",
       "assets/test/prefabs/cubea.prefab",
@@ -72,12 +124,51 @@
       "assets/test/textures/icon_staticmeshed_collision_512x.png",
       "assets/test/textures/icon_staticmeshed_showsockets_512x.png",
       "assets/test/textures/icon_view_512px.png",
-      "assets/test/textures/mt1.mat"
+      "assets/test/textures/mt1.mat",
+      "assets/test/textures/tableimage_tutorial.png"
+    ],
+    "unpacktexture": [
+      "assets/test/unpacktexture/tex/itemicon_bag_0.png",
+      "assets/test/unpacktexture/tex/itemicon_bag_1.png",
+      "assets/test/unpacktexture/tex/itemicon_battery.png",
+      "assets/test/unpacktexture/tex/itemicon_battery_booster.png",
+      "assets/test/unpacktexture/tex/itemicon_bell.png",
+      "assets/test/unpacktexture/tex/itemicon_bomb.png",
+      "assets/test/unpacktexture/tex/itemicon_bomb_red.png",
+      "assets/test/unpacktexture/tex/itemicon_bone.png",
+      "assets/test/unpacktexture/tex/itemicon_book_blue.png",
+      "assets/test/unpacktexture/tex/itemicon_book_purple.png",
+      "assets/test/unpacktexture/tex/itemicon_boss.png",
+      "assets/test/unpacktexture/tex/itemicon_box.png",
+      "assets/test/unpacktexture/tex/itemicon_bulb.png",
+      "assets/test/unpacktexture/tex/itemicon_bullet.png",
+      "assets/test/unpacktexture/tex/itemicon_burger.png",
+      "assets/test/unpacktexture/tex/itemicon_cactus.png",
+      "assets/test/unpacktexture/tex/itemicon_calendar.png",
+      "assets/test/unpacktexture/tex/itemicon_camera_blue.png",
+      "assets/test/unpacktexture/tex/itemicon_camera_red.png",
+      "assets/test/unpacktexture/tex/itemicon_card.png",
+      "assets/test/unpacktexture/tex/itemicon_castle.png",
+      "assets/test/unpacktexture/tex/itemicon_chat.png",
+      "assets/test/unpacktexture/tex/itemicon_chat_talk.png",
+      "assets/test/unpacktexture/tex/itemicon_chest_blue.png",
+      "assets/test/unpacktexture/tex/itemicon_chest_blue_open.png",
+      "assets/test/unpacktexture/tex/itemicon_chest_brown.png",
+      "assets/test/unpacktexture/tex/itemicon_chest_brown_open.png"
     ]
   },
   "AssetDependencyBundles": {
+    "assets/test/mt/bgmt.mat": [
+      "textures1"
+    ],
+    "assets/test/packtextures/new sprite atlas.spriteatlas": [
+      "packtextures"
+    ],
     "assets/prefabs/ui/connectwindow.prefab": [
       "textures.ab"
+    ],
+    "assets/test/prefabs/bag.prefab": [
+      "packtextures"
     ],
     "assets/test/prefabs/chess.prefab": [
       "textures1"
@@ -110,7 +201,7 @@
       "textures1"
     ]
   },
-  "Scenes": [
+  "SceneAssetNames": [
     "assets/scenes/main.unity"
   ]
 }

@@ -8,7 +8,7 @@ PluginImporter:
   defineConstraints: []
   isPreloaded: 0
   isOverridable: 0
-  isExplicitlyReferenced: 0
+  isExplicitlyReferenced: 1
   validateReferences: 1
   platformData:
   - first:
@@ -28,7 +28,8 @@ PluginImporter:
       Android: Android
     second:
       enabled: 0
-      settings: {}
+      settings:
+        CPU: ARMv7
   - first:
       Any: 
     second:
@@ -39,7 +40,9 @@ PluginImporter:
     second:
       enabled: 1
       settings:
+        CPU: AnyCPU
         DefaultValueInitialized: true
+        OS: AnyOS
   - first:
       Facebook: Win
     second:

@@ -1,0 +1,48 @@
+ManifestFileVersion: 1
+CompatibilityAssetBundleManifest:
+  AssetBundleInfos:
+    Info_0:
+      Name: textures
+      Hash: b7ab87848110ffe181f8a351b39ecb6b
+      CRC: 3816816644
+      Dependencies: {}
+    Info_1:
+      Name: scenes
+      Hash: 309b78e9b930b545e53fdd7f46b09204
+      CRC: 468216408
+      Dependencies: {}
+        Dependency_0: textures
+    Info_2:
+      Name: prefabs
+      Hash: 32f7e2d97a00c4f424047620ae54ad0d
+      CRC: 2920882074
+      Dependencies: {}
+        Dependency_0: textures
+    Info_3:
+      Name: prefabs1
+      Hash: 7996b0f8ba901ea42ba8f7c9f3e8cbc4
+      CRC: 2074261505
+      Dependencies: {}
+        Dependency_0: packtextures
+        Dependency_1: textures1
+    Info_4:
+      Name: textures1
+      Hash: 456be3fd00e1be0681313c69445b8429
+      CRC: 2633403563
+      Dependencies: {}
+    Info_5:
+      Name: packtextures
+      Hash: 895ba4b26cfcac9edacc7757d36e4fd5
+      CRC: 3839469357
+      Dependencies: {}
+    Info_6:
+      Name: unpacktexture
+      Hash: 41a936a81b47d0f25e831c47b07709e9
+      CRC: 1754336777
+      Dependencies: {}
+    Info_7:
+      Name: mt
+      Hash: c31e598518ee54d7f08479de96df25d6
+      CRC: 21269987
+      Dependencies: {}
+        Dependency_0: textures1

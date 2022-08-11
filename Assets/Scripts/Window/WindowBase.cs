@@ -15,6 +15,8 @@ namespace Window
             this.ResourcePath = resourcePath;
         }
     }
+    
+    //todo use animation asset replace this
     public class WindowBase : MonoBehaviour
     {
         public enum AnimationType
