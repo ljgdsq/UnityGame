@@ -73,5 +73,6 @@ crashlytics-build.properties
 /[Aa]ssets/[Ss]treamingAssets
 
 /Assets/PrivateAsset
+/Assets/PAsset
 /AssetBundles
 /[Aa]ssets/[Tt]est
