@@ -39,8 +39,6 @@ namespace Manager
             }
         }
 
-        
-        
         private IEnumerator ToMainScene()
         {
             yield return GameApplication.Instance.ReloadApplication();
@@ -61,8 +59,6 @@ namespace Manager
         private void CheckFileChange()
         {
             AssetBundleManager.Instance.LoadManifest();
-            
-                        
         }
     }
 }

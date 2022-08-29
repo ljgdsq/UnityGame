@@ -30,17 +30,28 @@ public class GameApplication : MonoSingleton<GameApplication>
         AssetBundleManager.Instance.Init();
         yield return null;
 
-        CreateManager("SystemManager");
+        yield return CreateManager("SystemManager");
 
         yield return WindowManager.Instance.Init();
     }
 
 
-    private void CreateManager(string name)
+    private IEnumerator CreateManager(string name)
     {
-        var managerAsset = Resources.Load(name);
-        var manager = Instantiate(managerAsset);
-        DontDestroyOnLoad(manager);
+        var assetLoadRequest = AssetManager.Instance.LoadAsset("manager/" + name + ".prefab");
+
+        yield return assetLoadRequest;
+        if (assetLoadRequest.AssetObject.asset == null)
+        {
+            var managerAsset = Resources.Load(name);
+            var manager = Instantiate(managerAsset);
+            DontDestroyOnLoad(manager);
+        }
+        else
+        {
+            var manager = Instantiate(assetLoadRequest.AssetObject.asset);
+            DontDestroyOnLoad(manager);
+        }
     }
 
     public IEnumerator ReloadApplication()
