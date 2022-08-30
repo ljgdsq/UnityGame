@@ -12,10 +12,10 @@ using UnityEditor;
 public class GameApplication : MonoSingleton<GameApplication>
 {
 //    [RuntimeInitializeOnLoadMethod]
-    private static void OnFirstLoad()
-    {
-        Instance.Init();
-    }
+//    private static void OnFirstLoad()
+//    {
+//        Instance.Init();
+//    }
 
     private IEnumerator Start()
     {
