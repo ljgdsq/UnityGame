@@ -11,7 +11,7 @@ using UnityEditor;
 
 public class GameApplication : MonoSingleton<GameApplication>
 {
-    [RuntimeInitializeOnLoadMethod]
+//    [RuntimeInitializeOnLoadMethod]
     private static void OnFirstLoad()
     {
         Instance.Init();
@@ -39,17 +39,16 @@ public class GameApplication : MonoSingleton<GameApplication>
     private IEnumerator CreateManager(string name)
     {
         var assetLoadRequest = AssetManager.Instance.LoadAsset("manager/" + name + ".prefab");
-
-        yield return assetLoadRequest;
-        if (assetLoadRequest.AssetObject.asset == null)
+        if (assetLoadRequest != null && assetLoadRequest.AssetObject != null)
         {
-            var managerAsset = Resources.Load(name);
-            var manager = Instantiate(managerAsset);
+            yield return assetLoadRequest;
+            var manager = Instantiate(assetLoadRequest.AssetObject.asset);
             DontDestroyOnLoad(manager);
         }
         else
         {
-            var manager = Instantiate(assetLoadRequest.AssetObject.asset);
+            var managerAsset = Resources.Load(name);
+            var manager = Instantiate(managerAsset);
             DontDestroyOnLoad(manager);
         }
     }
