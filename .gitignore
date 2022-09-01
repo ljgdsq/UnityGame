@@ -76,3 +76,6 @@ crashlytics-build.properties
 /Assets/PAsset
 /AssetBundles
 /[Aa]ssets/[Tt]est
+
+
+packages.config
