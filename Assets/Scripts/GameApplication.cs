@@ -4,6 +4,7 @@ using Manager;
 using Save;
 using SAssetbundle;
 using UnityEngine;
+using Util;
 #if UNITY_EDITOR
 using UnityEditor;
 
@@ -19,6 +20,9 @@ public class GameApplication : MonoSingleton<GameApplication>
 
     private IEnumerator Start()
     {
+        
+//        DeviceInfo.GetAllInfo();
+        
 #if JSON_PREFS_SAVE
         SaveGame.Instance.SetArchive(new PlayerPrefsJsonArchive());
 #else
