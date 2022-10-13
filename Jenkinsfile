@@ -1,23 +1,23 @@
+
 pipeline {
     agent {
         label 'wotv:android'
     }
-
-
-    stages ('build'){
-                steps {
+    
+    stages {
+        stage('Remove Last Build') {
+            steps {
+                 echo "......开始拉取最新 git 资源......"
+            }
+        }
+        stage ('Validate') {
+            steps {
                 script {
-   
-                    echo "......开始拉取最新 git 资源......"
-                    echo "......完成拉取最新 git 资源......"
+          echo "......开始拉取最新 git 资源 Validate......"
                 }
             }
+        }
+
     }
-
-
-      stage('dSYM Upload') {
-        echo "......dSYM Upload......"
-
-      }
-
 }
+
