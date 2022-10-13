@@ -1,4 +1,3 @@
-
 pipeline {
     agent {
         label 'wotv:android'
@@ -7,13 +6,13 @@ pipeline {
     stages {
         stage('Remove Last Build') {
             steps {
-                 echo "......开始拉取最新 git 资源......"
+                 echo "...... git ......"
             }
         }
         stage ('Validate') {
             steps {
                 script {
-          echo "......开始拉取最新 git 资源 Validate......"
+          echo "...... git  Validate......"
                 }
             }
         }
