@@ -13,7 +13,7 @@ public class Splash : MonoBehaviour
 
     void Start()
     {
-        DotweenEx.DoTime(1.0f).OnComplete(() =>
+        DotweenEx.DoTime(3.0f).OnComplete(() =>
         {
             SystemManager.Instance.ShowConnectWindow();
 
