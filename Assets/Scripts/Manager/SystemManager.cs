@@ -28,9 +28,12 @@ namespace Manager
 
         public void ShowConnectWindow()
         {
-            if (ConnectWindow == null && _connectLoadRequest.isDone)
+            if (ConnectWindow == null && _connectLoadRequest!=null)
             {
-                ConnectWindow = Instantiate(_connectLoadRequest.AssetObject.asset as GameObject, _systemUIRoot);
+                if (_connectLoadRequest.isDone)
+                {
+                    ConnectWindow = Instantiate(_connectLoadRequest.AssetObject.asset as GameObject, _systemUIRoot);
+                }
             }
 
             if (ConnectWindow)
@@ -50,6 +53,9 @@ namespace Manager
 
         private IEnumerator Start()
         {
+            
+            Debug.Log("SystemManager Start");
+            
            yield return LoadConnectWindow();
         }
         

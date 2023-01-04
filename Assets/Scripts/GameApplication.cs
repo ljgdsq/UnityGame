@@ -46,15 +46,27 @@ public class GameApplication : MonoSingleton<GameApplication>
         if (assetLoadRequest != null && assetLoadRequest.AssetObject != null)
         {
             yield return assetLoadRequest;
-            var manager = Instantiate(assetLoadRequest.AssetObject.asset);
-            DontDestroyOnLoad(manager);
+            if (assetLoadRequest.AssetObject.asset)
+            {
+                var manager = Instantiate(assetLoadRequest.AssetObject.asset);
+                DontDestroyOnLoad(manager);
+            }
+
+            LoadResources();
         }
         else
+        {
+            LoadResources();
+        }
+
+
+        void LoadResources()
         {
             var managerAsset = Resources.Load(name);
             var manager = Instantiate(managerAsset);
             DontDestroyOnLoad(manager);
         }
+       
     }
 
     public IEnumerator ReloadApplication()

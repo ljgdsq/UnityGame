@@ -60,8 +60,6 @@ public class AssetManager : MonoSingleton<AssetManager>
     }
 
 
-
-
     private void Update()
     {
         if (_requests.Count > 0)
@@ -78,6 +76,7 @@ public class AssetManager : MonoSingleton<AssetManager>
             }
         }
     }
+
 
     private void RemoveRequest(AssetLoadRequest request)
     {
