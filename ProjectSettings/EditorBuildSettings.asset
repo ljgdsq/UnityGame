@@ -5,13 +5,15 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 0
+  - enabled: 1
     path: Assets/Splash/Splash.unity
     guid: 4c37e66c0ce8733479fbc4949b30aa5d
   - enabled: 0
     path: Assets/Scenes/Main.unity
     guid: de8bff983c9b0664ba8a0c05ad0dcee7
   - enabled: 0
-    path: Assets/Examples/EditorExtension/1.0/New Scene.unity
+    path: Assets/Examples/EditorExtension/Editor/1.0/New Scene.unity
     guid: de47cdcd5e93baa4baca2f1f5ff50198
-  m_configObjects: {}
+  m_configObjects:
+    com.unity.input.settings: {fileID: 11400000, guid: 599513b501203fd4c9fbacb66e03931f,
+      type: 2}

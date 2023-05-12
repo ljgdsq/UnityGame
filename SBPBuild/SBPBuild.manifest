@@ -2,7 +2,12 @@ ManifestFileVersion: 1
 CompatibilityAssetBundleManifest:
   AssetBundleInfos:
     Info_0:
-      Name: prefabs1
-      Hash: 465578e0c42895bda88b5d79a51008e6
-      CRC: 467378551
+      Name: packtextures
+      Hash: c7b38183afc1a75bb4d02e2856d1de9d
+      CRC: 3450776844
+      Dependencies: {}
+    Info_1:
+      Name: prefabs
+      Hash: ecd0b318310dbca6a66bc60099d2948c
+      CRC: 2247142492
       Dependencies: {}

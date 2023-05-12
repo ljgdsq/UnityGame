@@ -16,22 +16,19 @@ namespace DefaultNamespace
 
                 options |= BuildAssetBundleOptions.ChunkBasedCompression;
 
-
-//               options |= BuildAssetBundleOptions.ForceRebuildAssetBundle;
+          //    options |= BuildAssetBundleOptions.ForceRebuildAssetBundle;
 
             Directory.CreateDirectory(outputPath);
 
             // Replaced BuildPipeline.BuildAssetBundles with CompatibilityBuildPipeline.BuildAssetBundles here
             var manifest = CompatibilityBuildPipeline.BuildAssetBundles(outputPath, options,  EditorUserBuildSettings.activeBuildTarget);
-
             if (manifest==null)
             {
                 Debug.LogError("build failed!");
                 return;
             }
-
             var allAssetBundlesWithVariant = manifest.GetAllAssetBundlesWithVariant();
-            
+
         }
     }
 }
