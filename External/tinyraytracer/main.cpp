@@ -20,11 +20,14 @@ using namespace std;
 
 struct Material {
 
-    Material(Vec3f color) : diffuse_color(color) {}
+    Material(const Vec3f &color,const Vec2f& factor,const float &exp) : diffuse_color(color),specular_exponent(exp),
+    albedo(factor){}
 
-    Material() : diffuse_color() {}
+    Material() : diffuse_color(),specular_exponent(),albedo() {}
 
     Vec3f diffuse_color;
+    float specular_exponent;
+    Vec2f albedo;
 };
 
 struct Light{
@@ -57,6 +60,11 @@ struct Sphere {
     }
 };
 
+Vec3f reflect(const Vec3f&I,const Vec3f&N)
+{
+    return I-N*2*(I*N);
+}
+
 bool scene_interact(const Vec3f &orig, const Vec3f &dir, const vector<Sphere> spheres,  Material &material,
                      Vec3f&hit, Vec3f&N) {
     float sphere_dist = std::numeric_limits<float>::max();
@@ -64,7 +72,7 @@ bool scene_interact(const Vec3f &orig, const Vec3f &dir, const vector<Sphere> sp
         float dist;
         if (sphere.ray_intersect(orig,dir,dist) && dist<sphere_dist){
            sphere_dist=dist;
-           material.diffuse_color=sphere.material.diffuse_color;
+           material=sphere.material;
            hit=orig+dir*dist;
            N=(hit-sphere.center).normalize();
         }
@@ -79,14 +87,18 @@ Vec3f cast_ray(const Vec3f &orig, const Vec3f &dir, const vector<Sphere> &sphere
 
     if (scene_interact(orig, dir, spheres, material,hit,N)) {
         float diffuse_light_intensity=0;
+        float specular_light_intensity=0;
         for (const auto&light:lights){
             Vec3f light_dir=(light.position-hit).normalize();
             diffuse_light_intensity+= light.intensity* std::max(0.1f, light_dir*N);
+
+            specular_light_intensity+= powf(std::max(0.f,-reflect(-light_dir,N)* dir),material.specular_exponent) *light.intensity;
         }
-        return material.diffuse_color*diffuse_light_intensity;
+        return material.diffuse_color*diffuse_light_intensity*material.albedo[0]+
+                Vec3f (1.f,1.f,1.f)*specular_light_intensity*material.albedo[1];
     }
 
-    return Vec3f(0.2, 0.7, 1); // background color
+    return Vec3f(0.2, 0.7, 0.8); // background color
 }
 
 #define M_PI       3.14159265358979323846   // pi
@@ -106,6 +118,12 @@ void render(const vector<Sphere> &spheres,const vector<Light> &lights) {
             Vec3f dir = Vec3f(x, y, -1).normalize();
 
             Vec3f color = cast_ray(orig, dir, spheres,lights);
+
+            float maxComp=std::max(color.x,std::max(color.y,color.z));
+            if (maxComp>1.0f){
+                color=color* (1.0f/maxComp);
+            }
+
             framebuffer[3 * (i * width + j) + 0] = color.x * 255.0;
             framebuffer[3 * (i * width + j) + 1] = color.y * 255.0;
             framebuffer[3 * (i * width + j) + 2] = color.z * 255.0;
@@ -120,8 +138,8 @@ void render(const vector<Sphere> &spheres,const vector<Light> &lights) {
 
 int main() {
 
-    Material      ivory(Vec3f(0.4, 0.4, 0.3));
-    Material red_rubber(Vec3f(0.3, 0.1, 0.1));
+    Material      ivory(Vec3f(0.4, 0.4, 0.3),{0.6,0.3},50);
+    Material red_rubber(Vec3f(0.3, 0.1, 0.1),{0.9,0.1},10);
 
     std::vector<Sphere> spheres;
     spheres.push_back(Sphere(Vec3f(-3,    0,   -16), 2,      ivory));
@@ -131,7 +149,9 @@ int main() {
 
 
     std::vector<Light> lights;
-    lights.push_back(Light(Vec3f(-20, 20, 20), 0.9));
+    lights.push_back(Light(Vec3f(-20, 20,  20), 1.5));
+    lights.push_back(Light(Vec3f( 30, 50, -25), 1.8));
+    lights.push_back(Light(Vec3f( 30, 20,  30), 1.7));
 
 
     render(spheres,lights);
