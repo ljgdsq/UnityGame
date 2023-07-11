@@ -82,3 +82,11 @@ crashlytics-build.properties
 
 
 packages.config
+
+
+
+
+# Some c++ code
+**/cmake-build-*
+**/.cmake
+**/external/**/build
