@@ -78,7 +78,8 @@ int main() {
     }
 
 
-    for (int frame = 0; frame < 360; ++frame) {
+    for (int frame = 0; frame < 360/2; ++frame) {
+        std::cout<<"begin "<<frame<<std::endl;
         std::stringstream ss;
         ss << std::setfill('0') << std::setw(5) << frame << ".ppm";
         player_a += 2 * M_PI / 360;
@@ -111,7 +112,7 @@ int main() {
                     int icolor = map[int(cx) + int(cy) * map_w] - '0';
                     assert(icolor < ncolors);
 
-                    int col_height = h / t;
+                    int col_height = h / (t* cos(angle-player_a));
                     draw_rectangle(framebuffer, w, h, w / 2 + i, h / 2 - col_height / 2, 1, col_height,
                                    colors[icolor]);
                     break;
