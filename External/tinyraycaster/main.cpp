@@ -1,8 +1,10 @@
 #include <iostream>
 #include <string>
 #include <fstream>
+#include <sstream>
 #include <vector>
 #include <cassert>
+#include <iomanip>
 
 #include "map.h"
 
@@ -63,58 +65,68 @@ int main() {
     const int rect_h = h / map_h;
 
 
-//    for (int j = 0; j < h; ++j) {
-//        for (int i = 0; i < w; ++i) {
-//            uint8_t r=255*j/float(h);
-//            uint8_t g=255*i/float(w);
-//            uint8_t b=0;
-//            framebuffer[j*w+i]= pack_color(r,g,b);
-//        }
-//    }
-
     float player_x = 3.456;
     float player_y = 2.345;
     float player_a = 1.523;// player view direction
 
     const float fov = M_PI / 3;
 
-
-    for (int j = 0; j < map_h; ++j) {
-        for (int i = 0; i < map_w; ++i) {
-            if (map[i + j * map_w] == ' ')continue;
-            int rect_x = i * rect_w;
-            int rect_y = j * rect_h;
-
-            draw_rectangle(framebuffer, w, h, rect_x, rect_y, rect_w, rect_h, pack_color(0, 255, 255));
-        }
+    const int ncolors = 10;
+    std::vector<uint32_t> colors(ncolors);
+    for (int i = 0; i < ncolors; ++i) {
+        colors[i] = pack_color(rand() % 255, rand() % 255, rand() % 255);
     }
 
-    for (int i = 0; i < w / 2; ++i) {
 
-        float angle = player_a - fov / 2 + fov * i / float(w / 2);
-        for (float t = 0; t < 20; t += 0.05) {
-            float cx = player_x + t * cos(angle);
-            float cy = player_y + t * sin(angle);
+    for (int frame = 0; frame < 360; ++frame) {
+        std::stringstream ss;
+        ss << std::setfill('0') << std::setw(5) << frame << ".ppm";
+        player_a += 2 * M_PI / 360;
+        framebuffer = std::vector<uint32_t>(w * h, pack_color(255, 255, 255)); // clear the screen
 
-            size_t pix_x = cx * rect_w;
-            size_t pix_y = cy * rect_h;
 
-            framebuffer[pix_x + pix_y * w] = pack_color(160, 160, 160);  // this draws the visibility cone
-
-            if (map[int(cx) + int(cy) * map_w] != ' ') {
-                int col_height = h / t;
-                draw_rectangle(framebuffer, w, h, w / 2 + i, h / 2 - col_height / 2, 1, col_height,
-                               pack_color(0, 255, 255));
-                break;
-
+        for (int j = 0; j < map_h; ++j) { //draw the map
+            for (int i = 0; i < map_w; ++i) {
+                if (map[i + j * map_w] == ' ')continue;
+                int rect_x = i * rect_w;
+                int rect_y = j * rect_h;
+                int icolor = map[i + j * map_w] - '0';
+                assert(icolor < ncolors);
+                draw_rectangle(framebuffer, w, h, rect_x, rect_y, rect_w, rect_h, colors[icolor]);
             }
         }
+
+        for (int i = 0; i < w / 2; ++i) { //draw the visibility cone adn "3d" view
+            float angle = player_a - fov / 2 + fov * i / float(w / 2);
+            for (float t = 0; t < 20; t += 0.01) {
+                float cx = player_x + t * cos(angle);
+                float cy = player_y + t * sin(angle);
+
+                size_t pix_x = cx * rect_w;
+                size_t pix_y = cy * rect_h;
+
+                framebuffer[pix_x + pix_y * w] = pack_color(160, 160, 160);  // this draws the visibility cone
+
+                if (map[int(cx) + int(cy) * map_w] != ' ') {
+                    int icolor = map[int(cx) + int(cy) * map_w] - '0';
+                    assert(icolor < ncolors);
+
+                    int col_height = h / t;
+                    draw_rectangle(framebuffer, w, h, w / 2 + i, h / 2 - col_height / 2, 1, col_height,
+                                   colors[icolor]);
+                    break;
+
+                }
+            }
+        }
+
+        save_ppm_image(ss.str(), framebuffer, w, h);
+
     }
 
 
-    draw_rectangle(framebuffer, w, h, player_x * rect_w, player_y * rect_h, 5, 5, pack_color(255, 0, 0));
+//    draw_rectangle(framebuffer, w, h, player_x * rect_w, player_y * rect_h, 5, 5, pack_color(255, 0, 0));
 
-    save_ppm_image("./out.ppm", framebuffer, w, h);
 
     return 0;
 }
