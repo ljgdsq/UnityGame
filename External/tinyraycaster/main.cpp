@@ -28,6 +28,22 @@ void unpack_color(const uint32_t &color, uint8_t &r, uint8_t &g, uint8_t &b, uin
     r = (color >> 0) & 255;
 }
 
+std::vector<uint32_t> texture_column(const std::vector<uint32_t> &img,const int texsize,const int ntextures,
+                                     const int texid,const int texcoord,const int col_height){
+    const int img_w=texsize*ntextures;
+    const int img_h=texsize;
+    assert(img.size()==img_w*img_h&& texcoord<texsize&&texid<ntextures);
+
+    std::vector<uint32_t > column(col_height);
+
+    for (int y = 0; y < col_height; ++y) {
+        int pix_x=texid*texsize+texcoord;
+        int pix_y=y*texsize/col_height;
+        column[y]=img[pix_x+pix_y*img_w];
+    }
+    return column;
+}
+
 bool load_texture(const std::string filename, std::vector<uint32_t> &texture, int &text_size, int &text_cnt) {
 
     int nchannels = -1, w, h;
@@ -122,15 +138,6 @@ int main() {
 
     const float fov = M_PI / 3;
 
-    const int ncolors = 10;
-    std::vector<uint32_t> colors(ncolors);
-    for (int i = 0; i < ncolors; ++i) {
-        colors[i] = pack_color(rand() % 255, rand() % 255, rand() % 255);
-    }
-
-
-
-
 
     for (int frame = 0; frame < frame_count; ++frame) {
         std::cout<<"begin "<<frame<<std::endl;
@@ -145,9 +152,9 @@ int main() {
                 if (map[i + j * map_w] == ' ')continue;
                 int rect_x = i * rect_w;
                 int rect_y = j * rect_h;
-                int icolor = map[i + j * map_w] - '0';
-                assert(icolor < ncolors);
-                draw_rectangle(framebuffer, w, h, rect_x, rect_y, rect_w, rect_h, colors[icolor]);
+                int texid = map[i + j * map_w] - '0';
+                assert(texid<walltext_cnt);
+                draw_rectangle(framebuffer, w, h, rect_x, rect_y, rect_w, rect_h, walltext[texid*walltext_size]); // the color is taken from the upper left pixel of the texture
             }
         }
 
@@ -157,33 +164,36 @@ int main() {
                 float cx = player_x + t * cos(angle);
                 float cy = player_y + t * sin(angle);
 
-                size_t pix_x = cx * rect_w;
-                size_t pix_y = cy * rect_h;
+                int pix_x = cx * rect_w;
+                int pix_y = cy * rect_h;
 
                 framebuffer[pix_x + pix_y * w] = pack_color(160, 160, 160);  // this draws the visibility cone
 
                 if (map[int(cx) + int(cy) * map_w] != ' ') {
-                    int icolor = map[int(cx) + int(cy) * map_w] - '0';
-                    assert(icolor < ncolors);
+                    int texid = map[int(cx) + int(cy) * map_w] - '0';
+                    assert(texid < walltext_cnt);
 
                     int col_height = h / (t* cos(angle-player_a));
-                    draw_rectangle(framebuffer, w, h, w / 2 + i, h / 2 - col_height / 2, 1, col_height,
-                                   colors[icolor]);
-                    break;
 
+                    float hitx=cx - floor(cx+0.5);
+                    float hity = cy - floor(cy+.5); // they vary between -0.5 and +0.5, and one of them is supposed to be very close to 0
+                    int x_texcoord=hitx*walltext_size;
+                    if (std::abs(hity)>std::abs(hitx)){
+                        x_texcoord = hity*walltext_size;
+                    }
+                    if (x_texcoord<0) x_texcoord += walltext_size;
+                    assert(x_texcoord>=0 && x_texcoord<(int)walltext_size);
+                    std::vector<uint32_t> column = texture_column(walltext, walltext_size, walltext_cnt, texid, x_texcoord, col_height);
+                    pix_x = w/2+i;
+                    for (size_t j=0; j<col_height; j++) {
+                        pix_y = j + h/2-col_height/2;
+                        if (pix_y<0 || pix_y>=(int)h) continue;
+                        framebuffer[pix_x + pix_y*w] = column[j];
+                    }
+                    break;
                 }
             }
         }
-
-        const int texid=4;
-        for (int i = 0; i < walltext_size; ++i) {
-            for (int j = 0; j < walltext_size; ++j) {
-                framebuffer[i+j*w] = walltext[i + texid*walltext_size + j*walltext_size*walltext_cnt];
-            }
-        }
-
-
-
         save_ppm_image(ss.str(), framebuffer, w, h);
 
     }
