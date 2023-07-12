@@ -8,6 +8,10 @@
 struct Sprite{
     float x,y;
     size_t tex_id;
+    float player_dist;
+    bool operator <(const Sprite&other){
+        return player_dist > other.player_dist;
+    }
 };
 
 #endif //SPRITE_H
