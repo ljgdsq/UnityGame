@@ -1,5 +1,4 @@
 #include <sstream>
-#include <iomanip>
 #include <cmath>
 #include <iostream>
 #include <vector>
@@ -12,6 +11,7 @@
 #include "framebuffer.h"
 #include "textures.h"
 #include "sprite.h"
+
 
 #define M_PI 3.1415926
 int wall_x_texcoord(const float x, const float y, Texture &tex_walls) {
@@ -114,7 +114,7 @@ void render(FrameBuffer &fb, Map &map, Player &player, std::vector<Sprite> &spri
 
 }
 
-int main() {
+int main0() {
 
     FrameBuffer fb{1024, 512, std::vector<uint32_t>(1024*512, pack_color(255, 255, 255))};
     Player player{3.456, 2.345, 1.523, M_PI/3.};
