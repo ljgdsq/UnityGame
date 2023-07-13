@@ -144,6 +144,41 @@ void triangle4(Vec2i t0, Vec2i t1, Vec2i t2, TGAImage &image, TGAColor color) {
         }
     }
 }
+
+Vec3f barycentric(Vec2i *pts, Vec2i P) {
+    Vec3f u = Vec3f(pts[2].x-pts[0].x, pts[1].x-pts[0].x,
+                    pts[0].x-P.x)^Vec3f(pts[2].y-pts[0].y,
+                                          pts[1].y-pts[0].y, pts[0].y-P.y);
+    /* `pts` and `P` has integer value as coordinates
+       so `abs(u[2])` < 1 means `u[2]` is 0, that means
+       triangle is degenerate, in this case return something with negative coordinates */
+    if (std::abs(u.z)<1) return Vec3f(-1,1,1);
+    return Vec3f(1.f-(u.x+u.y)/u.z, u.y/u.z, u.x/u.z);
+}
+
+void triangle(Vec2i*pts,TGAImage&image,TGAColor color) {
+    Vec2i bboxmin(image.get_width() - 1, image.get_height() - 1);
+    Vec2i bboxmax(0, 0);
+
+    Vec2i clamp(image.get_width() - 1, image.get_height() - 1);
+
+    for (int i = 0; i < 3; ++i) {
+        bboxmin.x = std::max(0, std::min(bboxmin.x, pts[i].x));
+        bboxmin.y = std::max(0, std::min(bboxmin.y, pts[i].y));
+
+        bboxmax.x = std::min(clamp.x, std::max(bboxmax.x, pts[i].x));
+        bboxmax.y = std::min(clamp.y, std::max(bboxmax.y, pts[i].y));
+    }
+
+    Vec2i P;
+    for (P.x = bboxmin.x; P.x <= bboxmax.x; P.x++)
+        for (P.y = bboxmin.y; P.y <= bboxmax.y; P.y++) {
+            Vec3f bc_screen=barycentric(pts,P);
+            if (bc_screen.x<0 || bc_screen.y<0 || bc_screen.z<0) continue;
+            image.set(P.x, P.y, color);
+        }
+}
+
 int main() {
 
     TGAImage image(200,200,TGAImage::RGB);
@@ -152,15 +187,17 @@ int main() {
     Vec2i t1[3] = {Vec2i(180, 50),  Vec2i(150, 1),   Vec2i(70, 180)};
     Vec2i t2[3] = {Vec2i(180, 150), Vec2i(120, 150), Vec2i(130, 180)};
 
-    triangle3(t0[0], t0[1], t0[2], image, red);
-    triangle3(t1[0], t1[1], t1[2], image, white);
-    triangle3(t2[0], t2[1], t2[2], image, green);
+//    triangle(t0[0], t0[1], t0[2], image, red);
+//    triangle(t1[0], t1[1], t1[2], image, white);
+//    triangle(t2[0], t2[1], t2[2], image, green);
+
+//    triangle(t0, image, green);
 
 
+    Vec2i pts[3] = {Vec2i(10,10), Vec2i(100, 30), Vec2i(190, 160)};
+    triangle(pts, image, TGAColor(255, 0, 0,255));
 
     image.flip_vertically();
     image.write_tga_file("output.tga");
-
-
     return 0;
 }
