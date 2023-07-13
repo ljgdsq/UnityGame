@@ -201,16 +201,19 @@ int main() {
 #define STEP1_MODEL
 
 #ifdef STEP1_MODEL
+    const int width=1024;
+    const int height=1024;
     TGAImage render(1024, 1024, TGAImage::RGB);
     Model model("../obj/african_head.obj");
     int size=1024;
-    for (int i = 0; i < model.nfaces(); ++i) {
-        std::vector<int> faces=model.face(i);
-        for (int j = 0; j < 3; ++j) {
-            Vec3f v0=model.vert(faces[j]);
-            Vec3f v1 = model.vert(faces[(j+1)%3]);
-            line((v0.x+1) * size/2, (v0.y+1)*size/2, (v1.x+1)*size/2, (v1.y+1)*size/2, render, white);
+    for (int i=0; i<model.nfaces(); i++) {
+        std::vector<int> face = model.face(i);
+        Vec2i screen_coords[3];
+        for (int j=0; j<3; j++) {
+            Vec3f world_coords = model.vert(face[j]);
+            screen_coords[j] = Vec2i((world_coords.x+1.)*width/2., (world_coords.y+1.)*height/2.);
         }
+        triangle(screen_coords, render, TGAColor(rand()%255, rand()%255, rand()%255, 255));
     }
 
     render.flip_vertically();
