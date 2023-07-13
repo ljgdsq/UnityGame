@@ -58,27 +58,103 @@ void line(Vec2i p0, Vec2i p1, TGAImage &image, TGAColor color) {
     }
 }
 
-void triangle(Vec2i t0, Vec2i t1, Vec2i t2, TGAImage &image, TGAColor color) {
+void triangle1(Vec2i t0, Vec2i t1, Vec2i t2, TGAImage &image, TGAColor color) {
     // sort the vertices, t0, t1, t2 lower−to−upper (bubblesort yay!)
     if (t0.y>t1.y) std::swap(t0, t1);
     if (t0.y>t2.y) std::swap(t0, t2);
     if (t1.y>t2.y) std::swap(t1, t2);
-    line(t0, t1, image, green);
-    line(t1, t2, image, green);
-    line(t2, t0, image, red);
+
+    int total_height=t2.y-t0.y;
+    for (int y = t0.y; y <t1.y ; ++y) {
+        int segment_height=t1.y-t0.y+1;
+//        float alpha=(y*1.0-t0.y) / total_height;
+//        float beta=(y*1.0-t0.y)/segment_height;
+
+        float alpha = (float)(y-t0.y)/total_height;
+        float beta  = (float)(y-t0.y)/segment_height; // be careful with divisions by zero
+        Vec2i A = t0 + (t2-t0)*alpha;
+        Vec2i B = t0 + (t1-t0)*beta;
+        image.set(A.x, y, red);
+        image.set(B.x, y, green);
+    }
+}
+void triangle2(Vec2i t0, Vec2i t1, Vec2i t2, TGAImage &image, TGAColor color) {
+    // sort the vertices, t0, t1, t2 lower−to−upper (bubblesort yay!)
+    if (t0.y>t1.y) std::swap(t0, t1);
+    if (t0.y>t2.y) std::swap(t0, t2);
+    if (t1.y>t2.y) std::swap(t1, t2);
+    int total_height = t2.y-t0.y;
+    for (int y=t0.y; y<=t1.y; y++) {
+        int segment_height = t1.y-t0.y+1;
+        float alpha = (float)(y-t0.y)/total_height;
+        float beta  = (float)(y-t0.y)/segment_height; // be careful with divisions by zero
+        Vec2i A = t0 + (t2-t0)*alpha;
+        Vec2i B = t0 + (t1-t0)*beta;
+        image.set(A.x, y, red);
+        image.set(B.x, y, green);
+    }
+}
+void triangle3(Vec2i t0, Vec2i t1, Vec2i t2, TGAImage &image, TGAColor color) {
+    // sort the vertices, t0, t1, t2 lower−to−upper (bubblesort yay!)
+    if (t0.y>t1.y) std::swap(t0, t1);
+    if (t0.y>t2.y) std::swap(t0, t2);
+    if (t1.y>t2.y) std::swap(t1, t2);
+    int total_height = t2.y-t0.y;
+    for (int y=t0.y; y<=t1.y; y++) {
+        int segment_height = t1.y-t0.y+1;
+        float alpha = (float)(y-t0.y)/total_height;
+        float beta  = (float)(y-t0.y)/segment_height; // be careful with divisions by zero
+        Vec2i A = t0 + (t2-t0)*alpha;
+        Vec2i B = t0 + (t1-t0)*beta;
+        if (A.x>B.x) std::swap(A, B);
+        for (int j=A.x; j<=B.x; j++) {
+            image.set(j, y, color); // attention, due to int casts t0.y+i != A.y
+        }
+    }
+    for (int y=t1.y; y<=t2.y; y++) {
+        int segment_height =  t2.y-t1.y+1;
+        float alpha = (float)(y-t0.y)/total_height;
+        float beta  = (float)(y-t1.y)/segment_height; // be careful with divisions by zero
+        Vec2i A = t0 + (t2-t0)*alpha;
+        Vec2i B = t1 + (t2-t1)*beta;
+        if (A.x>B.x) std::swap(A, B);
+        for (int j=A.x; j<=B.x; j++) {
+            image.set(j, y, color); // attention, due to int casts t0.y+i != A.y
+        }
+    }
 }
 
+void triangle4(Vec2i t0, Vec2i t1, Vec2i t2, TGAImage &image, TGAColor color) {
+    if (t0.y==t1.y && t0.y==t2.y) return; // I dont care about degenerate triangles
+    // sort the vertices, t0, t1, t2 lower−to−upper (bubblesort yay!)
+    if (t0.y>t1.y) std::swap(t0, t1);
+    if (t0.y>t2.y) std::swap(t0, t2);
+    if (t1.y>t2.y) std::swap(t1, t2);
+    int total_height = t2.y-t0.y;
+    for (int i=0; i<total_height; i++) {
+        bool second_half = i>t1.y-t0.y || t1.y==t0.y;
+        int segment_height = second_half ? t2.y-t1.y : t1.y-t0.y;
+        float alpha = (float)i/total_height;
+        float beta  = (float)(i-(second_half ? t1.y-t0.y : 0))/segment_height; // be careful: with above conditions no division by zero here
+        Vec2i A =               t0 + (t2-t0)*alpha;
+        Vec2i B = second_half ? t1 + (t2-t1)*beta : t0 + (t1-t0)*beta;
+        if (A.x>B.x) std::swap(A, B);
+        for (int j=A.x; j<=B.x; j++) {
+            image.set(j, t0.y+i, color); // attention, due to int casts t0.y+i != A.y
+        }
+    }
+}
 int main() {
 
-    TGAImage image(400,400,TGAImage::RGB);
+    TGAImage image(200,200,TGAImage::RGB);
 
     Vec2i t0[3] = {Vec2i(10, 10),   Vec2i(50, 160),  Vec2i(70, 80)};
     Vec2i t1[3] = {Vec2i(180, 50),  Vec2i(150, 1),   Vec2i(70, 180)};
     Vec2i t2[3] = {Vec2i(180, 150), Vec2i(120, 150), Vec2i(130, 180)};
 
-    triangle(t0[0], t0[1], t0[2], image, red);
-    triangle(t1[0], t1[1], t1[2], image, white);
-    triangle(t2[0], t2[1], t2[2], image, green);
+    triangle3(t0[0], t0[1], t0[2], image, red);
+    triangle3(t1[0], t1[1], t1[2], image, white);
+    triangle3(t2[0], t2[1], t2[2], image, green);
 
 
 
