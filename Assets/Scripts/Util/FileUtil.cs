@@ -1,9 +1,9 @@
 using System;
 using System.IO;
 
-namespace Util
+namespace GFUtil
 {
-    public static class FileUtil
+    public  class FileUtil
     {
       public  static void CopyDirectory(string sourceDir, string destinationDir, bool recursive=true)
         {

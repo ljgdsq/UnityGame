@@ -5,7 +5,7 @@ using Newtonsoft.Json;
 using SAssetbundle;
 using UnityEditor;
 using UnityEngine;
-using FileUtil = Util.FileUtil;
+using FileUtil = GFUtil.FileUtil;
 
 public partial class AssetBundleBuildScript
 {
