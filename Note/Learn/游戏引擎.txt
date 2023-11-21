@@ -1,1 +1,2 @@
-https://www.thisisgame.com.cn/      opengl 从零开始手敲次世代游戏引擎
+https://www.thisisgame.com.cn/      opengl
+https://zhuanlan.zhihu.com/p/28809434     文礼 
