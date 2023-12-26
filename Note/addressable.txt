@@ -3,6 +3,7 @@ localgroup  remotegroup 分别标记为static(prevent update) dynamic  的情况
 
 结论:本地资源优先选择static ，remote 资源static dynamic均可。
 本地资源标记为static时，如果资源发送了变更则发生变更的资源会新产生一个remote group打包到服务器目录
-本地资源标记为dynamic时，，如果资源发送了变更则本地bundle会重新打一次？这个时候如何热更新？重新出包后包里包含新bundle
+本地资源标记为dynamic时，，如果资源发送了变更则本地bundle会重新打一次？这个时候如何热更新？重新出包后包里包含新bundle？网上说的是
+这种方式是禁止的！不推荐使用
 
 远程资源标记为static与dynamic的区别主要是 如果static资源变更会加入一个新的group中，bundle包如果很大可以为static。
