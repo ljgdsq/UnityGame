@@ -1,0 +1,7 @@
+## write a log component  base on spdlog
+1. both write to console and file
+2. use daily file
+3. flush every 3s
+4. flush immediatily on error
+5. resister a callback when log cause error
+6 be easy to use
