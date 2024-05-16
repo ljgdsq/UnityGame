@@ -137,5 +137,10 @@ namespace SAssetbundle
                 File.Delete(path);
             }
         }
+
+        public bool HasScene(string name)
+        {
+            return true;
+        }
     }
 }
