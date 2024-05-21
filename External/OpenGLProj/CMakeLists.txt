@@ -11,7 +11,7 @@ set(GLFW_BUILD_DOCS OFF CACHE BOOL "Build the GLFW documentation")
 set(GLFW_INSTALL OFF CACHE BOOL "Generate installation target")
 
 # 添加 GLAD
-add_library(glad external/glad/src/gl.c)
+add_library(glad external/glad/src/gl.c )
 target_include_directories(glad PUBLIC external/glad/include)
 # 将 glad 放置到 glad 文件夹下
 set_target_properties(glad PROPERTIES FOLDER "glad")
@@ -19,15 +19,16 @@ set_target_properties(glad PROPERTIES FOLDER "glad")
 find_package(OpenGL REQUIRED)
 
 # 添加源文件
-file(GLOB SOURCES "src/*.cpp")
+file(GLOB SOURCES "src/*.cpp" src/lua/*.cpp src/core/*.cpp src/utils/*.cpp)
 
-add_executable(OpenGLProj ${SOURCES})
+add_executable(OpenGLProj ${SOURCES} )
 
 add_subdirectory(external/glfw)
 
 add_subdirectory(external/lua)
+add_subdirectory(external/glm)
 
-target_link_libraries(OpenGLProj PUBLIC glfw glad liblua ${OPENGL_LIBRARIES})
+target_link_libraries(OpenGLProj PUBLIC glfw glad liblua glm ${OPENGL_LIBRARIES})
 
 
 
