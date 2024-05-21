@@ -1,0 +1,11 @@
+//
+// Created by zhengshulin on 2024/5/20.
+//
+
+#ifndef __RES__PATH_H__
+#define __RES__PATH_H__
+#define RES_PATH "@PROJECT_BINARY_DIR@/res"
+#define LUA_SCRIPT_PATH "@PROJECT_BINARY_DIR@/res/lua"
+#endif
+
+
