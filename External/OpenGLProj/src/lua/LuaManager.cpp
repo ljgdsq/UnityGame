@@ -10,6 +10,7 @@
 #include <stdarg.h>
 #include <cassert>
 #include "../platform/PlatformMacro.h"
+#include "bind/bind_all.h"
 
 
 static const std::string GAME_INIT ="game_init";
@@ -98,6 +99,8 @@ static int framework_c(lua_State *L){
 void LuaManager::InitFramework(){
     luaL_requiref(L, "framework.c", framework_c, 0);
     lua_settop(L,0);
+
+    game_bind_all(L);
 }
 
 static void GameStart(){
@@ -114,13 +117,29 @@ void LuaManager::Update(float time) {
     lua_settop(L, update_func);
 }
 
+void InitDebugger(lua_State*L){
+#if LUA_DEBUG
+    auto script=R"(
+print("InitDebugger")
+package.cpath = package.cpath .. ';D:/JetBrains/apps/IDEA-U/ch-0/233.13135.103.plugins/EmmyLua/debugger/emmy/windows/x64/?.dll'
+local dbg = require('emmy_core')
+dbg.tcpConnect('localhost', 9966)
+    )";
+    int err=luaL_dostring(L,script);
+    if (err) {
+        const char *msg = lua_tostring(L,-1);
+        fault("%s", msg);
+    }
+#endif
+}
+
 void LuaManager::InitLua(char*path){
     if (nullptr== nullptr){
         L = luaL_newstate();
         luaL_openlibs(L);
         luaL_dostring(L,"print('lua init finish!')  print(\"Lua version: \" .. _VERSION)");
     }
-
+    InitDebugger(L);
     InitFramework();
     std::filesystem::path exePath= std::filesystem::path(path);
     std::filesystem::path dir=exePath.parent_path();
@@ -149,9 +168,7 @@ void LuaManager::InitLua(char*path){
         fault("%s", msg);
     }
 
-    StackDump();
-
-
+//    StackDump();
     GameStart();
 }
 

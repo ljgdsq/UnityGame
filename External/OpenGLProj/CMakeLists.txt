@@ -21,25 +21,37 @@ find_package(OpenGL REQUIRED)
 # 添加源文件
 file(GLOB SOURCES "src/*.cpp" src/lua/*.cpp src/core/*.cpp src/utils/*.cpp)
 
-add_executable(OpenGLProj ${SOURCES} )
+add_executable(OpenGLProj ${SOURCES} src/ui/Sprite.h src/ui/Sprite.cpp src/lua/bind/bind_all.h src/lua/bind/bind_all.cpp)
 
 add_subdirectory(external/glfw)
+
+
+set(LUA_BUILD_AS_DLL ON CACHE BOOL "Build Lua library as Dll")
 
 add_subdirectory(external/lua)
 add_subdirectory(external/glm)
 
-target_link_libraries(OpenGLProj PUBLIC glfw glad liblua glm ${OPENGL_LIBRARIES})
+target_link_libraries(OpenGLProj PUBLIC glfw glad liblua  glm ${OPENGL_LIBRARIES})
 
 
+if (LUA_BUILD_AS_DLL)
+
+    add_custom_command(TARGET OpenGLProj POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E copy
+            $<TARGET_FILE:liblua>
+            $<TARGET_FILE_DIR:OpenGLProj>)
+endif ()
 
 # 设置包含目录
 target_include_directories(OpenGLProj PUBLIC
         "${PROJECT_BINARY_DIR}"
+        "${PROJECT_BINARY_DIR}/src"
         "${PROJECT_SOURCE_DIR}/include"
         "external/glad/include"
         "external/glfw/include"
         "external/lua/src"
         )
+
 # 生成包含资源路径的头文件
 configure_file(res_path.h.in ${PROJECT_BINARY_DIR}/res_path.h @ONLY)
 

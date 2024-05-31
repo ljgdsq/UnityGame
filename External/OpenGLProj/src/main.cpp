@@ -11,6 +11,7 @@
 #include <filesystem>
 #include "res_path.h"
 #include "core/sprite_renderer.h"
+#include "ui/Sprite.h"
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow *window);
@@ -67,31 +68,31 @@ int main(int argc,char**argv)
     ResourceManager::GetShader("sprite").Use().SetInteger("image", 0);
     ResourceManager::GetShader("sprite").SetMatrix4("projection", projection);
     // 设置专用于渲染的控制
-    SpriteRenderer  *Renderer = new SpriteRenderer(ResourceManager::GetShader("sprite"));
+   SpriteRenderer  *Renderer = new SpriteRenderer(ResourceManager::GetShader("sprite"));
     // 加载纹理
 
     auto spritePath=std::filesystem::path(RES_PATH) / "textures" /"f1.png";
 //    auto spritePath=std::filesystem::path(RES_PATH) / "textures" /"wall.jpg";
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    ResourceManager::LoadTexture(spritePath.string().c_str(),  "face");
+    ResourceManager::LoadTexture(spritePath.string().c_str(),  "f1");
     // render loop
     // -----------
+
     while (!glfwWindowShouldClose(window))
     {
         // input
         // -----
         processInput(window);
 
-        LuaManager::GetInstance()->Update(0);
-
+//
         // render
         // ------
-        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
+        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+        LuaManager::GetInstance()->Update(0);
 
-        Renderer->DrawSprite(ResourceManager::GetTexture("face"),
-                             glm::vec2(200, 200), glm::vec2(300, 400), 45.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+
 
 
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
@@ -99,9 +100,6 @@ int main(int argc,char**argv)
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
-
-    // optional: de-allocate all resources once they've outlived their purpose:
-    // ------------------------------------------------------------------------
 
 
     // glfw: terminate, clearing all previously allocated GLFW resources.

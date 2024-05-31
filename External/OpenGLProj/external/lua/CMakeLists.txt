@@ -111,9 +111,23 @@ else ( )
   list ( APPEND SRC_LIB src/loadlib.c )
 endif ( )
 
+if(LUA_BUILD_AS_DLL)
+
+else()
+
+endif()
+
 ## BUILD
 # Create lua library
-add_library ( liblua ${SRC_CORE} ${SRC_LIB} ${LUA_DLL_RC} )
+
+
+if (LUA_BUILD_AS_DLL)
+  add_library(liblua SHARED ${SRC_CORE} ${SRC_LIB} ${LUA_DLL_RC})
+  set_target_properties(liblua PROPERTIES COMPILE_DEFINITIONS LUA_BUILD_AS_DLL)
+else ()
+  add_library(liblua STATIC ${SRC_CORE} ${SRC_LIB} ${LUA_DLL_RC})
+endif ()
+
 target_link_libraries ( liblua ${LIBS} )
 set_target_properties ( liblua PROPERTIES OUTPUT_NAME lua CLEAN_DIRECT_OUTPUT 1 )
 if ( LUA_BUILD_AS_DLL )

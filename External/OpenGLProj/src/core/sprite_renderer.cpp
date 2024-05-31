@@ -32,10 +32,10 @@ void SpriteRenderer::DrawSprite(Texture2D &texture, glm::vec2 position, glm::vec
     this->shader.SetMatrix4("model", model);
 
     // Render textured quad
-   this->shader.SetVector3f("spriteColor", glm::vec3(1,1,1));
-
-    glActiveTexture(GL_TEXTURE0);
+    this->shader.SetVector3f("spriteColor", color);
+//    glActiveTexture(GL_TEXTURE0);
     texture.Bind();
+//    this->shader.SetInteger("image",0);
 
     glBindVertexArray(this->quadVAO);
     glDrawArrays(GL_TRIANGLES, 0, 6);

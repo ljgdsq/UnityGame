@@ -4,17 +4,26 @@
 
 #include "resource_manager.h"
 #include "glad/gl.h"
+#include "res_path.h"
 #include <iostream>
 #include <sstream>
 #include <fstream>
-
+#include <filesystem>
 #include <stb_image.h>
 
 // Instantiate static variables
 std::map<std::string, Texture2D>    ResourceManager::Textures;
 std::map<std::string, Shader>       ResourceManager::Shaders;
 
-
+std::string normalizePath(const std::filesystem::path& path) {
+    std::string normalizedPath = path.string();
+#ifdef _WIN32
+    std::replace(normalizedPath.begin(), normalizedPath.end(), '/', '\\');
+#else
+    std::replace(normalizedPath.begin(), normalizedPath.end(), '\\', '/');
+#endif
+    return normalizedPath;
+}
 Shader ResourceManager::LoadShader(const char *vShaderFile, const char *fShaderFile, const char *gShaderFile, std::string name)
 {
     Shaders[name] = loadShaderFromFile(vShaderFile, fShaderFile, gShaderFile);
@@ -28,7 +37,9 @@ Shader ResourceManager::GetShader(std::string name)
 
 Texture2D ResourceManager::LoadTexture(const char *file, std::string name)
 {
-    Textures[name] = loadTextureFromFile(file);
+    auto spritePath=std::filesystem::path(RES_PATH) / "textures" / std::string(name).append(".png");
+    std::string normalizedSpritePath = normalizePath(spritePath);
+    Textures[name] = loadTextureFromFile(normalizedSpritePath.c_str());
     return Textures[name];
 }
 
@@ -99,15 +110,6 @@ Texture2D ResourceManager::loadTextureFromFile(const char *file)
     // Load image
     int width, height,ch;
     unsigned char* image = stbi_load(file, &width, &height, &ch,0);
-
-    if (ch==4)
-    {
-        texture.internalFormat = GL_RGBA;
-        texture.imageFormat = GL_RGBA;
-    }else{
-        texture.internalFormat = GL_RGB;
-        texture.imageFormat = GL_RGB;
-    }
 
     // Now generate texture
     texture.Generate(width, height, ch,image);

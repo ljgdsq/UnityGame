@@ -1,7 +1,11 @@
 
-local fw=require("framework.c")
+--package.cpath = package.cpath .. ';C:/Users/zhengshulin/AppData/Roaming/JetBrains/CLion2022.3/plugins/EmmyLua/debugger/emmy/windows/x64/?.dll'
+--local dbg = require('emmy_core')
+--dbg.tcpConnect('localhost', 9966)
 
+local fw=require("framework.c")
 local framework={}
+
 print("lua framework init!")
 
 
