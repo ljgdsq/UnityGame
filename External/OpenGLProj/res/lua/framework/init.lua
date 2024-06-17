@@ -3,6 +3,11 @@
 --local dbg = require('emmy_core')
 --dbg.tcpConnect('localhost', 9966)
 
+package.cpath = package.cpath .. ';D:/JetBrains/apps/IDEA-U/ch-0/233.13135.103.plugins/EmmyLua/debugger/emmy/windows/x64/?.dll'
+local dbg = require('emmy_core')
+dbg.tcpListen('localhost', 9966)
+
+
 local fw=require("framework.c")
 local framework={}
 

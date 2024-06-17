@@ -11,6 +11,8 @@
 class Sprite : Drawable {
 public:
     static Sprite*Create(std::string path);
+    Sprite()=default;
+    bool Init(std::string path);
     void Draw() override;
     void Position(int x,int y);
 private:

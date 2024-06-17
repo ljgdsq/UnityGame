@@ -19,9 +19,9 @@ set_target_properties(glad PROPERTIES FOLDER "glad")
 find_package(OpenGL REQUIRED)
 
 # 添加源文件
-file(GLOB SOURCES "src/*.cpp" src/lua/*.cpp src/core/*.cpp src/utils/*.cpp)
+file(GLOB_RECURSE  SOURCES "src/*.cpp" )
 
-add_executable(OpenGLProj ${SOURCES} src/ui/Sprite.h src/ui/Sprite.cpp src/lua/bind/bind_all.h src/lua/bind/bind_all.cpp)
+add_executable(OpenGLProj ${SOURCES} test_light/main.cpp src/core/Application.h src/core/Renderer.h)
 
 add_subdirectory(external/glfw)
 
@@ -55,9 +55,30 @@ target_include_directories(OpenGLProj PUBLIC
 # 生成包含资源路径的头文件
 configure_file(res_path.h.in ${PROJECT_BINARY_DIR}/res_path.h @ONLY)
 
-# 复制资源文件到构建目录
-add_custom_command(TARGET OpenGLProj POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy_directory
-        ${CMAKE_SOURCE_DIR}/res $<TARGET_FILE_DIR:OpenGLProj>/res
-        )
+## 复制资源文件到构建目录
+#add_custom_command(TARGET OpenGLProj POST_BUILD
+#        COMMAND ${CMAKE_COMMAND} -E copy_directory
+#        ${CMAKE_SOURCE_DIR}/res $<TARGET_FILE_DIR:OpenGLProj>/res
+#        )
 
+# 定义一个全局变量，包含所有资源文件
+file(GLOB_RECURSE RES_FILES "${CMAKE_SOURCE_DIR}/res/*")
+
+# 创建一个自定义命令来复制资源文件
+add_custom_command(
+        OUTPUT ${CMAKE_BINARY_DIR}/res
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+        ${CMAKE_SOURCE_DIR}/res ${CMAKE_BINARY_DIR}/res
+        DEPENDS ${RES_FILES}  # 使该命令依赖于所有资源文件
+        COMMENT "Copying resources..."
+)
+
+# 创建一个自定义目标，执行资源复制命令
+add_custom_target(copy_res ALL DEPENDS ${CMAKE_BINARY_DIR}/res)
+
+# 使 OpenGLProj 依赖于 copy_res 目标
+# 这样在构建 OpenGLProj 之前，资源文件会被复制
+add_dependencies(OpenGLProj copy_res)
+
+add_subdirectory(test_light)
+add_subdirectory(test)

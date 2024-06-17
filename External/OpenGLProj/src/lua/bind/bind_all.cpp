@@ -54,8 +54,11 @@ return 1;
 }
 
 
+
+
+
 void game_bind_all(lua_State *L) {
     luaL_requiref(L, "game.sprite", game_sprite, 0);
-
+//    luaL_requiref(L, "test.obj", test_obj, 0);
     lua_settop(L,0);
 }

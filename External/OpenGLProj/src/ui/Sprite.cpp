@@ -14,14 +14,21 @@ void Sprite::Draw() {
     renderer->DrawSprite(texture2D,position,size,rotate,color);
 }
 
+bool Sprite::Init(std::string path) {
+
+    this->InitWithTexture(path);
+    this->position=glm::vec2(200,100);
+    this->size=glm::vec2(this->texture2D.width,this->texture2D.height);
+    this->rotate=0;
+    this->color=glm::vec3(1,1,1);
+    this->renderer= new SpriteRenderer(ResourceManager::GetShader("sprite"));
+    return false;
+}
+
+
 Sprite *Sprite::Create(std::string path) {
     auto sp=new Sprite();
-    sp->InitWithTexture(path);
-    sp->position=glm::vec2(200,100);
-    sp->size=glm::vec2(sp->texture2D.width,sp->texture2D.height);
-    sp->rotate=0;
-    sp->color=glm::vec3(1,1,1);
-    sp->renderer= new SpriteRenderer(ResourceManager::GetShader("sprite"));
+    sp->Init(path);
     return sp;
 }
 
@@ -30,3 +37,4 @@ void Sprite::Position(int x, int y) {
     this->position.y=y;
 
 }
+

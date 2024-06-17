@@ -2,6 +2,7 @@
 // Created by zhengshulin on 2024/5/21.
 //
 
+
 #include "texture.h"
 #include "glad/glad.h"
 
@@ -37,3 +38,4 @@ void Texture2D::Bind() const
 {
     glBindTexture(GL_TEXTURE_2D, this->id);
 }
+

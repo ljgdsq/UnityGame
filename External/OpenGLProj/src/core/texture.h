@@ -19,6 +19,7 @@ public:
     int filterMin;
     int filterMax;
     Texture2D();
+    void load(const char*file);
     void Generate(int width,int height,int channel,unsigned char*data);
     void Bind()const;
 };

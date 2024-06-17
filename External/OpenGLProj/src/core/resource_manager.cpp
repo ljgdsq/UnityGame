@@ -26,7 +26,17 @@ std::string normalizePath(const std::filesystem::path& path) {
 }
 Shader ResourceManager::LoadShader(const char *vShaderFile, const char *fShaderFile, const char *gShaderFile, std::string name)
 {
-    Shaders[name] = loadShaderFromFile(vShaderFile, fShaderFile, gShaderFile);
+    auto vPath=std::filesystem::path(RES_PATH) / "shader" / std::string(vShaderFile);
+    auto fPath=std::filesystem::path(RES_PATH) / "shader" / std::string(fShaderFile);
+    std::filesystem::path gPath;
+    if (gShaderFile!= nullptr){
+        gPath=std::filesystem::path(RES_PATH) / "shader" / std::string(gShaderFile);
+    }
+    std::string normalizedVPath = normalizePath(vPath);
+    std::string normalizedFPath = normalizePath(fPath);
+    std::string normalizedGPath = normalizePath(gPath);
+
+    Shaders[name] = loadShaderFromFile(normalizedVPath.c_str(), normalizedFPath.c_str(), normalizedGPath.c_str());
     return Shaders[name];
 }
 
@@ -80,13 +90,15 @@ Shader ResourceManager::loadShaderFromFile(const char *vShaderFile, const char *
         vertexCode = vShaderStream.str();
         fragmentCode = fShaderStream.str();
         // If geometry shader path is present, also load a geometry shader
-        if (gShaderFile != nullptr)
+        if (gShaderFile != nullptr && strlen(gShaderFile)>0)
         {
             std::ifstream geometryShaderFile(gShaderFile);
             std::stringstream gShaderStream;
             gShaderStream << geometryShaderFile.rdbuf();
             geometryShaderFile.close();
             geometryCode = gShaderStream.str();
+        }else{
+            gShaderFile= nullptr;
         }
     }
     catch (std::exception e)

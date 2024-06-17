@@ -1,6 +1,6 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
-#define STB_IMAGE_IMPLEMENTATION
+//#define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
 
 #include <iostream>
@@ -56,7 +56,6 @@ int main(int argc,char**argv)
     }
 
 
-    LuaManager::GetInstance()->InitLua(argv[0]);
 
     auto vshaderPath=std::filesystem::path(RES_PATH) / "shader" /"sprite.vs";
     auto fshaderPath=std::filesystem::path(RES_PATH) / "shader" /"sprite.fs";
@@ -78,6 +77,7 @@ int main(int argc,char**argv)
     ResourceManager::LoadTexture(spritePath.string().c_str(),  "f1");
     // render loop
     // -----------
+    LuaManager::GetInstance()->InitLua(argv[0]);
 
     while (!glfwWindowShouldClose(window))
     {

@@ -132,3 +132,9 @@ void Shader::checkCompileErrors(int object, std::string type)
         }
     }
 }
+#include "resource_manager.h"
+Shader::Shader(const char *vPath, const char *fPath) {
+    auto name=std::string(vPath)+std::string(fPath);
+    auto s=ResourceManager::LoadShader(vPath, fPath, nullptr, name);
+    this->id=s.id;
+}

@@ -12,6 +12,9 @@
 
 class Shader {
 public:
+
+    Shader(const char*vPath,const char*fPath);
+
     // State
     int id;
     // Constructor
