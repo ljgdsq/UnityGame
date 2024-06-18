@@ -29,7 +29,7 @@ int main() {
     lightCubeVAO.addBufferLayout({0,3,GL_FLOAT,GL_FALSE,6* sizeof(float ),0});
     lightCubeVAO.enableAttribute();
 
-    Shader lightingShader("1.colors.vs", "1.colors.fs");
+    Shader lightingShader("1.colors_material.vs", "1.colors_material.fs");
     Shader lightCubeShader("1.light_cube.vs", "1.light_cube.fs");
 
     glm::vec3 lightPos(1.2f, 1.0f, 2.0f);
@@ -39,6 +39,16 @@ int main() {
     renderer->SetClearMode(ClearMode::COLOR_BIT|ClearMode::DEPTH_BIT);
     renderer->Enable(FuncType::Depth_Test);
     Camera*camera=app->GetCamera();
+
+    lightingShader.Use();
+    lightingShader.SetVector3f("material.ambient",  1.0f, 0.5f, 0.31f);
+    lightingShader.SetVector3f("material.diffuse",  1.0f, 0.5f, 0.31f);
+    lightingShader.SetVector3f("material.specular", 0.5f, 0.5f, 0.5f);
+    lightingShader.SetFloat("material.shininess", 32.0f);
+
+    lightingShader.SetVector3f("light.ambient",  0.2f, 0.2f, 0.2f);
+    lightingShader.SetVector3f("light.diffuse",  0.5f, 0.5f, 0.5f); // 将光照调暗了一些以搭配场景
+    lightingShader.SetVector3f("light.specular", 1.0f, 1.0f, 1.0f);
 
     float rotateSpeed=1.0f*0.01;
     float rotateRadius=10;
@@ -54,8 +64,8 @@ int main() {
         if (angle > 2.0f * M_PI) {
             angle -= 2.0f * M_PI;
         }
-        lightPos.x = rotateRadius * cos(angle);
-        lightPos.z = rotateRadius * sin(angle);
+//        lightPos.x = rotateRadius * cos(angle);
+//        lightPos.z = rotateRadius * sin(angle);
 
         lightingShader.Use();
         lightingShader.SetVector3f("lightPos", lightPos.x, lightPos.y, lightPos.z);
