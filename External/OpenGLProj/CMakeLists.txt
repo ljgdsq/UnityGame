@@ -1,8 +1,15 @@
 cmake_minimum_required(VERSION 3.00)
 project(OpenGLProj)
-
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 set(CMAKE_CXX_STANDARD 17)
+include_directories(${PROJECT_SOURCE_DIR})
+include_directories(${PROJECT_BINARY_DIR})
+include_directories(${PROJECT_SOURCE_DIR}/src)
 include_directories(${PROJECT_SOURCE_DIR}/include)
+include_directories(${PROJECT_SOURCE_DIR}/external/glad/include)
+include_directories(${PROJECT_SOURCE_DIR}/external/glfw/include)
+include_directories(${PROJECT_SOURCE_DIR}/external/lua/src)
+
 
 # 添加 GLFW
 set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "Build the GLFW example programs")
@@ -20,8 +27,11 @@ find_package(OpenGL REQUIRED)
 
 # 添加源文件
 file(GLOB_RECURSE  SOURCES "src/*.cpp" )
+# 排除 src/main.cpp 文件
+list(REMOVE_ITEM SOURCES "${PROJECT_SOURCE_DIR}/src/main.cpp")
 
-add_executable(OpenGLProj ${SOURCES} test_light/main.cpp src/core/Application.h src/core/Renderer.h)
+set(CORE_SRC ${SOURCES})
+add_executable(OpenGLProj ${SOURCES} src/main.cpp)
 
 add_subdirectory(external/glfw)
 
@@ -34,14 +44,22 @@ add_subdirectory(external/glm)
 target_link_libraries(OpenGLProj PUBLIC glfw glad liblua  glm ${OPENGL_LIBRARIES})
 
 
+#if (LUA_BUILD_AS_DLL)
+#    add_custom_command(TARGET OpenGLProj POST_BUILD
+#            COMMAND ${CMAKE_COMMAND} -E copy
+#            $<TARGET_FILE:liblua>
+#            $<TARGET_FILE_DIR:OpenGLProj>)
+#endif ()
+# 创建一个自定义目标来执行拷贝操作
 if (LUA_BUILD_AS_DLL)
-
-    add_custom_command(TARGET OpenGLProj POST_BUILD
+    add_custom_target(copy_liblua ALL
             COMMAND ${CMAKE_COMMAND} -E copy
             $<TARGET_FILE:liblua>
-            $<TARGET_FILE_DIR:OpenGLProj>)
-endif ()
-
+            ${CMAKE_CURRENT_BINARY_DIR}
+            DEPENDS liblua
+            COMMENT "Copying lua.dll to output directory"
+            )
+endif()
 # 设置包含目录
 target_include_directories(OpenGLProj PUBLIC
         "${PROJECT_BINARY_DIR}"
@@ -80,5 +98,6 @@ add_custom_target(copy_res ALL DEPENDS ${CMAKE_BINARY_DIR}/res)
 # 这样在构建 OpenGLProj 之前，资源文件会被复制
 add_dependencies(OpenGLProj copy_res)
 
-add_subdirectory(test_light)
-add_subdirectory(test)
+
+add_subdirectory(examples/light)
+add_subdirectory(examples/light5)

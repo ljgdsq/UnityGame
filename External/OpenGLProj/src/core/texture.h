@@ -21,7 +21,7 @@ public:
     Texture2D();
     void load(const char*file);
     void Generate(int width,int height,int channel,unsigned char*data);
-    void Bind()const;
+    void Bind(int slot=0)const;
 };
 
 

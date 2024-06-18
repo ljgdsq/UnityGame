@@ -34,8 +34,11 @@ void Texture2D::Generate(int width, int height,int channel ,unsigned char *data)
 
 }
 
-void Texture2D::Bind() const
+void Texture2D::Bind(int slot) const
 {
+    if (slot!=0){
+        glActiveTexture(GL_TEXTURE0+slot);
+    }
     glBindTexture(GL_TEXTURE_2D, this->id);
 }
 

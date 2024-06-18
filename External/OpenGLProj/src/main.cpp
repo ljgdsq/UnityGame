@@ -1,7 +1,8 @@
+//#define STB_IMAGE_IMPLEMENTATION
+//#include <stb_image.h>
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
-//#define STB_IMAGE_IMPLEMENTATION
-#include <stb_image.h>
+
 
 #include <iostream>
 #include "lua/LuaManager.h"
@@ -13,12 +14,12 @@
 #include "core/sprite_renderer.h"
 #include "ui/Sprite.h"
 
-void framebuffer_size_callback(GLFWwindow* window, int width, int height);
-void processInput(GLFWwindow *window);
+static void framebuffer_size_callback(GLFWwindow* window, int width, int height);
+static void processInput(GLFWwindow *window);
 
 // settings
-const unsigned int SCR_WIDTH = 800;
-const unsigned int SCR_HEIGHT = 600;
+static const unsigned int SCR_WIDTH = 800;
+static const unsigned int SCR_HEIGHT = 600;
 
 int main(int argc,char**argv)
 {
