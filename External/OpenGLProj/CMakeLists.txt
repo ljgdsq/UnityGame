@@ -99,5 +99,6 @@ add_custom_target(copy_res ALL DEPENDS ${CMAKE_BINARY_DIR}/res)
 add_dependencies(OpenGLProj copy_res)
 
 
-add_subdirectory(examples/light)
-add_subdirectory(examples/light5)
+#add_subdirectory(examples/light)
+#add_subdirectory(examples/light5)
+add_subdirectory(examples/spotlight)
