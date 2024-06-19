@@ -100,9 +100,18 @@ void Application::Init() {
 
 void processInput(GLFWwindow *window)
 {
+
+    //FIXME: camera move dont smooth! there has some bug! maybe glfw event loop or glfwGetKey
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(window, true);
+    static float speedUp=1.0f;
 
+    if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_RIGHT_SHIFT) == GLFW_PRESS)
+        speedUp=4.0f;
+    else
+        speedUp=1.0f;
+
+    deltaTime =deltaTime*speedUp;
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
         _camera.ProcessKeyboard(FORWARD, deltaTime);
     if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
