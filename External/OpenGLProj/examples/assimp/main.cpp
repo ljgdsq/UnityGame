@@ -11,7 +11,7 @@ const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
 int main() {
     auto app=Application::GetInstance();
-    app->Init();
+     ;
 
     VertexArray cubeVAO;
     Buffer VBO(VBO);
@@ -59,6 +59,9 @@ int main() {
     lightingShader.SetFloat("material.shininess", 64.0f);
 
 //    D:\UnityGame\External\OpenGLProj\res\model\nanosuit
+
+
+//    "D:\\UnityGame\\External\\OpenGLProj\\res\\model\\nanosuit\\nanosuit.obj"
     ex::assimp::Model nanosuitModel("D:\\UnityGame\\External\\OpenGLProj\\res\\model\\nanosuit\\nanosuit.obj");
 
     Shader modelShader("1.model_loading.vs", "1.model_loading.fs");

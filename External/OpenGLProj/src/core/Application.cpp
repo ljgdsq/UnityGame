@@ -25,7 +25,58 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 void processInput(GLFWwindow *window);
-Application::Application() {
+static Context*context;
+Application *Application::GetInstance() {
+    static Application app(SCR_WIDTH,SCR_HEIGHT);
+    return &app;
+}
+
+bool Application::ShouldClose() {
+    if (window && valid)
+        return glfwWindowShouldClose(window);
+    return true;
+}
+
+int Application::Run() {
+
+
+    while (!this->ShouldClose()){
+        glfwPollEvents();
+        processInput(window);
+        float currentFrame = static_cast<float>(glfwGetTime());
+        deltaTime = currentFrame - lastFrame;
+        lastFrame = currentFrame;
+        renderer->Clear();
+
+
+        renderer->Present();
+    }
+
+
+
+
+    return 0;
+}
+
+Application::~Application() {
+    if (renderer)
+        delete renderer;
+}
+
+void Application::Destroy() {
+    glfwDestroyWindow(window);
+    glfwTerminate();
+}
+
+void Application::Init() {
+    renderer=new Renderer(context);
+    renderer->SetClearMode(ClearMode::COLOR_BIT|ClearMode::DEPTH_BIT);
+    renderer->Enable(FuncType::Depth_Test);
+}
+
+Application::Application(int width, int height, const char *title) {
+
+
     glfwInit();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -60,41 +111,30 @@ Application::Application() {
     }
     this->camera=&_camera;
     valid= true;
+    if (title== nullptr){
+        title="ToyEngine";
+    }
+    context=new Context();
+    context->width=width;
+    context->height=height;
+    context->title=title;
+    context->window=window;
 
+    glfwSetWindowTitle(window,title);
+
+    Init();
 }
 
-Application *Application::GetInstance() {
-    static Application app;
-    return &app;
+Context *Application::GetContext() const {
+    return context;
 }
 
-bool Application::ShouldClose() {
-    if (window && valid)
-        return glfwWindowShouldClose(window);
-    return true;
+int Application::GetWidth() const {
+    return context->width;
 }
 
-void Application::Run() {
-    glfwPollEvents();
-    processInput(window);
-    float currentFrame = static_cast<float>(glfwGetTime());
-    deltaTime = currentFrame - lastFrame;
-    lastFrame = currentFrame;
-}
-
-Application::~Application() {
-    if (renderer)
-        delete renderer;
-}
-
-void Application::Destroy() {
-    glfwDestroyWindow(window);
-    glfwTerminate();
-}
-
-void Application::Init() {
-    renderer=new Renderer();
-
+int Application::GetHeight() const {
+    return context->height;
 }
 
 
@@ -129,6 +169,8 @@ void processInput(GLFWwindow *window)
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
+    context->width=width;
+    context->height=height;
     glViewport(0, 0, width, height);
 }
 

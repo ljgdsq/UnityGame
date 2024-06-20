@@ -10,17 +10,21 @@
 #include "glad/glad.h"
 #include "GLFW/glfw3.h"
 #include "camera.h"
+#include "Context.h"
 
 class Application {
-    Application();
+
     bool valid;
     GLFWwindow* window;
     Renderer* renderer;
     Camera* camera;
-public:
-    virtual ~Application();
     void Init();
-    void Run();
+
+public:
+    Application(int width,int height,const char*title= nullptr);
+    virtual ~Application();
+    int Run();
+    [[deprecated("old api,do not use")]]
     static Application*GetInstance();
 
     GLFWwindow* GetWindow ()const{
@@ -34,6 +38,12 @@ public:
     Camera *GetCamera() const{
         return camera;
     };
+
+    Context*GetContext()const;
+
+    int GetWidth() const;
+
+    int GetHeight() const;
 
     bool ShouldClose();
     void Destroy();

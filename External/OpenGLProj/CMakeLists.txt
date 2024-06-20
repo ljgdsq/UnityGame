@@ -32,7 +32,7 @@ file(GLOB_RECURSE  SOURCES "src/*.cpp" )
 list(REMOVE_ITEM SOURCES "${PROJECT_SOURCE_DIR}/src/main.cpp")
 
 set(CORE_SRC ${SOURCES})
-add_executable(OpenGLProj ${SOURCES} src/main.cpp)
+add_executable(OpenGLProj ${SOURCES} src/main.cpp src/core/Context.h)
 
 add_subdirectory(external/glfw)
 
@@ -120,5 +120,6 @@ set(ASSIMP_BUILD_TESTS OFF CACHE BOOL "If the test suite for Assimp is built in 
 
 add_subdirectory(external/assimp)
 
-add_subdirectory(examples/assimp)
+#add_subdirectory(examples/assimp)
+add_subdirectory(examples/advance)
 

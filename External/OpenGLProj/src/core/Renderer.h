@@ -5,6 +5,8 @@
 #ifndef OPENGLPROJ_RENDERER_H
 #define OPENGLPROJ_RENDERER_H
 
+#include "Context.h"
+
 enum ClearMode{
     COLOR_BIT=1,
     DEPTH_BIT=2,
@@ -25,10 +27,16 @@ public:
     void SetClearMode(int mode);
     void Present();
     void Enable(FuncType type);
-    Renderer();
+    void Disable(FuncType type);
+    Renderer(Context*context);
 
 private:
     unsigned int clearBit;
+    float r=0.1f;
+    float g=0.1f;
+    float b=0.1f;
+    float a=1.0f;
+    Context*context;
 };
 
 
