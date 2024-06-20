@@ -6,6 +6,7 @@
 #include "GLFW/glfw3.h"
 #include "glad/glad.h"
 #include "camera.h"
+#include "ui/scene.h"
 #include <iostream>
 
 const unsigned int SCR_WIDTH = 800;
@@ -46,15 +47,19 @@ int Application::Run() {
         float currentFrame = static_cast<float>(glfwGetTime());
         deltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
+
+        glm::mat4 projection = glm::perspective(glm::radians(camera->Zoom), (float)context->width / (float)(float)context->width, 0.1f, 100.0f);
+        glm::mat4 view = camera->GetViewMatrix();
+        context->projection=projection;
+        context->view=view;
+
         renderer->Clear();
-
-
+        if (scene){
+            scene->Update();
+            scene->Render(*context);
+        }
         renderer->Present();
     }
-
-
-
-
     return 0;
 }
 
@@ -135,6 +140,11 @@ int Application::GetWidth() const {
 
 int Application::GetHeight() const {
     return context->height;
+}
+
+void Application::SetScene(Scene *scene) {
+    this->scene=scene;
+    this->scene->Create();
 }
 
 

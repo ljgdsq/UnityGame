@@ -11,7 +11,7 @@
 #include "GLFW/glfw3.h"
 #include "camera.h"
 #include "Context.h"
-
+class Scene;
 class Application {
 
     bool valid;
@@ -19,11 +19,12 @@ class Application {
     Renderer* renderer;
     Camera* camera;
     void Init();
-
+    Scene*scene= nullptr;
 public:
     Application(int width,int height,const char*title= nullptr);
     virtual ~Application();
     int Run();
+    void SetScene(Scene*scene);
     [[deprecated("old api,do not use")]]
     static Application*GetInstance();
 

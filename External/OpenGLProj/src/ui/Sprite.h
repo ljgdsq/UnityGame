@@ -7,13 +7,13 @@
 
 #include "../core/sprite_renderer.h"
 #include "../core/Drawable.h"
+#include "SceneNode.h"
 
-class Sprite : Drawable {
+class Sprite : public SceneNode {
 public:
     static Sprite*Create(std::string path);
-    Sprite()=default;
     bool Init(std::string path);
-    void Draw() override;
+    void Draw();
     void Position(int x,int y);
 private:
     void InitWithTexture(std::string path);
