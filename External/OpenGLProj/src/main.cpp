@@ -50,12 +50,19 @@ int main(int argc,char**argv)
 
     // glad: load all OpenGL function pointers
     // ---------------------------------------
-    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
-    {
-        std::cout << "Failed to initialize GLAD" << std::endl;
-        return -1;
-    }
+//    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
+//    {
+//        std::cout << "Failed to initialize GLAD" << std::endl;
+//        return -1;
+//    }
+    
+    gladLoadGL(glfwGetProcAddress);
 
+//    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
+//           std::cout << "Failed to initialize GLAD" << std::endl;
+//           glfwTerminate();
+//           return -1;
+//       }
 
 
     auto vshaderPath=std::filesystem::path(RES_PATH) / "shader" /"sprite.vs";
