@@ -10,6 +10,7 @@
 
 class Cube : public SceneNode{
 public:
+    static std::string type;
     static Cube*Create(std::string path="");
     bool Init(std::string path);
     void SetTexture(std::string path);
@@ -19,6 +20,8 @@ private:
 
 protected:
     void UpdateShader(const Context &ctx) override;
+
+    std::string GetTypeName() override;
 };
 
 

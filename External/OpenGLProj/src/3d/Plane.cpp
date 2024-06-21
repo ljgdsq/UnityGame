@@ -55,3 +55,7 @@ void Plane::UpdateShader(const Context &ctx) {
         this->drawable->shader.SetInteger("hasTex",0);
     }
 }
+
+std::string Plane::GetTypeName() {
+    return "Plane";
+}

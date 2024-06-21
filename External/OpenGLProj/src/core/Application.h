@@ -15,16 +15,20 @@ class Scene;
 class Application {
 
     bool valid;
-    GLFWwindow* window;
     Renderer* renderer;
     Camera* camera;
-    void Init();
+protected:
+    virtual void Init();
+    virtual void BeginFrame(){};
+    virtual void EndFrame(){}
+
+    GLFWwindow* window;
     Scene*scene= nullptr;
 public:
     Application(int width,int height,const char*title= nullptr);
     virtual ~Application();
     int Run();
-    void SetScene(Scene*scene);
+    virtual void SetScene(Scene*scene);
     [[deprecated("old api,do not use")]]
     static Application*GetInstance();
 

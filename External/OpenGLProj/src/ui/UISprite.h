@@ -22,6 +22,9 @@ private:
     void InitWithTexture(std::string path);
 
 protected:
+    std::string GetTypeName() override;
+
+protected:
     void UpdateShader(const Context &ctx) override;
 };
 

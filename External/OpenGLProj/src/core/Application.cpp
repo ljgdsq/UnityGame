@@ -39,10 +39,12 @@ bool Application::ShouldClose() {
 }
 
 int Application::Run() {
+    Init();
 
 
     while (!this->ShouldClose()){
         glfwPollEvents();
+        BeginFrame();
         processInput(window);
         float currentFrame = static_cast<float>(glfwGetTime());
         deltaTime = currentFrame - lastFrame;
@@ -58,7 +60,10 @@ int Application::Run() {
             scene->Update();
             scene->Render(*context);
         }
+        EndFrame();
+
         renderer->Present();
+
     }
     return 0;
 }
@@ -106,7 +111,7 @@ Application::Application(int width, int height, const char *title) {
     glfwSetScrollCallback(window, scroll_callback);
 
     // tell GLFW to capture our mouse
-    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+//    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
     // glad: load all OpenGL function pointers
     // ---------------------------------------
@@ -128,7 +133,6 @@ Application::Application(int width, int height, const char *title) {
 
     glfwSetWindowTitle(window,title);
 
-    Init();
 }
 
 Context *Application::GetContext() const {

@@ -58,3 +58,7 @@ void UISprite::UpdateShader(const Context &ctx) {
     this->drawable->shader.SetMatrix4("projection", projection);
     texture2D.Bind();
 }
+
+std::string UISprite::GetTypeName() {
+    return "UISprite";
+}

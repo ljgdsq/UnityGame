@@ -10,8 +10,10 @@
 #include "core/texture.h"
 #include "core/Context.h"
 #include "core/resource_manager.h"
-
+#include <optional>
+using std::optional;
 class SceneNode {
+    optional<std::string> name;
 public:
     glm::vec3 position;
     glm::vec3 size;
@@ -23,9 +25,17 @@ public:
     std::function<void(const Context&ctx)> AfterDraw;
     Texture2D texture2D;
 
+public:
+    std::string GetName(){
+        if (name){
+            return name.value();
+        }
+        return GetTypeName();
+    }
 protected:
     Drawable* drawable= nullptr;
 protected:
+    virtual std::string GetTypeName()=0;
     virtual void UpdateShader(const Context&ctx){};
 public:
     void SetShader(std::string name){

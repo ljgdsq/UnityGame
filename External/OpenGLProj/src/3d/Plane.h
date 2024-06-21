@@ -17,6 +17,8 @@ protected:
     std::string path;
     bool hasTexture= false;
     void UpdateShader(const Context &ctx) override;
+
+    std::string GetTypeName() override;
 };
 
 

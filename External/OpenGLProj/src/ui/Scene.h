@@ -10,13 +10,16 @@
 #include "camera.h"
 
 class Scene {
-    std::vector<SceneNode*> nodes;
     friend class Application;
+    friend class EditorApplication;
     void Update();
-    void Render(const Context&ctx);
+
     void Create();
 protected:
+    std::vector<SceneNode*> nodes;
+
     Context*context;
+    virtual void Render(const Context&ctx);
 public:
 
     virtual void OnCreate(){};
@@ -28,6 +31,10 @@ public:
     }
     void AddChild(SceneNode*child);
     virtual void Destroy(){};
+
+   virtual std::vector<SceneNode*> GetNodes(){
+        return nodes;
+    }
 };
 
 

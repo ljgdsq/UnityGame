@@ -56,3 +56,7 @@ void Cube::UpdateShader(const Context &ctx) {
     }
 }
 
+std::string Cube::GetTypeName() {
+    return "Cube";
+}
+
