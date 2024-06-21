@@ -9,6 +9,9 @@ include_directories(${PROJECT_SOURCE_DIR}/include)
 include_directories(${PROJECT_SOURCE_DIR}/external/glad/include)
 include_directories(${PROJECT_SOURCE_DIR}/external/glfw/include)
 include_directories(${PROJECT_SOURCE_DIR}/external/assimp/include)
+include_directories(${PROJECT_SOURCE_DIR}/external/imgui)
+include_directories(${PROJECT_SOURCE_DIR}/external/imgui/backends)
+include_directories(${PROJECT_SOURCE_DIR}/external/imgui/misc)
 include_directories(${PROJECT_SOURCE_DIR}/external/lua/src)
 
 
@@ -32,7 +35,7 @@ file(GLOB_RECURSE  SOURCES "src/*.cpp" )
 list(REMOVE_ITEM SOURCES "${PROJECT_SOURCE_DIR}/src/main.cpp")
 
 set(CORE_SRC ${SOURCES})
-add_executable(OpenGLProj ${SOURCES} src/main.cpp src/core/Context.h src/ui/Scene.h src/ui/SceneNode.h src/ui/UISprite.h src/ui/QuadDrawable.h src/3d/Cube.h src/3d/CubeDrawable.h src/core/EmptyDrawable.h src/core/CommandNode.h src/3d/Plane.h src/3d/PlaneQuadDrawable.h)
+add_executable(OpenGLProj ${SOURCES} src/main.cpp src/core/Context.h src/ui/Scene.h src/ui/SceneNode.h src/ui/UISprite.h src/ui/QuadDrawable.h src/3d/Cube.h src/3d/CubeDrawable.h src/core/EmptyDrawable.h src/core/CommandNode.h src/3d/Plane.h src/3d/PlaneQuadDrawable.h examples/imgui/main.cpp)
 
 add_subdirectory(external/glfw)
 
@@ -122,5 +125,8 @@ add_subdirectory(external/assimp)
 
 #add_subdirectory(examples/assimp)
 add_subdirectory(examples/advance)
-add_subdirectory(examples/blend)
+add_subdirectory(external/imgui)
+
+add_subdirectory(examples/imgui)
+
 
