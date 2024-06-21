@@ -1,7 +1,7 @@
 //
 // Created by zhengshulin on 2024/5/21.
 //
-
+#if 0
 #include "gameobject.h"
 
 GameObject::GameObject()
@@ -14,3 +14,5 @@ void GameObject::Draw(SpriteRenderer &renderer)
 {
     renderer.DrawSprite(this->Sprite, this->Position, this->Size, this->Rotation, this->Color);
 }
+
+#endif

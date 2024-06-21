@@ -8,7 +8,7 @@
 
 #include "shader.h"
 #include "texture.h"
-
+#if 0
 class SpriteRenderer
 {
 public:
@@ -24,5 +24,5 @@ private:
 
     void initRenderData();
 };
-
+#endif
 #endif //OPENGLPROJ_SPRITE_RENDERER_H

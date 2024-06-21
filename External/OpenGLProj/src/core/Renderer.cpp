@@ -3,14 +3,20 @@
 //
 
 #include "Renderer.h"
-#include "Application.h"
-
+#include "glad/gl.h"
+#include "GLFW/glfw3.h"
+#include "core/Context.h"
+static GLFWwindow* window;
 
 void Renderer::ClearColor(float r, float g, float b, float a) {
-    glClearColor(r, g, b, a);
+    this->r=r;
+    this->g=g;
+    this->b=b;
+    this->a=a;
 }
 
 void Renderer::SetClearMode(int mode) {
+    clearBit=0;
     if (mode & COLOR_BIT) {
         clearBit |= GL_COLOR_BUFFER_BIT;
     }
@@ -22,7 +28,6 @@ void Renderer::SetClearMode(int mode) {
     }
 }
 
-static GLFWwindow*window= nullptr;
 
 void Renderer::Present() {
     glfwSwapBuffers(window);
@@ -30,10 +35,12 @@ void Renderer::Present() {
 
 void Renderer::Clear() {
     glClear(clearBit);
+    glClearColor(r,g,b,a);
 }
 
-Renderer::Renderer() {
-    window=Application::GetInstance()->GetWindow();
+Renderer::Renderer(Context*context) {
+    this->context=context;
+    window= static_cast<GLFWwindow *>(this->context->window);
     clearBit=0;
     SetClearMode(ClearMode::COLOR_BIT);
 }
@@ -43,3 +50,10 @@ void Renderer::Enable(FuncType type) {
         glEnable(GL_DEPTH_TEST);
     }
 }
+
+void Renderer::Disable(FuncType type) {
+    if (type==FuncType::Depth_Test){
+        glDisable(GL_DEPTH_TEST);
+    }
+}
+

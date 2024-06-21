@@ -8,6 +8,10 @@ include_directories(${PROJECT_SOURCE_DIR}/src)
 include_directories(${PROJECT_SOURCE_DIR}/include)
 include_directories(${PROJECT_SOURCE_DIR}/external/glad/include)
 include_directories(${PROJECT_SOURCE_DIR}/external/glfw/include)
+include_directories(${PROJECT_SOURCE_DIR}/external/assimp/include)
+include_directories(${PROJECT_SOURCE_DIR}/external/imgui)
+include_directories(${PROJECT_SOURCE_DIR}/external/imgui/backends)
+include_directories(${PROJECT_SOURCE_DIR}/external/imgui/misc)
 include_directories(${PROJECT_SOURCE_DIR}/external/lua/src)
 
 
@@ -31,7 +35,7 @@ file(GLOB_RECURSE  SOURCES "src/*.cpp" )
 list(REMOVE_ITEM SOURCES "${PROJECT_SOURCE_DIR}/src/main.cpp")
 
 set(CORE_SRC ${SOURCES})
-add_executable(OpenGLProj ${SOURCES} src/main.cpp)
+add_executable(OpenGLProj ${SOURCES} src/main.cpp src/editor/EditorScene.h src/editor/Stats.h src/core/Types.h src/editor/Inspector.h src/editor/inspector/ComponentInspector.h src/editor/inspector/TransformInspector.h)
 
 add_subdirectory(external/glfw)
 
@@ -102,5 +106,30 @@ add_custom_target(copy_res ALL DEPENDS ${CMAKE_BINARY_DIR}/res)
 add_dependencies(OpenGLProj copy_res)
 
 
-add_subdirectory(examples/light)
-add_subdirectory(examples/light5)
+#add_subdirectory(examples/light)
+#add_subdirectory(examples/light5)
+add_subdirectory(examples/spotlight)
+add_subdirectory(examples/multilight)
+
+
+#config assimp
+set(BUILD_SHARED_LIBS OFF CACHE BOOL "Build package with shared libraries")
+set(ASSIMP_INJECT_DEBUG_POSTFIX OFF CACHE BOOL "Inject debug postfix in .a/.so/.dll lib names")
+set(ASSIMP_WARNINGS_AS_ERRORS OFF CACHE BOOL "Treat all warnings as errors.")
+set(ASSIMP_INSTALL OFF CACHE BOOL "Disable this if you want to use assimp as a submodule.")
+set(ASSIMP_BUILD_TESTS OFF CACHE BOOL "If the test suite for Assimp is built in addition to the library.")
+
+
+#if (WIN32)
+#    set(USE_STATIC_CRT ON CACHE BOOL "Link against the static runtime libraries.")
+#endif ()
+
+add_subdirectory(external/assimp)
+
+#add_subdirectory(examples/assimp)
+add_subdirectory(examples/advance)
+add_subdirectory(external/imgui)
+
+add_subdirectory(examples/imgui)
+
+

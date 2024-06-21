@@ -6,6 +6,7 @@
 #include "GLFW/glfw3.h"
 #include "glad/glad.h"
 #include "camera.h"
+#include "ui/scene.h"
 #include <iostream>
 
 const unsigned int SCR_WIDTH = 800;
@@ -25,7 +26,68 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 void processInput(GLFWwindow *window);
-Application::Application() {
+static Context*context;
+Application *Application::GetInstance() {
+    static Application app(SCR_WIDTH,SCR_HEIGHT);
+    return &app;
+}
+
+bool Application::ShouldClose() {
+    if (window && valid)
+        return glfwWindowShouldClose(window);
+    return true;
+}
+
+int Application::Run() {
+    Init();
+
+
+    while (!this->ShouldClose()){
+        glfwPollEvents();
+        BeginFrame();
+        processInput(window);
+        float currentFrame = static_cast<float>(glfwGetTime());
+        deltaTime = currentFrame - lastFrame;
+        lastFrame = currentFrame;
+
+        glm::mat4 projection = glm::perspective(glm::radians(camera->Zoom), (float)context->width / (float)(float)context->width, 0.1f, 100.0f);
+        glm::mat4 view = camera->GetViewMatrix();
+        context->projection=projection;
+        context->view=view;
+
+        renderer->Clear();
+        if (scene){
+            scene->Update();
+            scene->Render(*context);
+        }
+        EndFrame();
+
+        renderer->Present();
+
+    }
+    return 0;
+}
+
+Application::~Application() {
+    if (renderer)
+        delete renderer;
+}
+
+void Application::Destroy() {
+    glfwDestroyWindow(window);
+    glfwTerminate();
+}
+
+void Application::Init() {
+    renderer=new Renderer(context);
+    context->renderer=renderer;
+    renderer->SetClearMode(ClearMode::COLOR_BIT|ClearMode::DEPTH_BIT);
+    renderer->Enable(FuncType::Depth_Test);
+}
+
+Application::Application(int width, int height, const char *title) {
+
+
     glfwInit();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -49,7 +111,7 @@ Application::Application() {
     glfwSetScrollCallback(window, scroll_callback);
 
     // tell GLFW to capture our mouse
-    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+//    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
     // glad: load all OpenGL function pointers
     // ---------------------------------------
@@ -60,49 +122,52 @@ Application::Application() {
     }
     this->camera=&_camera;
     valid= true;
+    if (title== nullptr){
+        title="ToyEngine";
+    }
+    context=new Context();
+    context->width=width;
+    context->height=height;
+    context->title=title;
+    context->window=window;
+
+    glfwSetWindowTitle(window,title);
 
 }
 
-Application *Application::GetInstance() {
-    static Application app;
-    return &app;
+Context *Application::GetContext() const {
+    return context;
 }
 
-bool Application::ShouldClose() {
-    if (window && valid)
-        return glfwWindowShouldClose(window);
-    return true;
+int Application::GetWidth() const {
+    return context->width;
 }
 
-void Application::Run() {
-    glfwPollEvents();
-    processInput(window);
-    float currentFrame = static_cast<float>(glfwGetTime());
-    deltaTime = currentFrame - lastFrame;
-    lastFrame = currentFrame;
+int Application::GetHeight() const {
+    return context->height;
 }
 
-Application::~Application() {
-    if (renderer)
-        delete renderer;
-}
-
-void Application::Destroy() {
-    glfwDestroyWindow(window);
-    glfwTerminate();
-}
-
-void Application::Init() {
-    renderer=new Renderer();
-
+void Application::SetScene(Scene *scene) {
+    this->scene=scene;
+    this->scene->Create();
+    this->scene->SetContext(context);
 }
 
 
 void processInput(GLFWwindow *window)
 {
+
+    //FIXME: camera move dont smooth! there has some bug! maybe glfw event loop or glfwGetKey
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(window, true);
+    static float speedUp=1.0f;
 
+    if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_RIGHT_SHIFT) == GLFW_PRESS)
+        speedUp=4.0f;
+    else
+        speedUp=1.0f;
+
+    deltaTime =deltaTime*speedUp;
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
         _camera.ProcessKeyboard(FORWARD, deltaTime);
     if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
@@ -120,6 +185,8 @@ void processInput(GLFWwindow *window)
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
+    context->width=width;
+    context->height=height;
     glViewport(0, 0, width, height);
 }
 

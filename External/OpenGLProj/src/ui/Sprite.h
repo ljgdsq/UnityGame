@@ -1,19 +1,19 @@
 //
 // Created by zhengshulin on 2024/5/31.
 //
-
+#if 0
 #ifndef OPENGLPROJ_SPRITE_H
 #define OPENGLPROJ_SPRITE_H
 
 #include "../core/sprite_renderer.h"
 #include "../core/Drawable.h"
+#include "SceneNode.h"
 
-class Sprite : Drawable {
+class Sprite : public SceneNode {
 public:
     static Sprite*Create(std::string path);
-    Sprite()=default;
     bool Init(std::string path);
-    void Draw() override;
+    void Draw();
     void Position(int x,int y);
 private:
     void InitWithTexture(std::string path);
@@ -28,3 +28,4 @@ private:
 
 
 #endif //OPENGLPROJ_SPRITE_H
+#endif

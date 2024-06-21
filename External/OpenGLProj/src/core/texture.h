@@ -5,6 +5,12 @@
 #ifndef OPENGLPROJ_TEXTURE_H
 #define OPENGLPROJ_TEXTURE_H
 
+#include "glad/gl.h"
+
+enum TextureParam{
+    CLAMP_TO_EDGE=GL_CLAMP_TO_EDGE,
+    REPEAT=GL_REPEAT
+};
 
 class Texture2D {
 public:
@@ -22,6 +28,7 @@ public:
     void load(const char*file);
     void Generate(int width,int height,int channel,unsigned char*data);
     void Bind(int slot=0)const;
+    void SetWrapMode(TextureParam param);
 };
 
 

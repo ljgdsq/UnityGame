@@ -1,7 +1,7 @@
 //
 // Created by zhengshulin on 2024/5/21.
 //
-
+#if 0
 #include "sprite_renderer.h"
 #include "glad/gl.h"
 
@@ -69,3 +69,5 @@ void SpriteRenderer::initRenderData()
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
 }
+
+#endif

@@ -43,6 +43,11 @@ Shader ResourceManager::LoadShader(const char *vShaderFile, const char *fShaderF
 
 Shader ResourceManager::GetShader(std::string name)
 {
+    auto vshaderPath=std::filesystem::path(RES_PATH) / "shader" / (name+std::string(".vs"));
+    auto fshaderPath=std::filesystem::path(RES_PATH) / "shader" /(name+std::string(".fs"));
+
+    ResourceManager::LoadShader(vshaderPath.string().c_str(), fshaderPath.string().c_str(), nullptr, name);
+
     return Shaders[name];
 }
 

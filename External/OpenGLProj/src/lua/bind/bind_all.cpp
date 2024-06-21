@@ -3,8 +3,10 @@
 //
 
 #include "bind_all.h"
-#include "../../ui/Sprite.h"
 
+
+#if 0
+#include "../../ui/Sprite.h"
 static int
 create(lua_State *L) {
     const char * name = lua_tostring(L,-1);
@@ -54,11 +56,11 @@ return 1;
 }
 
 
-
+#endif
 
 
 void game_bind_all(lua_State *L) {
-    luaL_requiref(L, "game.sprite", game_sprite, 0);
+//    luaL_requiref(L, "game.sprite", game_sprite, 0);
 //    luaL_requiref(L, "test.obj", test_obj, 0);
     lua_settop(L,0);
 }

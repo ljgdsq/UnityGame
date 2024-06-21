@@ -87,7 +87,7 @@ void Buffer::uploadData(int size, void *data, DataUsage usage) {
     }
 }
 
-VertexArray::VertexArray(BufferType type) : Buffer(type) {
+VertexArray::VertexArray() : Buffer(BufferType::VAO) {
 
 }
 

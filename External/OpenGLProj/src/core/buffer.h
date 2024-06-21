@@ -54,7 +54,7 @@ struct BufferLayout{
 class VertexArray:public Buffer{
     std::vector<BufferLayout> layouts;
 public:
-    VertexArray(BufferType type);
+    VertexArray();
     void enableAttribute(int n=0);
     void addBufferLayout(BufferLayout layout);
 };
