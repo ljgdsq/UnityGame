@@ -5,7 +5,7 @@
 #include "Renderer.h"
 #include "glad/gl.h"
 #include "GLFW/glfw3.h"
-
+#include "core/Context.h"
 static GLFWwindow* window;
 
 void Renderer::ClearColor(float r, float g, float b, float a) {
@@ -16,6 +16,7 @@ void Renderer::ClearColor(float r, float g, float b, float a) {
 }
 
 void Renderer::SetClearMode(int mode) {
+    clearBit=0;
     if (mode & COLOR_BIT) {
         clearBit |= GL_COLOR_BUFFER_BIT;
     }

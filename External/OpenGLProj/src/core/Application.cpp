@@ -75,6 +75,7 @@ void Application::Destroy() {
 
 void Application::Init() {
     renderer=new Renderer(context);
+    context->renderer=renderer;
     renderer->SetClearMode(ClearMode::COLOR_BIT|ClearMode::DEPTH_BIT);
     renderer->Enable(FuncType::Depth_Test);
 }
@@ -145,6 +146,7 @@ int Application::GetHeight() const {
 void Application::SetScene(Scene *scene) {
     this->scene=scene;
     this->scene->Create();
+    this->scene->SetContext(context);
 }
 
 

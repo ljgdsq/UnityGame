@@ -1,7 +1,7 @@
 //
 // Created by zhengshulin on 2024/5/31.
 //
-
+#if 0
 #ifndef OPENGLPROJ_SPRITE_H
 #define OPENGLPROJ_SPRITE_H
 
@@ -28,3 +28,4 @@ private:
 
 
 #endif //OPENGLPROJ_SPRITE_H
+#endif

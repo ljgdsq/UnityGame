@@ -42,3 +42,10 @@ void Texture2D::Bind(int slot) const
     glBindTexture(GL_TEXTURE_2D, this->id);
 }
 
+void Texture2D::SetWrapMode(TextureParam param) {
+    glBindTexture(GL_TEXTURE_2D, this->id);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, param);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, param);
+    glBindTexture(GL_TEXTURE_2D, 0);
+}
+

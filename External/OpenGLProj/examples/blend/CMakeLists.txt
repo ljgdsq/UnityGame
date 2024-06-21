@@ -1,5 +1,5 @@
 
-project(advance)
+project(advance_blend)
 # 包含其他目录中的所有文件
 
 # 添加测试源文件
@@ -8,6 +8,6 @@ file(GLOB TEST_SOURCES "main.cpp")
 # 合并所有源文件
 set(SOURCES ${TEST_SOURCES} ${CORE_SRC} )
 # 创建可执行文件
-add_executable(advance ${SOURCES} )
+add_executable(advance_blend ${SOURCES} )
 # 链接库
-target_link_libraries(advance PUBLIC glfw glad liblua glm ${OPENGL_LIBRARIES})
+target_link_libraries(advance_blend PUBLIC glfw glad liblua glm ${OPENGL_LIBRARIES})

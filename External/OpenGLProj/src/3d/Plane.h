@@ -1,25 +1,23 @@
 //
-// Created by zhengshulin on 2024/6/20.
+// Created by zhengshulin on 2024/6/21.
 //
 
-#ifndef OPENGLPROJ_CUBE_H
-#define OPENGLPROJ_CUBE_H
+#ifndef OPENGLPROJ_PLANE_H
+#define OPENGLPROJ_PLANE_H
 
 
 #include "ui/SceneNode.h"
 
-class Cube : public SceneNode{
+class Plane: public SceneNode {
 public:
-    static Cube*Create(std::string path="");
+    static Plane*Create(std::string path="");
     bool Init(std::string path);
     void SetTexture(std::string path);
-private:
+protected:
     std::string path;
     bool hasTexture= false;
-
-protected:
     void UpdateShader(const Context &ctx) override;
 };
 
 
-#endif //OPENGLPROJ_CUBE_H
+#endif //OPENGLPROJ_PLANE_H

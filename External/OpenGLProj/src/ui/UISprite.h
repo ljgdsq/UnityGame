@@ -20,8 +20,9 @@ public:
     void Angle(float angle);
 private:
     void InitWithTexture(std::string path);
-    void UpdateShader();
 
+protected:
+    void UpdateShader(const Context &ctx) override;
 };
 
 

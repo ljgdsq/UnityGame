@@ -1,7 +1,7 @@
 //
 // Created by zhengshulin on 2024/5/31.
 //
-
+#if 0
 #include <filesystem>
 #include "Sprite.h"
 #include "../core/resource_manager.h"
@@ -45,3 +45,4 @@ void Sprite::Position(int x, int y) {
 
 }
 
+#endif

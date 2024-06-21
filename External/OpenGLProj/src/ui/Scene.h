@@ -7,6 +7,7 @@
 #include <vector>
 #include "ui/SceneNode.h"
 #include "core/Context.h"
+#include "camera.h"
 
 class Scene {
     std::vector<SceneNode*> nodes;
@@ -14,13 +15,17 @@ class Scene {
     void Update();
     void Render(const Context&ctx);
     void Create();
-private:
-
+protected:
+    Context*context;
 public:
+
     virtual void OnCreate(){};
     virtual void OnUpdate(){
 
     };
+    void SetContext(Context*ctx){
+        this->context=ctx;
+    }
     void AddChild(SceneNode*child);
     virtual void Destroy(){};
 };

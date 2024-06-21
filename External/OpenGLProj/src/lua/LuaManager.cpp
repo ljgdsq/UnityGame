@@ -100,7 +100,7 @@ void LuaManager::InitFramework(){
     luaL_requiref(L, "framework.c", framework_c, 0);
     lua_settop(L,0);
 
-    game_bind_all(L);
+//    game_bind_all(L);
 }
 
 static void GameStart(){

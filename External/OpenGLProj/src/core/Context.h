@@ -6,6 +6,7 @@
 #define OPENGLPROJ_CONTEXT_H
 #include <string>
 #include "glm/glm.hpp"
+#include "Renderer.h"
 
 class Context {
 
@@ -17,6 +18,7 @@ public:
     void*window;
     glm::mat4 projection;
     glm::mat4 view;
+    Renderer* renderer;
 };
 
 

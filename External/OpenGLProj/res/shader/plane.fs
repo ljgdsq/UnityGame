@@ -1,6 +1,5 @@
 #version 330 core
 in vec3 FragPos;
-in vec3 Normal;
 in vec2 TexCoords;
 
 uniform sampler2D image;
@@ -11,7 +10,10 @@ out vec4 FragColor;
 void main()
 {
     if(hasTex){
-        FragColor = vec4(texture(image,TexCoords).rgb*color,1.0);
+        vec4 c=texture(image,TexCoords).rgba;
+        if(c.a<0.1)
+        discard;
+        FragColor =c;
     }else{
         FragColor = vec4(color, 1.0);
     }

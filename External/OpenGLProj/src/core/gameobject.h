@@ -1,7 +1,7 @@
 //
 // Created by zhengshulin on 2024/5/21.
 //
-
+#if 0
 #ifndef OPENGLPROJ_GAMEOBJECT_H
 #define OPENGLPROJ_GAMEOBJECT_H
 
@@ -32,3 +32,4 @@ public:
 };
 
 #endif //OPENGLPROJ_GAMEOBJECT_H
+#endif
