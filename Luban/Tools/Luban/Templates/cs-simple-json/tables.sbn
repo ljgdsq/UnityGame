@@ -1,0 +1,42 @@
+using Luban;
+using System.Text.Json;
+
+{{namespace_with_grace_begin __namespace}}
+public partial class {{__name}}
+{
+
+    {{~for table in __tables ~}}
+    private {{table.full_name}} _{{format_property_name __code_style table.name}};
+{{~end~}}
+
+    private System.Func<string, JSONNode> _loader;
+    {{~for table in __tables ~}}
+{{~if table.comment != '' ~}}
+    /// <summary>
+    /// {{escape_comment table.comment}}
+    /// </summary>
+{{~end~}}
+        public {{table.full_name}} {{format_property_name __code_style table.name}}
+    {
+        get
+        {
+            if (_{{format_property_name __code_style table.name}} == null)
+            {
+                _{{format_property_name __code_style table.name}} = new {{table.full_name}}(_loader("{{table.output_data_file}}"));
+                _{{format_property_name __code_style table.name}}.ResolveRef(this);
+            }
+            return _{{format_property_name __code_style table.name}};
+        }
+    }
+    {{~end~}}
+
+
+
+    public {{__name}}(System.Func<string, JSONNode> loader)
+    {
+        this._loader = loader;
+    }
+
+}
+
+{{namespace_with_grace_end __namespace}}
