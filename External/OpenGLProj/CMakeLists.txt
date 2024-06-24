@@ -40,7 +40,10 @@ add_executable(OpenGLProj ${SOURCES} src/main.cpp src/editor/EditorScene.h src/e
 add_subdirectory(external/glfw)
 
 
+if(WIN32)
 set(LUA_BUILD_AS_DLL ON CACHE BOOL "Build Lua library as Dll")
+endif()
+
 
 add_subdirectory(external/lua)
 add_subdirectory(external/glm)

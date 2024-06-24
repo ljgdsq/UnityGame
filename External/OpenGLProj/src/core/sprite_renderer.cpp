@@ -5,7 +5,7 @@
 #include "sprite_renderer.h"
 #include "glad/gl.h"
 
-SpriteRenderer::SpriteRenderer(Shader &shader)
+SpriteRenderer::SpriteRenderer(const Shader &shader)
 {
     this->shader = shader;
     this->initRenderData();
