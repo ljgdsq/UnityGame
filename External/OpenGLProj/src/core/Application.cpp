@@ -46,9 +46,8 @@ int Application::Run() {
     context->fbo=frameBuffer;
     while (!this->ShouldClose()){
         glfwPollEvents();
-        BeginFrame();
 
-//        frameBuffer->bind();
+       frameBuffer->bind();
         processInput(window);
         float currentFrame = static_cast<float>(glfwGetTime());
         deltaTime = currentFrame - lastFrame;
@@ -64,9 +63,9 @@ int Application::Run() {
             scene->Update();
             scene->Render(*context);
         }
-
-//        frameBuffer->unbind();
-//        renderer->Clear();
+     frameBuffer->unbind();
+        BeginFrame();
+       renderer->Clear();
         EndFrame();
         renderer->Present();
 

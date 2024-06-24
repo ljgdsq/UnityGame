@@ -39,10 +39,10 @@ void EditorApplication::BeginFrame() {
     ImGui_ImplGlfw_NewFrame();
     ImGui::NewFrame();
     static ImGuiID id=ImGui::GetID("EditorPanelDockSpace");
-// ImGui::DockSpaceOverViewport(id,ImGui::GetMainViewport());
+ ImGui::DockSpaceOverViewport(id,ImGui::GetMainViewport());
     if (editorScene){
         editorScene->RenderWidget();
-//        editorScene->ShowGame(GetContext()->fbo);
+       editorScene->ShowGame(GetContext()->fbo);
     }
 
     static bool show_demo_window = true;

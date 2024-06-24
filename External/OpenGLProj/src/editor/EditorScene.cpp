@@ -8,6 +8,7 @@
 #include "Stats.h"
 #include "Inspector.h"
 #include "EditorPanel.h"
+#include "ContentBrowser.h"
 EditorScene::EditorScene():hierarchy(nullptr),stats(nullptr){}
 
 void EditorScene::OnCreate() {
@@ -24,6 +25,10 @@ void EditorScene::OnCreate() {
     editorPanel=new EditorPanel("editorPanel",this);
     this->AddChild(editorPanel);
 
+    contentBrowser=new ContentBrowser("contentBrowser",this);
+    this->AddChild(contentBrowser);
+
+
 }
 
 EditorScene::~EditorScene() {
@@ -37,6 +42,8 @@ EditorScene::~EditorScene() {
 
     if (editorPanel)
         delete editorPanel;
+    if (contentBrowser)
+        delete contentBrowser;
 }
 
 void EditorScene::AddChild(EditorWidget *child) {

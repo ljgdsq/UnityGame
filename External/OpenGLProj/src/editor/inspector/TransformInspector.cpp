@@ -6,8 +6,9 @@
 #include "imgui.h"
 #include "ui/SceneNode.h"
 void TransformInspector::Inspect( SceneNode *node) {
-
     if (node){
+        ImGui::Text("Transform:");
+
         float min_input_width = 50.0f;
         float available_width = ImGui::GetContentRegionAvail().x;
         float input_width = (available_width - ImGui::CalcTextSize("Position X: Y: Z: ").x -20) / 3.0f;

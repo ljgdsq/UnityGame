@@ -13,7 +13,7 @@ class Stats;
 class EditorWidget;
 class Inspector;
 class EditorPanel;
-
+class ContentBrowser;
 class EditorScene: public Scene{
 
 private:
@@ -21,6 +21,7 @@ private:
     Stats*stats;
     Inspector*inspector;
     EditorPanel* editorPanel;
+    ContentBrowser*contentBrowser;
     std::vector<EditorWidget*> editorWidget;
 public:
     Scene *getRunningScene() const;
