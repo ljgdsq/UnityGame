@@ -53,7 +53,12 @@ Shader ResourceManager::GetShader(std::string name)
 
 Texture2D ResourceManager::LoadTexture(const char *file, std::string name)
 {
-    auto spritePath=std::filesystem::path(RES_PATH) / "textures" / std::string(name).append(".png");
+    auto spritePath=std::filesystem::path(RES_PATH) / "textures";
+    if (name.find(".png")!=std::string::npos){
+        spritePath=spritePath /std::string(name);
+    }else{
+        spritePath=spritePath /std::string(name).append(".png");
+    }
     std::string normalizedSpritePath = normalizePath(spritePath);
     Textures[name] = loadTextureFromFile(normalizedSpritePath.c_str());
     return Textures[name];

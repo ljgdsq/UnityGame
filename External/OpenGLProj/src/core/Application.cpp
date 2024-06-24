@@ -9,8 +9,8 @@
 #include "ui/scene.h"
 #include <iostream>
 
-const unsigned int SCR_WIDTH = 800;
-const unsigned int SCR_HEIGHT = 600;
+ unsigned int SCR_WIDTH = 800;
+ unsigned int SCR_HEIGHT = 600;
 
 // camera
 Camera _camera(glm::vec3(0.0f, 0.0f, 3.0f));
@@ -53,7 +53,7 @@ int Application::Run() {
         deltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
 
-        glm::mat4 projection = glm::perspective(glm::radians(camera->Zoom), (float)context->width / (float)(float)context->width, 0.1f, 100.0f);
+        glm::mat4 projection = glm::perspective(glm::radians(camera->Zoom), (float)context->width / (context->width+0.0001f), 0.1f, 100.0f);
         glm::mat4 view = camera->GetViewMatrix();
         context->projection=projection;
         context->view=view;
@@ -94,6 +94,10 @@ void Application::Init() {
 
 Application::Application(int width, int height, const char *title) {
 
+    SCR_WIDTH=width;
+    SCR_HEIGHT=height;
+     lastX = SCR_WIDTH / 2.0f;
+     lastY = SCR_HEIGHT / 2.0f;
 
     glfwInit();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);

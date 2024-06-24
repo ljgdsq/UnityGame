@@ -6,9 +6,11 @@
 #include "imgui.h"
 #include "inspector/ComponentInspector.h"
 #include "editor/inspector/TransformInspector.h"
+#include "editor/inspector/TextureInspect.h"
 
 Inspector::Inspector(const std::string &name, EditorScene *scene) : EditorWidget(name, scene) {
     componentInspectors.push_back(new TransformInspector());
+    componentInspectors.push_back(new TextureInspect());
 }
 
 void Inspector::Draw() {

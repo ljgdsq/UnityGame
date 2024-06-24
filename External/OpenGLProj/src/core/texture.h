@@ -14,7 +14,7 @@ enum TextureParam{
 
 class Texture2D {
 public:
-    int id;
+    int id=-1;
     int width;
     int height;
 

@@ -39,7 +39,7 @@ public:
 
 
 int main() {
-    EditorApplication app(1280, 720, "editor");
+    EditorApplication app(1920, 1080, "editor");
     app.SetScene(new ImguiScene());
     return app.Run();
 }

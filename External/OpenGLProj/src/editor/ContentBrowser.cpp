@@ -68,6 +68,12 @@ void ContentBrowser::ShowDirectory(const string &path) {
         if (ImGui::Selectable(file.c_str())) {
             std::cout << "Selected file: " << file << std::endl;
         }
+
+        if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_SourceAllowNullID)) {
+            ImGui::SetDragDropPayload("CONTENT_BROWSER_FILE", file.c_str(), file.size() + 1);
+            ImGui::Text("Dragging %s", file.c_str());
+            ImGui::EndDragDropSource();
+        }
     }
 
     if (!currentPath.empty()) {
