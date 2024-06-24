@@ -32,13 +32,18 @@ void EditorApplication::Init() {
 
 void EditorApplication::BeginFrame() {
     ImGuiIO &io = ImGui::GetIO();
+
+    io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
     Application::BeginFrame();
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplGlfw_NewFrame();
     ImGui::NewFrame();
-
-    if (editorScene)
-    editorScene->RenderWidget();
+    static ImGuiID id=ImGui::GetID("EditorPanelDockSpace");
+// ImGui::DockSpaceOverViewport(id,ImGui::GetMainViewport());
+    if (editorScene){
+        editorScene->RenderWidget();
+//        editorScene->ShowGame(GetContext()->fbo);
+    }
 
     static bool show_demo_window = true;
     static bool show_hello_window = false;

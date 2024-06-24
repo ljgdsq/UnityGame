@@ -6,32 +6,9 @@
 #include "imgui.h"
 #include "ui/SceneNode.h"
 void TransformInspector::Inspect( SceneNode *node) {
-    if (node&& false ){
-        ImGui::PushItemWidth(100);
-        ImGui::Text("Position");
-        ImGui::SameLine();
 
-        // Display the "X" label
-        ImGui::Text("X:");
-        ImGui::SameLine();
-        ImGui::DragFloat("##X", &(node->position.x), 1.0f);
-        ImGui::SameLine();
-
-        // Display the "Y" label
-        ImGui::Text("Y:");
-        ImGui::SameLine();
-        ImGui::DragFloat("##Y", &(node->position.y), 1.0f);
-        ImGui::SameLine();
-
-        // Display the "Z" label
-        ImGui::Text("Z:");
-        ImGui::SameLine();
-        ImGui::DragFloat("##Z", &(node->position.z), 1.0f);
-
-        ImGui::PopItemWidth();
-    }
     if (node){
-        float min_input_width = 80.0f;
+        float min_input_width = 50.0f;
         float available_width = ImGui::GetContentRegionAvail().x;
         float input_width = (available_width - ImGui::CalcTextSize("Position X: Y: Z: ").x -20) / 3.0f;
 

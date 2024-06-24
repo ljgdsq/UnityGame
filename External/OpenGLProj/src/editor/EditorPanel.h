@@ -4,16 +4,15 @@
 
 #ifndef OPENGLPROJ_EDITORPANEL_H
 #define OPENGLPROJ_EDITORPANEL_H
-
+#include "EditorWidget.h"
 #include <string>
-class EditorPanel {
+class EditorPanel :public  EditorWidget{
+    FrameBuffer *buffer= nullptr;
 public:
-    std::string name;
-    EditorPanel(std::string name){
-        this->name=name;
-    }
-public:
-    virtual void Draw();
+    EditorPanel(const std::string name, EditorScene *scene);
+
+    void Draw() override;
+    void ShowGame(void *data);
 };
 
 

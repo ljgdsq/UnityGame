@@ -12,6 +12,7 @@ class Hierarchy;
 class Stats;
 class EditorWidget;
 class Inspector;
+class EditorPanel;
 
 class EditorScene: public Scene{
 
@@ -19,10 +20,12 @@ private:
     Hierarchy*hierarchy;
     Stats*stats;
     Inspector*inspector;
+    EditorPanel* editorPanel;
     std::vector<EditorWidget*> editorWidget;
 public:
     Scene *getRunningScene() const;
     void InspectNode(SceneNode*node);
+    void ShowGame(void*buffer);
 private:
     Scene* runningScene;
 public:
@@ -33,7 +36,7 @@ public:
     ~EditorScene();
     void AddChild(EditorWidget*child);
     void OnCreate() override;
-    void RenderWidget();;
+    void RenderWidget();
 
     std::vector<SceneNode *> GetNodes() override;
 };

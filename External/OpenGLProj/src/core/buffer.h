@@ -10,7 +10,8 @@
 enum BufferType{
     VAO,
     VBO,
-    EBO
+    EBO,
+    FBO
 };
 
 enum DataUsage{
@@ -31,8 +32,7 @@ public:
     void bind();
     void unbind();
     void destroy();
-    void uploadData(int size,void*data,DataUsage usage);
-
+    virtual void uploadData(int size,void*data,DataUsage usage);
 private:
     unsigned int id;
     BufferType type;
@@ -53,10 +53,31 @@ struct BufferLayout{
 
 class VertexArray:public Buffer{
     std::vector<BufferLayout> layouts;
+private:
+    void uploadData(int size, void *data, DataUsage usage){};
 public:
     VertexArray();
     void enableAttribute(int n=0);
     void addBufferLayout(BufferLayout layout);
+};
+
+class FrameBuffer:public Buffer{
+public:
+     FrameBuffer(int w,int h);
+
+private:
+    void uploadData(int size, void *data, DataUsage usage){};
+    void Init();
+
+private:
+    unsigned int colorBuffer;
+public:
+    unsigned int getColorBuffer() const;
+
+private:
+    unsigned int rbo;
+    int width;
+    int height;
 };
 
 

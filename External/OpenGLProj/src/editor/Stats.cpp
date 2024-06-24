@@ -14,4 +14,7 @@ void Stats::Draw() {
     ImGui::End();
 }
 
-Stats::Stats(const std::string &name, EditorScene *scene) : EditorWidget(name, scene) {}
+Stats::Stats(const std::string &name, EditorScene *scene) : EditorWidget(name, scene) {
+
+
+}

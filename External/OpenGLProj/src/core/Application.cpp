@@ -41,10 +41,14 @@ bool Application::ShouldClose() {
 int Application::Run() {
     Init();
 
-
+    FrameBuffer*frameBuffer=new FrameBuffer(context->width,context->height);
+    frameBuffer->unbind();
+    context->fbo=frameBuffer;
     while (!this->ShouldClose()){
         glfwPollEvents();
         BeginFrame();
+
+//        frameBuffer->bind();
         processInput(window);
         float currentFrame = static_cast<float>(glfwGetTime());
         deltaTime = currentFrame - lastFrame;
@@ -60,11 +64,15 @@ int Application::Run() {
             scene->Update();
             scene->Render(*context);
         }
-        EndFrame();
 
+//        frameBuffer->unbind();
+//        renderer->Clear();
+        EndFrame();
         renderer->Present();
 
     }
+
+    frameBuffer->destroy();
     return 0;
 }
 
