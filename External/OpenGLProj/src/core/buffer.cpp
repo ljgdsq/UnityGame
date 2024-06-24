@@ -153,3 +153,11 @@ void FrameBuffer::Init() {
 unsigned int FrameBuffer::getColorBuffer() const {
     return colorBuffer;
 }
+
+int FrameBuffer::getWidth() const {
+    return width;
+}
+
+int FrameBuffer::getHeight() const {
+    return height;
+}

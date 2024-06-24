@@ -17,6 +17,11 @@ class Application {
     bool valid;
     Renderer* renderer;
     Camera* camera;
+public:
+    static bool isIgnoreInput() ;
+
+    static void setIgnoreInput(bool ignoreInput);
+
 protected:
     virtual void Init();
     virtual void BeginFrame(){};

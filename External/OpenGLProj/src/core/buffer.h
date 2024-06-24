@@ -77,6 +77,12 @@ public:
 private:
     unsigned int rbo;
     int width;
+public:
+    int getWidth() const;
+
+    int getHeight() const;
+
+private:
     int height;
 };
 

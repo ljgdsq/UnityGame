@@ -11,6 +11,7 @@
 
  unsigned int SCR_WIDTH = 800;
  unsigned int SCR_HEIGHT = 600;
+static bool s_ignoreInput= true;
 
 // camera
 Camera _camera(glm::vec3(0.0f, 0.0f, 3.0f));
@@ -164,6 +165,14 @@ void Application::SetScene(Scene *scene) {
     this->scene->SetContext(context);
 }
 
+bool Application::isIgnoreInput()  {
+    return s_ignoreInput;
+}
+
+void Application::setIgnoreInput(bool ignoreInput) {
+    s_ignoreInput = ignoreInput;
+}
+
 
 void processInput(GLFWwindow *window)
 {
@@ -171,6 +180,9 @@ void processInput(GLFWwindow *window)
     //FIXME: camera move dont smooth! there has some bug! maybe glfw event loop or glfwGetKey
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(window, true);
+    if (s_ignoreInput)
+        return;
+
     static float speedUp=1.0f;
 
     if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_RIGHT_SHIFT) == GLFW_PRESS)
@@ -205,6 +217,8 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 
 void mouse_callback(GLFWwindow* window, double xposIn, double yposIn)
 {
+    if (s_ignoreInput)
+        return;
     float xpos = static_cast<float>(xposIn);
     float ypos = static_cast<float>(yposIn);
 
@@ -226,5 +240,7 @@ void mouse_callback(GLFWwindow* window, double xposIn, double yposIn)
 
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 {
+    if (s_ignoreInput)
+        return;
     _camera.ProcessMouseScroll(static_cast<float>(yoffset));
 }
