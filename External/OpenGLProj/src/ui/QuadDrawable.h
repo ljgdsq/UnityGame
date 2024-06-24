@@ -13,7 +13,7 @@ protected:
     VertexArray *VAO= nullptr;
     Buffer *VBO= nullptr;
 public:
-    QuadDrawable(const Shader&shader);
+    QuadDrawable( Shader*shader);
     ~QuadDrawable();
     void Draw() override;
 };

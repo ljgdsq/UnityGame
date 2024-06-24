@@ -31,7 +31,7 @@ public:
     void genBuffer();
     void bind();
     void unbind();
-    void destroy();
+    virtual void destroy();
     virtual void uploadData(int size,void*data,DataUsage usage);
 private:
     unsigned int id;
@@ -73,6 +73,8 @@ private:
     unsigned int colorBuffer;
 public:
     unsigned int getColorBuffer() const;
+
+    void destroy() override;
 
 private:
     unsigned int rbo;

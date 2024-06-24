@@ -5,7 +5,7 @@
 #include "ui/scene.h"
 #include "ui/UISprite.h"
 #include "3d/Cube.h"
-#include "core/resource_manager.h"
+#include "core/ResourceManager.h"
 #include "3d/Plane.h"
 
 

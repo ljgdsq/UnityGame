@@ -14,7 +14,7 @@ protected:
     Buffer*VBO= nullptr;
 
 public:
-    CubeDrawable(const Shader&shader);
+    CubeDrawable( Shader*shader);
     ~CubeDrawable();
 
     void Draw() override;

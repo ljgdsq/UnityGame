@@ -15,26 +15,27 @@ class Scene;
 class Application {
 
     bool valid;
-    Renderer* renderer;
-    Camera* camera;
+
 public:
-    static bool isIgnoreInput() ;
+     static bool isIgnoreInput() ;
 
-    static void setIgnoreInput(bool ignoreInput);
+     static void setIgnoreInput(bool ignoreInput);
 
+    static Context*context;
 protected:
     virtual void Init();
     virtual void BeginFrame(){};
     virtual void EndFrame(){}
-
-    GLFWwindow* window;
+    virtual void OnExit(){}
+    Renderer* renderer= nullptr;
+    Camera* camera= nullptr;
+    GLFWwindow* window= nullptr;
     Scene*scene= nullptr;
 public:
     Application(int width,int height,const char*title= nullptr);
     virtual ~Application();
     int Run();
     virtual void SetScene(Scene*scene);
-    [[deprecated("old api,do not use")]]
     static Application*GetInstance();
 
     GLFWwindow* GetWindow ()const{

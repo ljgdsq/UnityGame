@@ -7,10 +7,9 @@
 
 #include <iostream>
 
-Shader &Shader::Use()
+void Shader::Use()
 {
     glUseProgram(this->id);
-    return *this;
 }
 
 void Shader::Compile(const char* vertexSource, const char* fragmentSource, const char* geometrySource)
@@ -132,9 +131,9 @@ void Shader::checkCompileErrors(int object, std::string type)
         }
     }
 }
-#include "resource_manager.h"
+#include "ResourceManager.h"
 Shader::Shader(const char *vPath, const char *fPath) {
     auto name=std::string(vPath)+std::string(fPath);
     auto s=ResourceManager::LoadShader(vPath, fPath, nullptr, name);
-    this->id=s.id;
+    this->id=s->id;
 }

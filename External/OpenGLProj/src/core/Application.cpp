@@ -9,28 +9,24 @@
 #include "ui/scene.h"
 #include <iostream>
 
- unsigned int SCR_WIDTH = 800;
- unsigned int SCR_HEIGHT = 600;
-static bool s_ignoreInput= true;
+
+void framebuffer_size_callback(GLFWwindow *window, int width, int height);
+
+void mouse_callback(GLFWwindow *window, double xpos, double ypos);
+
+void scroll_callback(GLFWwindow *window, double xoffset, double yoffset);
+
+void processInput(GLFWwindow *window);
 
 // camera
-Camera _camera(glm::vec3(0.0f, 0.0f, 3.0f));
-float lastX = SCR_WIDTH / 2.0f;
-float lastY = SCR_HEIGHT / 2.0f;
-bool firstMouse = true;
+static Camera _camera(glm::vec3(0.0f, 0.0f, 3.0f));
+static float lastX;
+static float lastY;
+static bool firstMouse = true;
 
-// timing
-float deltaTime = 0.0f;
-float lastFrame = 0.0f;
 
-void framebuffer_size_callback(GLFWwindow* window, int width, int height);
-void mouse_callback(GLFWwindow* window, double xpos, double ypos);
-void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
-void processInput(GLFWwindow *window);
-static Context*context;
 Application *Application::GetInstance() {
-    static Application app(SCR_WIDTH,SCR_HEIGHT);
-    return &app;
+    return nullptr;
 }
 
 bool Application::ShouldClose() {
@@ -42,37 +38,30 @@ bool Application::ShouldClose() {
 int Application::Run() {
     Init();
 
-    FrameBuffer*frameBuffer=new FrameBuffer(context->width,context->height);
-    frameBuffer->unbind();
-    context->fbo=frameBuffer;
-    while (!this->ShouldClose()){
-        glfwPollEvents();
 
-       frameBuffer->bind();
+    while (!this->ShouldClose()) {
+
+        BeginFrame();
+        glfwPollEvents();
         processInput(window);
         float currentFrame = static_cast<float>(glfwGetTime());
-        deltaTime = currentFrame - lastFrame;
-        lastFrame = currentFrame;
-
-        glm::mat4 projection = glm::perspective(glm::radians(camera->Zoom), (float)context->width / (context->width+0.0001f), 0.1f, 100.0f);
+        context->deltaTime = currentFrame - context->lastFrame;
+        context->lastFrame = currentFrame;
+        glm::mat4 projection = glm::perspective(glm::radians(camera->Zoom),
+                                                (float) context->width / (context->width + 0.0001f), 0.1f, 100.0f);
         glm::mat4 view = camera->GetViewMatrix();
-        context->projection=projection;
-        context->view=view;
-
+        context->projection = projection;
+        context->view = view;
         renderer->Clear();
-        if (scene){
+        if (scene) {
             scene->Update();
             scene->Render(*context);
         }
-     frameBuffer->unbind();
-        BeginFrame();
-       renderer->Clear();
         EndFrame();
         renderer->Present();
-
     }
 
-    frameBuffer->destroy();
+    OnExit();
     return 0;
 }
 
@@ -87,18 +76,14 @@ void Application::Destroy() {
 }
 
 void Application::Init() {
-    renderer=new Renderer(context);
-    context->renderer=renderer;
-    renderer->SetClearMode(ClearMode::COLOR_BIT|ClearMode::DEPTH_BIT);
+    renderer = new Renderer(context);
+    context->renderer = renderer;
+    renderer->SetClearMode(ClearMode::COLOR_BIT | ClearMode::DEPTH_BIT);
     renderer->Enable(FuncType::Depth_Test);
 }
 
 Application::Application(int width, int height, const char *title) {
 
-    SCR_WIDTH=width;
-    SCR_HEIGHT=height;
-     lastX = SCR_WIDTH / 2.0f;
-     lastY = SCR_HEIGHT / 2.0f;
 
     glfwInit();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -109,14 +94,13 @@ Application::Application(int width, int height, const char *title) {
 #endif
     // glfw window creation
     // --------------------
-    GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "LearnOpenGL", NULL, NULL);
-    if (window == NULL)
-    {
+    GLFWwindow *window = glfwCreateWindow(width, height, "LearnOpenGL", NULL, NULL);
+    if (window == NULL) {
         std::cout << "Failed to create GLFW window" << std::endl;
         glfwTerminate();
         return;
     }
-    this->window=window;
+    this->window = window;
     glfwMakeContextCurrent(window);
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
     glfwSetCursorPosCallback(window, mouse_callback);
@@ -127,23 +111,23 @@ Application::Application(int width, int height, const char *title) {
 
     // glad: load all OpenGL function pointers
     // ---------------------------------------
-    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
-    {
+    if (!gladLoadGLLoader((GLADloadproc) glfwGetProcAddress)) {
         std::cout << "Failed to initialize GLAD" << std::endl;
-        return ;
+        return;
     }
-    this->camera=&_camera;
-    valid= true;
-    if (title== nullptr){
-        title="ToyEngine";
+    this->camera = &_camera;
+    valid = true;
+    if (title == nullptr) {
+        title = "ToyEngine";
     }
-    context=new Context();
-    context->width=width;
-    context->height=height;
-    context->title=title;
-    context->window=window;
-
-    glfwSetWindowTitle(window,title);
+    context = new Context();
+    context->width = width;
+    context->height = height;
+    context->title = title;
+    context->window = window;
+    lastX = width / 2.0f;
+    lastY = height / 2.0f;
+    glfwSetWindowTitle(window, title);
 
 }
 
@@ -160,37 +144,36 @@ int Application::GetHeight() const {
 }
 
 void Application::SetScene(Scene *scene) {
-    this->scene=scene;
+    this->scene = scene;
     this->scene->Create();
     this->scene->SetContext(context);
 }
 
-bool Application::isIgnoreInput()  {
-    return s_ignoreInput;
+bool Application::isIgnoreInput() {
+    return context->ignoreInput;
 }
 
 void Application::setIgnoreInput(bool ignoreInput) {
-    s_ignoreInput = ignoreInput;
+    context->ignoreInput = ignoreInput;
 }
 
 
-void processInput(GLFWwindow *window)
-{
+void processInput(GLFWwindow *window) {
 
     //FIXME: camera move dont smooth! there has some bug! maybe glfw event loop or glfwGetKey
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(window, true);
-    if (s_ignoreInput)
+    if (Application::context->ignoreInput)
         return;
 
-    static float speedUp=1.0f;
+    static float speedUp = 1.0f;
 
     if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_RIGHT_SHIFT) == GLFW_PRESS)
-        speedUp=4.0f;
+        speedUp = 4.0f;
     else
-        speedUp=1.0f;
+        speedUp = 1.0f;
 
-    deltaTime =deltaTime*speedUp;
+    float deltaTime = Application::context->deltaTime * speedUp;
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
         _camera.ProcessKeyboard(FORWARD, deltaTime);
     if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
@@ -206,24 +189,20 @@ void processInput(GLFWwindow *window)
 
 }
 
-void framebuffer_size_callback(GLFWwindow* window, int width, int height)
-{
-    context->width=width;
-    context->height=height;
+void framebuffer_size_callback(GLFWwindow *window, int width, int height) {
+    Application::context->width = width;
+    Application::context->height = height;
     glViewport(0, 0, width, height);
 }
 
 
-
-void mouse_callback(GLFWwindow* window, double xposIn, double yposIn)
-{
-    if (s_ignoreInput)
+void mouse_callback(GLFWwindow *window, double xposIn, double yposIn) {
+    if (Application::context->ignoreInput)
         return;
     float xpos = static_cast<float>(xposIn);
     float ypos = static_cast<float>(yposIn);
 
-    if (firstMouse)
-    {
+    if (firstMouse) {
         lastX = xpos;
         lastY = ypos;
         firstMouse = false;
@@ -238,9 +217,10 @@ void mouse_callback(GLFWwindow* window, double xposIn, double yposIn)
 }
 
 
-void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
-{
-    if (s_ignoreInput)
+void scroll_callback(GLFWwindow *window, double xoffset, double yoffset) {
+    if (Application::context->ignoreInput)
         return;
     _camera.ProcessMouseScroll(static_cast<float>(yoffset));
 }
+
+Context* Application::context= nullptr;

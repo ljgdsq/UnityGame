@@ -14,7 +14,7 @@
 #include "assimp/scene.h"
 #include "assimp/Importer.hpp"
 #include "assimp/postprocess.h"
-#include "core/resource_manager.h"
+#include "core/ResourceManager.h"
 #include "stb_image.h"
 
 using std::string;

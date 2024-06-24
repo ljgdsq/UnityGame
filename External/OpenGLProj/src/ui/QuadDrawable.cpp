@@ -11,7 +11,7 @@ void QuadDrawable::Draw() {
     VAO->unbind();
 }
 
-QuadDrawable::QuadDrawable(const Shader &shader) : Drawable(shader) {
+QuadDrawable::QuadDrawable(Shader *shader) : Drawable(shader) {
     float vertices[] = {
             // Pos      // Tex
             0.0f, 1.0f, 0.0f, 1.0f,

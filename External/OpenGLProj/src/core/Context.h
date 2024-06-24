@@ -11,15 +11,18 @@
 class Context {
 
 public:
-//    static Context*GetInstance();
+
     int width;
     int height;
     std::string title;
-    void*window;
     glm::mat4 projection;
     glm::mat4 view;
-    Renderer* renderer;
-    void*fbo;
+    void*window= nullptr;
+    Renderer* renderer= nullptr;
+    void*fbo= nullptr;
+    bool ignoreInput = true;
+    float deltaTime = 0.0f;
+    float lastFrame = 0.0f;
 };
 
 

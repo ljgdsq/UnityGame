@@ -40,15 +40,15 @@ int main() {
     renderer->Enable(FuncType::Depth_Test);
     Camera*camera=app->GetCamera();
 
-    lightingShader.Use();
-    lightingShader.SetVector3f("material.ambient",  1.0f, 0.5f, 0.31f);
-    lightingShader.SetVector3f("material.diffuse",  1.0f, 0.5f, 0.31f);
-    lightingShader.SetVector3f("material.specular", 0.5f, 0.5f, 0.5f);
+    lightingshader->Use();
+    lightingshader->SetVector3f("material.ambient",  1.0f, 0.5f, 0.31f);
+    lightingshader->SetVector3f("material.diffuse",  1.0f, 0.5f, 0.31f);
+    lightingshader->SetVector3f("material.specular", 0.5f, 0.5f, 0.5f);
     lightingShader.SetFloat("material.shininess", 32.0f);
 
-    lightingShader.SetVector3f("light.ambient",  0.2f, 0.2f, 0.2f);
-    lightingShader.SetVector3f("light.diffuse",  0.5f, 0.5f, 0.5f); // 将光照调暗了一些以搭配场景
-    lightingShader.SetVector3f("light.specular", 1.0f, 1.0f, 1.0f);
+    lightingshader->SetVector3f("light.ambient",  0.2f, 0.2f, 0.2f);
+    lightingshader->SetVector3f("light.diffuse",  0.5f, 0.5f, 0.5f); // 将光照调暗了一些以搭配场景
+    lightingshader->SetVector3f("light.specular", 1.0f, 1.0f, 1.0f);
 
     float rotateSpeed=1.0f*0.01;
     float rotateRadius=10;
@@ -67,19 +67,19 @@ int main() {
 //        lightPos.x = rotateRadius * cos(angle);
 //        lightPos.z = rotateRadius * sin(angle);
 
-        lightingShader.Use();
-        lightingShader.SetVector3f("lightPos", lightPos.x, lightPos.y, lightPos.z);
-        lightingShader.SetVector3f("viewPos", camera->Position.x,camera->Position.y,camera->Position.z);
-        lightingShader.SetVector3f("objectColor", 1.0f, 0.5f, 0.31f);
-        lightingShader.SetVector3f("lightColor",  1.0f, 1.0f, 1.0f);
+        lightingshader->Use();
+        lightingshader->SetVector3f("lightPos", lightPos.x, lightPos.y, lightPos.z);
+        lightingshader->SetVector3f("viewPos", camera->Position.x,camera->Position.y,camera->Position.z);
+        lightingshader->SetVector3f("objectColor", 1.0f, 0.5f, 0.31f);
+        lightingshader->SetVector3f("lightColor",  1.0f, 1.0f, 1.0f);
         glm::mat4 projection = glm::perspective(glm::radians(camera->Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
         glm::mat4 view = camera->GetViewMatrix();
-        lightingShader.SetMatrix4("projection", projection);
-        lightingShader.SetMatrix4("view", view);
+        lightingshader->SetMatrix4("projection", projection);
+        lightingshader->SetMatrix4("view", view);
 
 
         glm::mat4 model = glm::mat4(1.0f);
-        lightingShader.SetMatrix4("model", model);
+        lightingshader->SetMatrix4("model", model);
           cubeVAO.bind();
           glDrawArrays(GL_TRIANGLES, 0, 36);
 
@@ -88,19 +88,19 @@ int main() {
        model = glm::mat4(1.0f);
        model = glm::translate(model, planePos);
        model = glm::scale(model, glm::vec3(10.f,0.01f,10.f)); // a smaller cube
-        lightingShader.SetMatrix4("model", model);
+        lightingshader->SetMatrix4("model", model);
         cubeVAO.bind();
         glDrawArrays(GL_TRIANGLES, 0, 36);
 
 //
 //        // also draw the lamp object
-        lightCubeShader.Use();
-        lightCubeShader.SetMatrix4("projection", projection);
-        lightCubeShader.SetMatrix4("view", view);
+        lightCubeshader->Use();
+        lightCubeshader->SetMatrix4("projection", projection);
+        lightCubeshader->SetMatrix4("view", view);
         model = glm::mat4(1.0f);
         model = glm::translate(model, lightPos);
         model = glm::scale(model, glm::vec3(0.2f)); // a smaller cube
-        lightCubeShader.SetMatrix4("model", model);
+        lightCubeshader->SetMatrix4("model", model);
         lightCubeVAO.bind();
         glDrawArrays(GL_TRIANGLES, 0, 36);
 

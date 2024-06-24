@@ -12,7 +12,7 @@ void PlaneQuadDrawable::Draw() {
     VAO->unbind();
 }
 
-PlaneQuadDrawable::PlaneQuadDrawable(const Shader &shader) : Drawable(shader) {
+PlaneQuadDrawable::PlaneQuadDrawable(Shader *shader) : Drawable(shader) {
     float vertices[] = {
             // Pos      // Tex
             0.0f, 1.0f,0, 1.0f, 0.0f,

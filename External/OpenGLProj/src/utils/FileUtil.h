@@ -9,16 +9,25 @@
 #include <filesystem>
 class FileUtil {
 public:
-    static std::string NormalizePath(const std::string&path){
-        std::filesystem::path fs_path(path);
-
-        std::string normalized_path = fs_path.generic_string();
+    static std::string NormalizePath(const std::filesystem::path& path){
+        std::string normalized_path = path.generic_string();
         for (char& c : normalized_path) {
             if (c == '\\') {
                 c = '/';
             }
         }
         return normalized_path;
+    }
+    static std::string NormalizePath(const std::string&path){
+        std::filesystem::path fs_path(path);
+//        std::string normalizedPath = path.string();
+//#ifdef _WIN32
+//        std::replace(normalizedPath.begin(), normalizedPath.end(), '/', '\\');
+//#else
+//        std::replace(normalizedPath.begin(), normalizedPath.end(), '\\', '/');
+//#endif
+
+        return NormalizePath(fs_path);
     }
 };
 

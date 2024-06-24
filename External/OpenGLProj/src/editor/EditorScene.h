@@ -7,16 +7,21 @@
 
 
 #include "ui/Scene.h"
-
+#include <memory>
 class Hierarchy;
 class Stats;
 class EditorWidget;
 class Inspector;
 class EditorPanel;
 class ContentBrowser;
+class EditorMenuBar;
+
+using std::unique_ptr;
+
 class EditorScene: public Scene{
 
-private:
+private: //todo use smart pointer!
+    EditorMenuBar* editorMenuBar;
     Hierarchy*hierarchy;
     Stats*stats;
     Inspector*inspector;
@@ -26,7 +31,7 @@ private:
 public:
     Scene *getRunningScene() const;
     void InspectNode(SceneNode*node);
-    void ShowGame(void*buffer);
+    void SetGameBuffer(void*buffer);
 private:
     Scene* runningScene;
 public:

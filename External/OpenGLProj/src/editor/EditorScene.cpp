@@ -9,25 +9,30 @@
 #include "Inspector.h"
 #include "EditorPanel.h"
 #include "ContentBrowser.h"
-EditorScene::EditorScene():hierarchy(nullptr),stats(nullptr){}
+#include "EditorMenuBar.h"
+
+EditorScene::EditorScene() : hierarchy(nullptr), stats(nullptr) {}
 
 void EditorScene::OnCreate() {
     Scene::OnCreate();
-    hierarchy=new Hierarchy("hierarchy", this);
+
+    editorMenuBar = new EditorMenuBar("editorMenuBar", this);
+    this->AddChild(editorMenuBar);
+
+    hierarchy = new Hierarchy("hierarchy", this);
     this->AddChild(hierarchy);
 
-    stats=new Stats("stats",this);
+    stats = new Stats("stats", this);
     this->AddChild(stats);
 
-    inspector=new Inspector("inspector",this);
+    inspector = new Inspector("inspector", this);
     this->AddChild(inspector);
 
-    editorPanel=new EditorPanel("editorPanel",this);
+    editorPanel = new EditorPanel("editorPanel", this);
     this->AddChild(editorPanel);
 
-    contentBrowser=new ContentBrowser("contentBrowser",this);
+    contentBrowser = new ContentBrowser("contentBrowser", this);
     this->AddChild(contentBrowser);
-
 
 }
 
@@ -50,8 +55,10 @@ void EditorScene::AddChild(EditorWidget *child) {
     editorWidget.push_back(child);
 }
 
+
 void EditorScene::RenderWidget() {
-    for (const auto widget:editorWidget) {
+
+    for (const auto widget: editorWidget) {
         widget->Draw();
     }
 }
@@ -72,8 +79,8 @@ void EditorScene::InspectNode(SceneNode *node) {
     inspector->InspectNode(node);
 }
 
-void EditorScene::ShowGame(void *buffer) {
-    if (editorPanel){
+void EditorScene::SetGameBuffer(void *buffer) {
+    if (editorPanel) {
         editorPanel->ShowGame(buffer);
     }
 }

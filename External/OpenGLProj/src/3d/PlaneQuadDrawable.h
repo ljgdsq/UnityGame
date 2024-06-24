@@ -12,7 +12,7 @@ protected:
     VertexArray *VAO= nullptr;
     Buffer *VBO= nullptr;
 public:
-    PlaneQuadDrawable(const Shader&shader);
+    PlaneQuadDrawable(Shader*shader);
     ~PlaneQuadDrawable();
     void Draw() override;
 };

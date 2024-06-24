@@ -161,3 +161,9 @@ int FrameBuffer::getWidth() const {
 int FrameBuffer::getHeight() const {
     return height;
 }
+
+void FrameBuffer::destroy() {
+    Buffer::destroy();
+    glDeleteTextures(1,&colorBuffer);
+    glDeleteRenderbuffers(1,&rbo);
+}

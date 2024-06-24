@@ -8,7 +8,7 @@
 #include "core/buffer.h"
 #include "core/graphics.h"
 #include "cube_vertex.h"
-#include "core/resource_manager.h"
+#include "core/ResourceManager.h"
 #include "camera.h"
 // settings
 const unsigned int SCR_WIDTH = 800;
@@ -250,11 +250,11 @@ const int sampleCount=32;
     Shader screenShader;
     screenShader.Compile(screenVs,screenFs, nullptr);
 
-    shader.Use();
-    shader.SetInteger("texture1", 0);
+    shader->Use();
+    shader->SetInteger("texture1", 0);
 
-    screenShader.Use();
-    screenShader.SetInteger("screenTexture", 0);
+    screenshader->Use();
+    screenshader->SetInteger("screenTexture", 0);
 
     glEnable(GL_MULTISAMPLE);
 
@@ -280,27 +280,27 @@ const int sampleCount=32;
         {
             Graphics::GetInstance()->SetDrawMode(DrawMode::FILL);
 
-            shader.Use();
+            shader->Use();
             glm::mat4 model = glm::mat4(1.0f);
             glm::mat4 view = camera.GetViewMatrix();
             glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
-            shader.SetMatrix4("view", view);
-            shader.SetMatrix4("projection", projection);
+            shader->SetMatrix4("view", view);
+            shader->SetMatrix4("projection", projection);
             // cubes
             glBindVertexArray(cubeVAO.getId());
             glActiveTexture(GL_TEXTURE0);
             glBindTexture(GL_TEXTURE_2D, cubeTexture.id);
             model = glm::translate(model, glm::vec3(-1.0f, 0.0f, -1.0f));
-            shader.SetMatrix4("model", model);
+            shader->SetMatrix4("model", model);
             glDrawArrays(GL_TRIANGLES, 0, 36);
             model = glm::mat4(1.0f);
             model = glm::translate(model, glm::vec3(2.0f, 0.0f, 0.0f));
-            shader.SetMatrix4("model", model);
+            shader->SetMatrix4("model", model);
             glDrawArrays(GL_TRIANGLES, 0, 36);
             // floor
             glBindVertexArray(planeVAO);
             glBindTexture(GL_TEXTURE_2D, floorTexture.id);
-            shader.SetMatrix4("model", glm::mat4(1.0f));
+            shader->SetMatrix4("model", glm::mat4(1.0f));
             glDrawArrays(GL_TRIANGLES, 0, 6);
             glBindVertexArray(0);
 
@@ -312,7 +312,7 @@ const int sampleCount=32;
 //            glClearColor(1.0f, 1.0f, 1.0f, 1.0f); // set clear color to white (not really necessary actually, since we won't be able to see behind the quad anyways)
 //            glClear(GL_COLOR_BUFFER_BIT);
 //
-//            screenShader.Use();
+//            screenshader->Use();
 //            glBindVertexArray(quadVAO);
 //            glBindTexture(GL_TEXTURE_2D, textureColorbuffer);	// use the color attachment texture as the texture of the quad plane
 //            glDrawArrays(GL_TRIANGLES, 0, 6);

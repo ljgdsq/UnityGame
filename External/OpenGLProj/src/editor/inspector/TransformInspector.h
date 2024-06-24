@@ -8,7 +8,7 @@
 
 class TransformInspector: public ComponentInspector{
 public:
-    void Inspect(struct SceneNode *node) override;
+    void Inspect( SceneNode *node) override;
 };
 
 

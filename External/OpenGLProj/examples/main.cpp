@@ -6,7 +6,7 @@
 #include "core/graphics.h"
 #include "camera.h"
 #include "data/code_data.h"
-#include "core/resource_manager.h"
+#include "core/ResourceManager.h"
 
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
@@ -47,16 +47,16 @@ int main() {
     Texture2D tex=ResourceManager::LoadTexture("container2","container2");
     Texture2D tex2=ResourceManager::LoadTexture("container2_specular","container2_specular");
 
-    lightingShader.Use();
-    lightingShader.SetInteger("material.diffuse", 0);
-    lightingShader.SetInteger("material.specular", 1);
+    lightingshader->Use();
+    lightingshader->SetInteger("material.diffuse", 0);
+    lightingshader->SetInteger("material.specular", 1);
     // light properties
-    lightingShader.SetVector3f("light.ambient", 0.2f, 0.2f, 0.2f);
-    lightingShader.SetVector3f("light.diffuse", 0.5f, 0.5f, 0.5f);
-    lightingShader.SetVector3f("light.specular", 1.0f, 1.0f, 1.0f);
+    lightingshader->SetVector3f("light.ambient", 0.2f, 0.2f, 0.2f);
+    lightingshader->SetVector3f("light.diffuse", 0.5f, 0.5f, 0.5f);
+    lightingshader->SetVector3f("light.specular", 1.0f, 1.0f, 1.0f);
 
     // material properties
-//    lightingShader.SetVector3f("material.specular", 0.5f, 0.5f, 0.5f);
+//    lightingshader->SetVector3f("material.specular", 0.5f, 0.5f, 0.5f);
     lightingShader.SetFloat("material.shininess", 64.0f);
 
 
@@ -67,31 +67,31 @@ int main() {
         renderer->ClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 
 
-        lightingShader.Use();
-        lightingShader.SetVector3f("light.position", lightPos);
-        lightingShader.SetVector3f("viewPos", camera->Position);
+        lightingshader->Use();
+        lightingshader->SetVector3f("light.position", lightPos);
+        lightingshader->SetVector3f("viewPos", camera->Position);
 
         glm::mat4 projection = glm::perspective(glm::radians(camera->Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
         glm::mat4 view = camera->GetViewMatrix();
-        lightingShader.SetMatrix4("projection", projection);
-        lightingShader.SetMatrix4("view", view);
+        lightingshader->SetMatrix4("projection", projection);
+        lightingshader->SetMatrix4("view", view);
 
         // world transformation
         glm::mat4 model = glm::mat4(1.0f);
-        lightingShader.SetMatrix4("model", model);
+        lightingshader->SetMatrix4("model", model);
         tex.Bind(0);
 
         tex2.Bind(1);
         cubeVAO.bind();
         glDrawArrays(GL_TRIANGLES, 0, 36);
 
-        lightCubeShader.Use();
-        lightCubeShader.SetMatrix4("projection", projection);
-        lightCubeShader.SetMatrix4("view", view);
+        lightCubeshader->Use();
+        lightCubeshader->SetMatrix4("projection", projection);
+        lightCubeshader->SetMatrix4("view", view);
         model = glm::mat4(1.0f);
         model = glm::translate(model, lightPos);
         model = glm::scale(model, glm::vec3(0.2f)); // a smaller cube
-        lightCubeShader.SetMatrix4("model", model);
+        lightCubeshader->SetMatrix4("model", model);
         lightCubeVAO.bind();
         glDrawArrays(GL_TRIANGLES, 0, 36);
 

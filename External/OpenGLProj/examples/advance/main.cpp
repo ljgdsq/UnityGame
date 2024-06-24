@@ -5,7 +5,7 @@
 #include "ui/scene.h"
 #include "ui/UISprite.h"
 #include "3d/Cube.h"
-#include "core/resource_manager.h"
+#include "core/ResourceManager.h"
 
 
 class AdvanceScene:public Scene{
@@ -79,7 +79,7 @@ public:
     float t=0;
     Shader xyzshader;
     void OnUpdate() override {
-//        xyzshader.Use();
+//        xyzshader->Use();
 //        glm::mat4 model = glm::mat4(1.0f);
 //
 //

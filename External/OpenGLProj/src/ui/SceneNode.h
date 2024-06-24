@@ -9,7 +9,7 @@
 #include "core/Drawable.h"
 #include "core/texture.h"
 #include "core/Context.h"
-#include "core/resource_manager.h"
+#include "core/ResourceManager.h"
 #include <optional>
 using std::optional;
 class SceneNode {
@@ -23,7 +23,7 @@ public:
 
     std::function<void(const Context&ctx)> BeforeDraw;
     std::function<void(const Context&ctx)> AfterDraw;
-    Texture2D texture2D;
+    Texture2D *texture2D= nullptr;
 
 public:
     std::string GetName(){

@@ -8,7 +8,7 @@
 #include "lua/LuaManager.h"
 #include "core/texture.h"
 #include "core/shader.h"
-#include "core/resource_manager.h"
+#include "core/ResourceManager.h"
 #include <filesystem>
 #include "res_path.h"
 #include "core/sprite_renderer.h"

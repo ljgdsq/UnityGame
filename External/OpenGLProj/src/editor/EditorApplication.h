@@ -8,12 +8,15 @@
 
 #include "core/Application.h"
 #include "EditorScene.h"
-
 class EditorApplication: public Application {
 private:
     EditorScene* editorScene= nullptr;
+    FrameBuffer *frameBuffer= nullptr;
+    static EditorApplication*Instance;
 protected:
     void Init() override;
+
+    void OnExit() override;
 
     void BeginFrame() override;
 
@@ -25,7 +28,7 @@ public:
     EditorApplication(int width,int height,const char*title= nullptr);
 
     void SetScene(Scene *scene) override;
-
+    EditorApplication*GetInstance();
 };
 
 

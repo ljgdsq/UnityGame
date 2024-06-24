@@ -20,7 +20,7 @@ public:
     // Constructor
     Shader() { }
     // Sets the current shader as active
-    Shader  &Use();
+    void   Use();
     // Compiles the shader from given source code
     void    Compile(const char *vertexSource, const char *fragmentSource, const char *geometrySource = nullptr); // Note: geometry source code is optional 
     // Utility functions
