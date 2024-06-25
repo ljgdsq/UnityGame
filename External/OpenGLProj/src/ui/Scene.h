@@ -30,6 +30,7 @@ public:
         this->context=ctx;
     }
     void AddChild(SceneNode*child);
+    void DeleteChild(int index);
     virtual void Destroy(){};
 
    virtual std::vector<SceneNode*> GetNodes(){

@@ -11,10 +11,13 @@
 #include <string>
 using std::vector;
 using std::string;
+class ContextMenu;
 class Hierarchy: public EditorWidget{
     vector<string> nodeNames;
     int selectIndex=-1;
+    ContextMenu*contextMenu;
 public:
+    ~Hierarchy();
     Hierarchy(const std::string &name, EditorScene *scene);
 
     void Draw() override;

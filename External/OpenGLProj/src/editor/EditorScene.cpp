@@ -84,3 +84,4 @@ void EditorScene::SetGameBuffer(void *buffer) {
         editorPanel->ShowGame(buffer);
     }
 }
+

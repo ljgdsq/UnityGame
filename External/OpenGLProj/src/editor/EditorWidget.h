@@ -16,6 +16,7 @@ public:
     EditorWidget(std::string name,EditorScene*scene);
 
 public:
+    ~EditorWidget(){}
     virtual void Draw()=0;
 };
 

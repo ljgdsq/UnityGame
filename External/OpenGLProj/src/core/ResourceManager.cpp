@@ -3,7 +3,6 @@
 //
 
 #include "ResourceManager.h"
-#include "glad/gl.h"
 #include "res_path.h"
 #include <iostream>
 #include <sstream>

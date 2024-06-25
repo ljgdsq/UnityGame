@@ -23,12 +23,22 @@ public:
 //        sp->Scale(0.5f,0.5f);
 //        this->AddChild(sp);
 //
+    auto sp1=UISprite::Create("container");
+    sp1->Position(0,0);
+    this->AddChild(sp1);
+
         sp2=UISprite::Create("container");
-        sp2->Position(-10,200);
+        sp2->Position(512,512);
+        this->AddChild(sp2);
+        auto w=Application::GetInstance()->GetWidth();
+        auto h=Application::GetInstance()->GetHeight();
+
+        auto sp2=UISprite::Create("container");
+        sp2->Position(w/2,h/2);
         this->AddChild(sp2);
 //
         cube=Cube::Create("wall");
-      this->AddChild(cube);
+        this->AddChild(cube);
         cube->scale=glm::vec3 (0.5,0.5,0.5);
 
 

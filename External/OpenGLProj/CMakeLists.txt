@@ -35,7 +35,7 @@ file(GLOB_RECURSE  SOURCES "src/*.cpp" )
 list(REMOVE_ITEM SOURCES "${PROJECT_SOURCE_DIR}/src/main.cpp")
 
 set(CORE_SRC ${SOURCES})
-add_executable(OpenGLProj ${SOURCES} src/main.cpp src/editor/EditorScene.h src/editor/Stats.h src/core/Types.h src/editor/Inspector.h src/editor/inspector/ComponentInspector.h src/editor/inspector/TransformInspector.h src/editor/inspector/TextureInspect.h src/editor/ContentBrowser.h src/editor/EditorMenuBar.h)
+add_executable(OpenGLProj ${SOURCES} src/main.cpp src/editor/EditorScene.h src/editor/Stats.h src/core/Types.h src/editor/Inspector.h src/editor/inspector/ComponentInspector.h src/editor/inspector/TransformInspector.h src/editor/inspector/TextureInspect.h src/editor/ContentBrowser.h src/editor/EditorMenuBar.h src/editor/Project.h src/editor/ContextMenu.h)
 
 add_subdirectory(external/glfw)
 

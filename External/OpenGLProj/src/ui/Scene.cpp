@@ -26,3 +26,9 @@ void Scene::Render(const Context&ctx) {
 void Scene::AddChild(SceneNode *child) {
     nodes.push_back(child);
 }
+
+void Scene::DeleteChild(int index) {
+    if (index>=0&&index<nodes.size()){
+        nodes.erase(nodes.begin()+index);
+    }
+}

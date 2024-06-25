@@ -17,9 +17,9 @@ void Inspector::Draw() {
     ImGui::Begin(name.c_str());
     if (node){
         ImGui::Text(inspectName.c_str());
-    }
-    for (const auto &inspect :componentInspectors) {
-        inspect->Inspect(node);
+        for (const auto &inspect :componentInspectors) {
+            inspect->Inspect(node);
+        }
     }
 
     ImGui::End();

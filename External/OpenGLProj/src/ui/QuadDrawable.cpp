@@ -13,15 +13,16 @@ void QuadDrawable::Draw() {
 
 QuadDrawable::QuadDrawable(Shader *shader) : Drawable(shader) {
     float vertices[] = {
-            // Pos      // Tex
-            0.0f, 1.0f, 0.0f, 1.0f,
-            1.0f, 0.0f, 1.0f, 0.0f,
-            0.0f, 0.0f, 0.0f, 0.0f,
+            // Pos               // Tex
+            -0.5f,  0.5f, 0.0f, 1.0f,  // 左上角
+            0.5f, -0.5f, 1.0f, 0.0f,  // 右下角
+            -0.5f, -0.5f, 0.0f, 0.0f,  // 左下角
 
-            0.0f, 1.0f, 0.0f, 1.0f,
-            1.0f, 1.0f, 1.0f, 1.0f,
-            1.0f, 0.0f, 1.0f, 0.0f
+            -0.5f,  0.5f, 0.0f, 1.0f,  // 左上角
+            0.5f,  0.5f, 1.0f, 1.0f,  // 右上角
+            0.5f, -0.5f, 1.0f, 0.0f   // 右下角
     };
+
 
     VAO=new VertexArray();
     VBO=new Buffer(BufferType::VBO);
