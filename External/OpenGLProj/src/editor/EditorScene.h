@@ -43,7 +43,7 @@ public:
     void AddChild(EditorWidget*child);
     void OnCreate() override;
     void RenderWidget();
-
+    void Save();
     std::vector<SceneNode *> GetNodes() override;
 };
 

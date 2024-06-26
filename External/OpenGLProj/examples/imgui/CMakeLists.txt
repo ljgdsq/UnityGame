@@ -10,4 +10,4 @@ set(SOURCES ${TEST_SOURCES} ${CORE_SRC} )
 # 创建可执行文件
 add_executable(imgui_demo ${SOURCES} )
 # 链接库
-target_link_libraries(imgui_demo PUBLIC glfw glad liblua imgui glm ${OPENGL_LIBRARIES})
+target_link_libraries(imgui_demo PUBLIC glfw glad liblua RapidJSON imgui glm ImGuiFileDialog ${OPENGL_LIBRARIES})

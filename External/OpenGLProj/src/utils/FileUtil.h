@@ -7,6 +7,7 @@
 
 #include <string>
 #include <filesystem>
+namespace fs=std::filesystem;
 class FileUtil {
 public:
     static std::string NormalizePath(const std::filesystem::path& path){
@@ -29,6 +30,23 @@ public:
 
         return NormalizePath(fs_path);
     }
+
+    static bool FileExists(const std::string& fullPath){
+        return fs::exists(fullPath);
+    }
+
+    static bool PathExists(const std::string& fullPath){
+        return fs::exists(fullPath);
+    }
+
+    static bool RemoveFile(const std::string& fullPath){
+        if (FileExists(fullPath)){
+            return fs::remove(fullPath);
+        }
+        return false;
+    }
+
+    static bool WriteText(const std::string& fullPath,const std::string& text);
 };
 
 

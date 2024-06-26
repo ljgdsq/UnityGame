@@ -85,3 +85,7 @@ void EditorScene::SetGameBuffer(void *buffer) {
     }
 }
 
+void EditorScene::Save() {
+
+}
+

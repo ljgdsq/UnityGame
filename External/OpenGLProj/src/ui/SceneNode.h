@@ -15,6 +15,7 @@ using std::optional;
 class SceneNode {
     optional<std::string> name;
 public:
+
     glm::vec3 position;
     glm::vec3 size;
     glm::vec3 scale;

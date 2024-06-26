@@ -6,7 +6,6 @@
 #define OPENGLPROJ_BUFFER_H
 #include "glad/gl.h"
 #include <vector>
-#define str(name) #name
 enum BufferType{
     VAO,
     VBO,

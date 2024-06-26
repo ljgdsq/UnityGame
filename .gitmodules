@@ -2,3 +2,6 @@
 	path = External/OpenGLProj/external/imgui
 	url = https://github.com/ocornut/imgui.git
     branch = docking
+[submodule "External/OpenGLProj/external/rapidjson"]
+	path = External/OpenGLProj/external/rapidjson
+	url = https://github.com/Tencent/rapidjson.git

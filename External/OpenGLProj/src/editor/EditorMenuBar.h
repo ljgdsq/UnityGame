@@ -8,6 +8,8 @@
 #include "EditorWidget.h"
 
 class EditorMenuBar: public EditorWidget{
+private:
+    void DrawMainMenuBar();
 public:
     EditorMenuBar(const std::string &name, EditorScene *scene);
 

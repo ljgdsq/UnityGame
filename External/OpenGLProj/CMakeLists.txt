@@ -13,6 +13,8 @@ include_directories(${PROJECT_SOURCE_DIR}/external/imgui)
 include_directories(${PROJECT_SOURCE_DIR}/external/imgui/backends)
 include_directories(${PROJECT_SOURCE_DIR}/external/imgui/misc)
 include_directories(${PROJECT_SOURCE_DIR}/external/lua/src)
+include_directories(${PROJECT_SOURCE_DIR}/external/ImGuiFileDialog)
+include_directories(${PROJECT_SOURCE_DIR}/external/rapidjson/include)
 
 
 # 添加 GLFW
@@ -35,7 +37,7 @@ file(GLOB_RECURSE  SOURCES "src/*.cpp" )
 list(REMOVE_ITEM SOURCES "${PROJECT_SOURCE_DIR}/src/main.cpp")
 
 set(CORE_SRC ${SOURCES})
-add_executable(OpenGLProj ${SOURCES} src/main.cpp src/editor/EditorScene.h src/editor/Stats.h src/core/Types.h src/editor/Inspector.h src/editor/inspector/ComponentInspector.h src/editor/inspector/TransformInspector.h src/editor/inspector/TextureInspect.h src/editor/ContentBrowser.h src/editor/EditorMenuBar.h src/editor/Project.h src/editor/ContextMenu.h)
+add_executable(OpenGLProj ${SOURCES} src/main.cpp src/editor/EditorScene.h src/editor/Stats.h src/core/Types.h src/editor/Inspector.h src/editor/inspector/ComponentInspector.h src/editor/inspector/TransformInspector.h src/editor/inspector/TextureInspect.h src/editor/ContentBrowser.h src/editor/EditorMenuBar.h src/editor/Project.h src/editor/ContextMenu.h src/core/Archiver.h src/core/Serializable.h src/editor/ArchiverImpl.h examples/josntest/main.cpp)
 
 add_subdirectory(external/glfw)
 
@@ -125,11 +127,14 @@ set(ASSIMP_BUILD_TESTS OFF CACHE BOOL "If the test suite for Assimp is built in 
 #endif ()
 
 add_subdirectory(external/assimp)
+add_subdirectory(external/ImGuiFileDialog)
+add_subdirectory(external/rapidjson)
 
 #add_subdirectory(examples/assimp)
 add_subdirectory(examples/advance)
 add_subdirectory(external/imgui)
 
 add_subdirectory(examples/imgui)
+add_subdirectory(examples/josntest)
 
 

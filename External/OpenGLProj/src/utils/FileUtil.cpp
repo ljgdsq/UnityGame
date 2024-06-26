@@ -3,3 +3,15 @@
 //
 
 #include "FileUtil.h"
+#include <fstream>
+
+using std::ofstream;
+bool FileUtil::WriteText(const std::string &fullPath, const std::string &text) {
+    ofstream outFile(fullPath);
+    if (outFile.is_open()){
+        outFile << text;
+        outFile.close();
+    }else{
+        return false;
+    }
+}
