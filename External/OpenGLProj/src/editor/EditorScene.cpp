@@ -10,6 +10,7 @@
 #include "EditorPanel.h"
 #include "ContentBrowser.h"
 #include "EditorMenuBar.h"
+#include "LogWindow.h"
 
 EditorScene::EditorScene() : hierarchy(nullptr), stats(nullptr) {}
 
@@ -33,6 +34,9 @@ void EditorScene::OnCreate() {
 
     contentBrowser = new ContentBrowser("contentBrowser", this);
     this->AddChild(contentBrowser);
+
+    logWindow=new LogWindow("logWindow",this);
+    this->AddChild(logWindow);
 
 }
 
@@ -87,5 +91,10 @@ void EditorScene::SetGameBuffer(void *buffer) {
 
 void EditorScene::Save() {
 
+}
+
+void EditorScene::setLogSink(ImGuiLogSink *sink) {
+    if(logWindow)
+        logWindow->setLogSink(sink);
 }
 

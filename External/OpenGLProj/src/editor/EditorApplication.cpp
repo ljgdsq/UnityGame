@@ -6,8 +6,12 @@
 #include "imgui.h"
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
-
+#include "log/Logger.h"
 void EditorApplication::Init() {
+
+    imGuiLogSink =std::make_shared<ImGuiLogSink>();
+    Logger::Init({imGuiLogSink});
+
     Application::Init();
     ImGui::CreateContext();
     ImGuiIO &io = ImGui::GetIO();
@@ -31,7 +35,7 @@ void EditorApplication::Init() {
     frameBuffer = new FrameBuffer(context->width, context->height);
     frameBuffer->unbind();
     context->fbo = frameBuffer;
-
+    editorScene->setLogSink(imGuiLogSink.get());
 }
 
 void EditorApplication::BeginFrame() {

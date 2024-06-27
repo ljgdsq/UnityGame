@@ -7,6 +7,7 @@
 
 
 #include "ui/Scene.h"
+#include "ImGuiLogSink.h"
 #include <memory>
 class Hierarchy;
 class Stats;
@@ -15,7 +16,7 @@ class Inspector;
 class EditorPanel;
 class ContentBrowser;
 class EditorMenuBar;
-
+class LogWindow;
 using std::unique_ptr;
 
 class EditorScene: public Scene{
@@ -27,6 +28,7 @@ private: //todo use smart pointer!
     Inspector*inspector;
     EditorPanel* editorPanel;
     ContentBrowser*contentBrowser;
+    LogWindow*logWindow;
     std::vector<EditorWidget*> editorWidget;
 public:
     Scene *getRunningScene() const;
@@ -36,7 +38,7 @@ private:
     Scene* runningScene;
 public:
     void setRunningScene(Scene *runningScene);
-
+    void setLogSink(ImGuiLogSink*sink);
 public:
     EditorScene();
     ~EditorScene();

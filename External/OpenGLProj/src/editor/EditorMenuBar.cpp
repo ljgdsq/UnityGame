@@ -8,6 +8,7 @@
 #include "ImGuiFileDialog.h"
 #include "utils/FileUtil.h"
 #include "core/Archiver.h"
+#include "log/Logger.h"
 #include <sstream>
 static bool show_demo_window = false;
 
@@ -52,6 +53,7 @@ void EditorMenuBar::DrawMainMenuBar() {
 
         if (ImGui::BeginMenu("Help")) {
             if (ImGui::MenuItem("About")) {
+                Logger::error("About not impl!");
             }
             if (ImGui::MenuItem("ImGui Demo")) {
                 show_demo_window = !show_demo_window;

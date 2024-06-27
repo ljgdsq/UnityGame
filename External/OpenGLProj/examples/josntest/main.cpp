@@ -1,11 +1,15 @@
 #include "rapidjson/document.h"
 #include "rapidjson/writer.h"
 #include "rapidjson/stringbuffer.h"
+#include "data/Serializer.h"
+
 using namespace rapidjson;
+
 #include <iostream>
+
 using std::string;
 
-class Vec3{
+class Vec3 {
 public:
     float x;
     float y;
@@ -13,104 +17,90 @@ public:
 
     Vec3(float x, float y, float z) : x(x), y(y), z(z) {}
 
-    explicit Vec3(float v) : Vec3(v,v,v) {}
+    explicit Vec3(float v) : Vec3(v, v, v) {}
 };
 
-class Student{
+class Student {
 public:
-    int id=0;
-    string name="";
-    float height=0;
-    Vec3 pos=Vec3(0,0,0);
+    int id = 0;
+    string name = "";
+    float height = 0;
+    bool man= false;
+    Vec3 pos = Vec3(0, 0, 0);
 
 };
-static MemoryPoolAllocator<CrtAllocator> allocator;
-template<class T>
-Value SerializeT(const T&t);
-
-template<class T>
-T Deserialize(const Value&v);
 
 
 template<>
-Value SerializeT(const Vec3&v){
-    Value value(kArrayType);
-    value.PushBack(v.x, allocator);
-    value.PushBack(v.y, allocator);
-    value.PushBack(v.z, allocator);
-    return value;
+void Serializer::serialize(Value &value, const char *name, const Vec3 &v) {
+    Value vec(kArrayType);
+    vec.PushBack(v.x, allocator);
+    vec.PushBack(v.y, allocator);
+    vec.PushBack(v.z, allocator);
+    value.AddMember(StringRef(name), vec, allocator);
 }
 
 template<>
-Vec3 Deserialize(const Value&value){
-    if (value.IsArray() && value.Size() == 3) {
-        return Vec3(value[0].GetFloat(), value[1].GetFloat(), value[2].GetFloat());
-    } else {
-        return Vec3(0.0f);
+void Serializer::serialize(Value &value, const char *name, const Student &v) {
+    Value stu(kObjectType);
+    Serializer serializer;
+    serializer.serialize(stu, "id", v.id);
+    serializer.serialize(stu, "name", v.name);
+    serializer.serialize(stu, "height", v.height);
+    serializer.serialize(stu, "pos", v.pos);
+    serializer.serialize(stu, "man", v.man);
+    value.AddMember(StringRef(name), stu, allocator);
+}
+
+template<>
+Vec3 Serializer::deserialize(const Value &value, const char *name) {
+    if (value.HasMember(name) && value[name].IsArray() && value[name].Size() == 3) {
+        const Value& vec = value[name];
+        return Vec3(vec[0].GetFloat(), vec[1].GetFloat(), vec[2].GetFloat());
     }
+    return Vec3(0.0f);
 }
 
 template<>
-Student Deserialize(const Value&value){
+Student Serializer::deserialize(const Value &value, const char *name) {
     Student student;
-    // 检查并解析 id 字段
-    if (value.HasMember("id") && value["id"].IsInt())
-        student.id = value["id"].GetInt();
-    else
-        student.id = 0;  // 默认值或错误处理
-
-    // 检查并解析 name 字段
-    if (value.HasMember("name") && value["name"].IsString())
-        student.name = value["name"].GetString();
-    else
-        student.name = "";  // 默认值或错误处理
-
-    // 检查并解析 height 字段
-    if (value.HasMember("height") && value["height"].IsFloat())
-        student.height = value["height"].GetFloat();
-    else
-        student.height = 0.0f;  // 默认值或错误处理
-
-    if (value.HasMember("pos") && value["pos"].IsArray()){
-        const Value& posValue = value["pos"];
-        student.pos = Deserialize<Vec3>(posValue);
+    if (value.HasMember(name) && value[name].IsObject()) {
+        const Value& stu = value[name];
+        Serializer serializer;
+        student.id = serializer.deserialize<int>(stu, "id");
+        student.name = serializer.deserialize<string>(stu, "name");
+        student.height = serializer.deserialize<float>(stu, "height");
+        student.man = serializer.deserialize<bool>(stu, "man");
+        student.pos = serializer.deserialize<Vec3>(stu, "pos");
     }
     return student;
 }
-
-template<>
-Value SerializeT(const Student&v){
-    Value value(kObjectType);
-    value.AddMember("id",v.id,allocator);
-    value.AddMember("name",StringRef(v.name.c_str()),allocator);
-    value.AddMember("height",v.height,allocator);
-    value.AddMember("pos",SerializeT(v.pos),allocator);
-    return value;
-}
-
-
 
 
 int main() {
     Document document;
     document.SetObject();
-    allocator = document.GetAllocator();
 
     Student student;
-    student.id=99;
-    student.name="zxx";
-    student.height=175.1;
-    student.pos={1,2,3};
+    student.id = 99;
+    student.name = "zxx";
+    student.height = 175.1;
+    student.pos = {1, 2, 3};
+    student.man= true;
 
-    auto v=SerializeT(student);
 
-    document.AddMember("person",v,allocator);
+    Serializer serializer;
+    serializer.serialize(document, "student", student);
     StringBuffer buffer;
     Writer<StringBuffer> writer(buffer);
     document.Accept(writer);
-    std::cout<<buffer.GetString()<<std::endl;
-    const Value& person = document["person"];
-    Student stu=Deserialize<Student>(person);
+    std::cout << buffer.GetString() << std::endl;
+
+    Student stu=serializer.deserialize<Student>(document,"student");
+
+
+
+
     return 0;
 }
 

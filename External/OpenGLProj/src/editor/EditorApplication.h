@@ -8,11 +8,14 @@
 
 #include "core/Application.h"
 #include "EditorScene.h"
+#include "ImGuiLogSink.h"
+
 class EditorApplication: public Application {
 private:
     EditorScene* editorScene= nullptr;
     FrameBuffer *frameBuffer= nullptr;
     static EditorApplication*Instance;
+    std::shared_ptr<ImGuiLogSink> imGuiLogSink;
 protected:
     void Init() override;
 
