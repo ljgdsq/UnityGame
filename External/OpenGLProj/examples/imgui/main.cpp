@@ -9,6 +9,7 @@
 #include "ui/UISprite.h"
 #include "3d/Cube.h"
 #include "editor/Hierarchy.h"
+#include "core/GameObject.h"
 
 class ImguiScene:public Scene{
 
@@ -27,19 +28,24 @@ public:
     sp1->Position(0,0);
     this->AddChild(sp1);
 
-        sp2=UISprite::Create("container");
-        sp2->Position(512,512);
-        this->AddChild(sp2);
-        auto w=Application::GetInstance()->GetWidth();
-        auto h=Application::GetInstance()->GetHeight();
+    auto go=new GameObject("zzz");
+    auto comp=go->AddComponent<ImageComponent>();
+    comp->setTexture2D(ResourceManager::GetTexture("face"));
 
-        auto sp2=UISprite::Create("container");
-        sp2->Position(w/2,h/2);
-        this->AddChild(sp2);
 //
-        cube=Cube::Create("wall");
-        this->AddChild(cube);
-        cube->scale=glm::vec3 (0.5,0.5,0.5);
+//        sp2=UISprite::Create("container");
+//        sp2->Position(512,512);
+//        this->AddChild(sp2);
+//        auto w=Application::GetInstance()->GetWidth();
+//        auto h=Application::GetInstance()->GetHeight();
+//
+//        auto sp2=UISprite::Create("container");
+//        sp2->Position(w/2,h/2);
+//        this->AddChild(sp2);
+////
+//        cube=Cube::Create("wall");
+//        this->AddChild(cube);
+//        cube->scale=glm::vec3 (0.5,0.5,0.5);
 
 
     }

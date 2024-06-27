@@ -11,6 +11,7 @@ bool FileUtil::WriteText(const std::string &fullPath, const std::string &text) {
     if (outFile.is_open()){
         outFile << text;
         outFile.close();
+        return true;
     }else{
         return false;
     }

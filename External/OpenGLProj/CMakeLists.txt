@@ -18,6 +18,13 @@ include_directories(${PROJECT_SOURCE_DIR}/external/rapidjson/include)
 include_directories(${PROJECT_SOURCE_DIR}/external/spdlog/include)
 
 
+
+#option(RAPIDJSON_BUILD_DOC "Build rapidjson documentation." OFF)
+#option(RAPIDJSON_BUILD_EXAMPLES "Build rapidjson examples." OFF)
+#option(RAPIDJSON_BUILD_TESTS "Build rapidjson perftests and unittests." OFF)
+set(RAPIDJSON_BUILD_EXAMPLES OFF CACHE BOOL "Build rapidjson examples.")
+set(RAPIDJSON_BUILD_DOC OFF CACHE BOOL "Build rapidjson examples.")
+set(RAPIDJSON_BUILD_TESTS OFF CACHE BOOL "Build rapidjson examples.")
 # 添加 GLFW
 set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "Build the GLFW example programs")
 set(GLFW_BUILD_TESTS OFF CACHE BOOL "Build the GLFW test programs")
@@ -38,8 +45,7 @@ file(GLOB_RECURSE  SOURCES "src/*.cpp" )
 list(REMOVE_ITEM SOURCES "${PROJECT_SOURCE_DIR}/src/main.cpp")
 
 set(CORE_SRC ${SOURCES})
-add_executable(OpenGLProj ${SOURCES} src/main.cpp src/editor/EditorScene.h src/editor/Stats.h src/core/Types.h src/editor/Inspector.h src/editor/inspector/ComponentInspector.h src/editor/inspector/TransformInspector.h src/editor/inspector/TextureInspect.h src/editor/ContentBrowser.h src/editor/EditorMenuBar.h src/editor/Project.h src/editor/ContextMenu.h src/core/Archiver.h src/core/Serializable.h src/editor/ArchiverImpl.h examples/josntest/main.cpp src/data/Serializer.h examples/logtest/main.cpp src/log/Logger.h src/editor/LogWindow.h src/editor/ImGuiLogSink.h)
-
+add_executable(OpenGLProj ${SOURCES} src/main.cpp src/core/GameObject.h src/core/Component.h src/core/Transform.h)
 add_subdirectory(external/glfw)
 
 
@@ -100,6 +106,8 @@ add_custom_command(
         DEPENDS ${RES_FILES}  # 使该命令依赖于所有资源文件
         COMMENT "Copying resources..."
 )
+
+add_executable(aaa_fake "src/main.cpp" src/core/Common.h src/core/component/ImageComponent.h src/core/Canvas.h)
 
 # 创建一个自定义目标，执行资源复制命令
 add_custom_target(copy_res ALL DEPENDS ${CMAKE_BINARY_DIR}/res)

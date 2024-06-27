@@ -11,14 +11,16 @@
 
 class Scene {
     friend class Application;
+    friend class GameObject;
     friend class EditorApplication;
     void Update();
 
     void Create();
 protected:
     std::vector<SceneNode*> nodes;
-
+    static std::vector<class GameObject*> gameobjects;
     Context*context;
+    class Canvas*canvas;
     virtual void Render(const Context&ctx);
 public:
 

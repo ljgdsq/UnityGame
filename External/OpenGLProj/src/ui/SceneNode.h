@@ -16,8 +16,8 @@ class SceneNode {
     optional<std::string> name;
 public:
 
-    glm::vec3 position;
     glm::vec3 size;
+    glm::vec3 position;
     glm::vec3 scale;
     glm::vec3 rotate;
     glm::vec3 color;

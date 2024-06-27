@@ -3,8 +3,8 @@
 //
 
 #include "Scene.h"
-
-
+#include "core/Canvas.h"
+std::vector<class GameObject*> Scene::gameobjects;
 
 void Scene::Update() {
     for(const auto node:nodes){
@@ -14,10 +14,12 @@ void Scene::Update() {
 }
 
 void Scene::Create() {
+    canvas=new Canvas(0);
     OnCreate();
 }
 
 void Scene::Render(const Context&ctx) {
+    canvas->Process();
     for(const auto node:nodes){
         node->Draw(ctx);
     }
