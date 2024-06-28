@@ -5,15 +5,18 @@
 #ifndef OPENGLPROJ_EDITORWIDGET_H
 #define OPENGLPROJ_EDITORWIDGET_H
 
-
-#include "ui/SceneNode.h"
+#include <string>
+#include <vector>
+using std::vector;
+using std::string;
 class EditorScene;
+
 class EditorWidget{
 protected:
     std::string name;
     class EditorScene*scene;
 public:
-    EditorWidget(std::string name,EditorScene*scene);
+    EditorWidget(std::string name,class EditorScene*scene);
 
 public:
     ~EditorWidget(){}

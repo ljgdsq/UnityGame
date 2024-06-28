@@ -4,7 +4,7 @@
 
 #include "Transform.h"
 
-std::string Transform::GetType() {
+const char* Transform::GetType() {
     return "Transform";
 }
 
@@ -28,3 +28,11 @@ Transform::Transform(GameObject *gameObject, const vec3 &position, const vec3 &s
         gameObject), position(position), scale(scale), rotate(rotate) {}
 
 Transform::Transform(GameObject *gameObject) : Component(gameObject), position(0,0,0),scale(1,1,1), rotate(0) {}
+
+rapidjson::Value Transform::serialize() {
+    return rapidjson::Value();
+}
+
+void Transform::deserialize() {
+
+}

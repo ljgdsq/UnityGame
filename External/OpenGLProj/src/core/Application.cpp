@@ -6,7 +6,7 @@
 #include "GLFW/glfw3.h"
 #include "glad/glad.h"
 #include "camera.h"
-#include "ui/scene.h"
+#include "Scene.h"
 #include <iostream>
 
 
@@ -48,13 +48,13 @@ int Application::Run() {
         context->deltaTime = currentFrame - context->lastFrame;
         context->lastFrame = currentFrame;
         glm::mat4 projection = glm::perspective(glm::radians(camera->Zoom),
-                                                (float) context->width / (context->width + 0.0001f), 0.1f, 100.0f);
+                                                (float) context->width / (context->height + 0.0001f), 0.1f, 100.0f);
         glm::mat4 view = camera->GetViewMatrix();
         context->projection = projection;
         context->view = view;
         renderer->Clear();
         if (scene) {
-            scene->Update();
+            scene->Update(*context);
             scene->Render(*context);
         }
         EndFrame();

@@ -13,6 +13,7 @@
 enum CanvasDrawType{
     Line=1,
     Quad=2,
+    Quad3d
 };
 
 class CanvasDrawCommand{
@@ -33,21 +34,29 @@ public:
 
     CanvasDrawType GetType() const override;
 };
+
+class Quad3DDrawCommand:public CanvasDrawCommand{
+    vec3 position;
+    vec3 scale;
+    vec3 rotate;
+    vec2 size;
+    int texID;
+    int shaderID;
+
+    CanvasDrawType GetType() const override;
+};
+
 class CanvasItem:public Component{
 public:
     virtual void Process(const Context&ctx)=0;
 
     explicit CanvasItem(GameObject *gameObject);
+
+    rapidjson::Value serialize() override;
+
+    void deserialize() override;
 };
-struct Vertex {
-    vec3 position;
-    vec2 texCoords;
 
-    Vertex(const vec3 &position, const vec2 &texCoords) : position(position), texCoords(texCoords) {}
-
-    Vertex(float x, float y, float z, float u, float v) : position(x, y, z), texCoords(u, v) {}
-
-};
 
 struct Batch{
     int shaderID;
@@ -76,7 +85,7 @@ protected:
     Batch otherBatch;
     void FlushQuad();
     void FlushOther();
-    std::string GetType() override;
+    const char* GetType() override;
 
 
 

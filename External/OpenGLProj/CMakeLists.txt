@@ -107,7 +107,7 @@ add_custom_command(
         COMMENT "Copying resources..."
 )
 
-add_executable(aaa_fake "src/main.cpp" src/core/Common.h src/core/component/ImageComponent.h src/core/Canvas.h)
+add_executable(aaa_fake "src/main.cpp" src/core/Common.h src/core/component/ImageComponent.h src/core/Canvas.h src/core/component/MeshComponent.h src/core/Mesh.h src/core/MeshRenderer.h src/core/bsp/CubeMesh.h src/editor/SceneSerializer.h src/core/component/Serializable.h)
 
 # 创建一个自定义目标，执行资源复制命令
 add_custom_target(copy_res ALL DEPENDS ${CMAKE_BINARY_DIR}/res)

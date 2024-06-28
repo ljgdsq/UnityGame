@@ -3,7 +3,9 @@
 //
 
 #include "GameObject.h"
-#include "ui/Scene.h"
+#include "Scene.h"
+#include "core/component/MeshComponent.h"
+
 GameObject::GameObject(const string &name) : name(name),active(true), transform(this) {
     Scene::gameobjects.push_back(this);
 
@@ -24,10 +26,30 @@ const string GameObject::getName() const {
     return name;
 }
 
+void GameObject::Update(const Context &ctx) {
+    for(const auto&comp:components){
+        comp->OnUpdate(ctx);
+    }
+}
+
+const vector<Component *> &GameObject::getComponents() const {
+    return components;
+}
+
 
 template<>
 ImageComponent* GameObject::AddComponent(){
     const auto&comp=new ImageComponent(this);
     comp->OnCreate();
+    this->AddComponent(comp);
+    return  comp;
+}
+
+
+template<>
+MeshComponent* GameObject::AddComponent(){
+    const auto&comp=new MeshComponent(this);
+    comp->OnCreate();
+    this->AddComponent(comp);
     return  comp;
 }

@@ -12,7 +12,7 @@
 #include "EditorMenuBar.h"
 #include "LogWindow.h"
 #include "core/GameObject.h"
-EditorScene::EditorScene() : hierarchy(nullptr), stats(nullptr) {}
+EditorScene::EditorScene() : Scene("EditorScene"), hierarchy(nullptr), stats(nullptr) {}
 
 void EditorScene::OnCreate() {
     Scene::OnCreate();

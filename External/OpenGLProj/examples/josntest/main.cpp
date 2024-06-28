@@ -31,14 +31,7 @@ public:
 };
 
 
-template<>
-void Serializer::serialize(Value &value, const char *name, const Vec3 &v) {
-    Value vec(kArrayType);
-    vec.PushBack(v.x, allocator);
-    vec.PushBack(v.y, allocator);
-    vec.PushBack(v.z, allocator);
-    value.AddMember(StringRef(name), vec, allocator);
-}
+
 
 template<>
 void Serializer::serialize(Value &value, const char *name, const Student &v) {
@@ -52,14 +45,7 @@ void Serializer::serialize(Value &value, const char *name, const Student &v) {
     value.AddMember(StringRef(name), stu, allocator);
 }
 
-template<>
-Vec3 Serializer::deserialize(const Value &value, const char *name) {
-    if (value.HasMember(name) && value[name].IsArray() && value[name].Size() == 3) {
-        const Value& vec = value[name];
-        return Vec3(vec[0].GetFloat(), vec[1].GetFloat(), vec[2].GetFloat());
-    }
-    return Vec3(0.0f);
-}
+
 
 template<>
 Student Serializer::deserialize(const Value &value, const char *name) {

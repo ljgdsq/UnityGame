@@ -27,7 +27,7 @@ void Canvas::RemoveCanvasItem(CanvasItem *item) {
     }
 }
 
-std::string Canvas::GetType() {
+const char* Canvas::GetType() {
     return "Canvas";
 }
 #define MAX_SPRITE 300
@@ -149,7 +149,6 @@ void Canvas::FlushQuad() {
     batchCount=quadBatch.indices.size()/6;
     glUseProgram(quadBatch.shaderID);
     vao->bind();
-    vbo->bind();
 
 //    glBufferSubData(GL_ARRAY_BUFFER,0,quadBatch.vertices.size()* sizeof(Vertex),quadBatch.vertices.data());
 
@@ -182,6 +181,18 @@ bool Canvas::isSameBatch(QuadDrawCommand *command) {
 
 CanvasItem::CanvasItem(GameObject *gameObject) : Component(gameObject) {}
 
+rapidjson::Value CanvasItem::serialize() {
+    return rapidjson::Value();
+}
+
+void CanvasItem::deserialize() {
+
+}
+
 CanvasDrawType QuadDrawCommand::GetType() const {
     return Quad;
+}
+
+CanvasDrawType Quad3DDrawCommand::GetType() const {
+    return Quad3d;
 }

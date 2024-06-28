@@ -2,7 +2,7 @@
 #include "core/Application.h"
 #include "core/buffer.h"
 
-#include "ui/scene.h"
+#include "src/core/Scene.h"
 #include "ui/UISprite.h"
 #include "3d/Cube.h"
 #include "core/ResourceManager.h"

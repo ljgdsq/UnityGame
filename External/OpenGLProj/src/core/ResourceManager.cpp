@@ -131,6 +131,7 @@ Texture2D *ResourceManager::loadTextureFromFile(const char *file) {
     unsigned char *image = stbi_load(file, &width, &height, &ch, 0);
     // Now generate texture
     texture->Generate(width, height, ch, image);
+    texture->path=file;
     // And finally free image data
     stbi_image_free(image);
     return texture;

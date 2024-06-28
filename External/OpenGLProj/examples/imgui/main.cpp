@@ -5,11 +5,13 @@
 #include "imgui_impl_opengl3.h"
 #include "editor/EditorApplication.h"
 #include <GLFW/glfw3.h>
-#include "ui/scene.h"
+#include "src/core/Scene.h"
 #include "ui/UISprite.h"
 #include "3d/Cube.h"
 #include "editor/Hierarchy.h"
 #include "core/GameObject.h"
+#include "core/component/MeshComponent.h"
+#include "core/bsp/CubeMesh.h"
 
 class ImguiScene:public Scene{
 
@@ -18,6 +20,7 @@ class ImguiScene:public Scene{
     Cube* cube;
     Cube* plane;
 public:
+    explicit ImguiScene(const string &name) : Scene(name) {}
 
     void OnCreate() override {
 //        sp=UISprite::Create("face");
@@ -29,13 +32,21 @@ public:
 //    this->AddChild(sp1);
 
         {
+            auto cube=new GameObject("Cube");
+            auto comp=cube->AddComponent<MeshComponent>();
+            cube->transform.position=vec3 (0,0,0);
+            comp->SetUpMesh(new CubeMesh());
+        }
+
+
+        {
             auto go=new GameObject("zzz");
             auto comp=go->AddComponent<ImageComponent>();
             comp->setTexture2D(ResourceManager::GetTexture("face"));
             go->transform.position=vec3 (100,100,0);
 
         }
-        {        int batch=20;
+        {        int batch=2;
             for (int i = 0; i <batch ; ++i) {
                 auto go=new GameObject("zzz"+ std::to_string(i));
                 auto comp=go->AddComponent<ImageComponent>();
@@ -45,6 +56,7 @@ public:
             }
 
         }
+
 
 
 
@@ -72,7 +84,7 @@ public:
 
 int main() {
     EditorApplication app(1920, 1080, "editor");
-    app.SetScene(new ImguiScene());
+    app.SetScene(new ImguiScene("imgui"));
     return app.Run();
 }
 

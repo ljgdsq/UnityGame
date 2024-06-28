@@ -10,11 +10,20 @@ enum DrawMode{
     FILL=GL_FILL
 };
 
+enum CullFace{
+    FRONT=GL_FRONT,
+    BACK=GL_BACK,
+    BOTH=GL_FRONT_AND_BACK
+};
+
 class Graphics {
     Graphics()=default;
 public:
     static Graphics*GetInstance();
     void SetDrawMode(DrawMode mode);
+    void SetCull(CullFace cullFace);
+    void DisableCull();
+    void SetFrontFace(bool ccw= true);
 };
 
 

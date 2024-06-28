@@ -9,6 +9,7 @@
 #include "utils/FileUtil.h"
 #include "core/Archiver.h"
 #include "log/Logger.h"
+#include "SceneSerializer.h"
 #include <sstream>
 static bool show_demo_window = false;
 
@@ -73,11 +74,12 @@ void EditorMenuBar::DrawMainMenuBar() {
             if (FileUtil::FileExists(filePathName)){
                 FileUtil::RemoveFile(filePathName);
             }
-            std::ostringstream ss;
-          Archiver<EditorScene> archiver;
-            auto res=archiver.save(scene);
 
-            printf("EditorScene :%s",res.c_str());
+
+            SceneSerializer sceneSerializer;
+            sceneSerializer.Save(scene);
+
+
 //            FileUtil::WriteText(filePathName,)
             // Your application save function
 //            scene->SaveToFile(filePathName);

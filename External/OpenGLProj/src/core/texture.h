@@ -6,7 +6,7 @@
 #define OPENGLPROJ_TEXTURE_H
 
 #include "glad/gl.h"
-
+#include <string>
 enum TextureParam{
     CLAMP_TO_EDGE=GL_CLAMP_TO_EDGE,
     REPEAT=GL_REPEAT
@@ -24,8 +24,8 @@ public:
     int wrapT;
     int filterMin;
     int filterMax;
+    std::string path;
     Texture2D();
-    void load(const char*file);
     void Generate(int width,int height,int channel,unsigned char*data);
     void Bind(int slot=0)const;
     void SetWrapMode(TextureParam param);

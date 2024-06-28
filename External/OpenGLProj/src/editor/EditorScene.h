@@ -6,12 +6,13 @@
 #define OPENGLPROJ_EDITORSCENE_H
 
 
-#include "ui/Scene.h"
+#include "src/core/Scene.h"
 #include "ImGuiLogSink.h"
+#include "EditorWidget.h"
 #include <memory>
 class Hierarchy;
 class Stats;
-class EditorWidget;
+
 class Inspector;
 class EditorPanel;
 class ContentBrowser;

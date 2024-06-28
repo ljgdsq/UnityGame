@@ -5,8 +5,9 @@
 #include "ImageComponent.h"
 #include "core/GameObject.h"
 #include "core/ResourceManager.h"
+#include "data/Serializer.h"
 
-std::string ImageComponent::GetType() {
+const char* ImageComponent::GetType() {
     return "Image";
 }
 
@@ -17,10 +18,6 @@ void ImageComponent::OnCreate() {
 
 void ImageComponent::OnEnable() {
 
-}
-
-void ImageComponent::OnUpdate() {
-    Component::OnUpdate();
 }
 
 void ImageComponent::OnDisable() {
@@ -62,4 +59,15 @@ void ImageComponent::Process(const Context&ctx) {
 }
 
 ImageComponent::ImageComponent(GameObject *gameObject) : CanvasItem(gameObject), quadDrawCommand() {}
+
+rapidjson::Value ImageComponent::serialize() {
+    rapidjson::Value v(rapidjson::kObjectType);
+    Serializer serializer;
+    serializer.serialize(v,"tex",texture2D->path);
+    return v;
+}
+
+void ImageComponent::deserialize() {
+    CanvasItem::deserialize();
+}
 

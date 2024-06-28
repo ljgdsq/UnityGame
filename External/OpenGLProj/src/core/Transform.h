@@ -8,6 +8,11 @@
 #include "Component.h"
 class Transform: public Component{
 public:
+    rapidjson::Value serialize() override;
+
+    void deserialize() override;
+
+public:
     vec3 position;
     vec3 scale;
     vec3 rotate;
@@ -17,7 +22,7 @@ public:
     explicit Transform(GameObject *gameObject);
 
 protected:
-    std::string GetType() override;
+    const char* GetType() override;
 
     void OnCreate() override;
 

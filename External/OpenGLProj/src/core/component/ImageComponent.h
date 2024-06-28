@@ -10,7 +10,7 @@
 #include "core/Canvas.h"
 #include "core/shader.h"
 
-class ImageComponent:CanvasItem {
+class ImageComponent:public CanvasItem {
 public:
     explicit ImageComponent(GameObject *gameObject);
 
@@ -29,17 +29,19 @@ private:
     void Process(const Context&ctx) override;
 
 protected:
-    std::string GetType() override;
+    const char* GetType() override;
 
     void OnEnable() override;
 
-    void OnUpdate() override;
 
     void OnDisable() override;
 
     void OnDestroy() override;
 
+public:
+    rapidjson::Value serialize() override;
 
+    void deserialize() override;
 };
 
 

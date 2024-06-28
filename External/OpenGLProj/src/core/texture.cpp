@@ -4,7 +4,6 @@
 
 
 #include "texture.h"
-#include "glad/glad.h"
 
 Texture2D::Texture2D() :
         width(0), height(0), internalFormat(GL_RGBA), imageFormat(GL_RGBA), wrapS(GL_REPEAT), wrapT(GL_REPEAT),

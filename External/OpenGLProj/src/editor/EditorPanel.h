@@ -5,6 +5,7 @@
 #ifndef OPENGLPROJ_EDITORPANEL_H
 #define OPENGLPROJ_EDITORPANEL_H
 #include "EditorWidget.h"
+#include "core/buffer.h"
 #include <string>
 class EditorPanel :public  EditorWidget{
     FrameBuffer *buffer= nullptr;

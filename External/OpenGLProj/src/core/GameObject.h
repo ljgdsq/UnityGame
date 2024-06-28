@@ -24,7 +24,11 @@ private:
     bool active;
     vector<Component*> components;
 public:
+    const vector<Component *> &getComponents() const;
+
+public:
     explicit GameObject(const string &name);
+    void Update(const Context&ctx);
 public:
     void AddComponent(Component*component);
     void RemoveComponent(Component*component);
@@ -32,9 +36,13 @@ public:
 
     template<class T>
     T *AddComponent();
+
 };
 
 template<>
 ImageComponent* GameObject::AddComponent();
+
+
+
 
 #endif //OPENGLPROJ_GAMEOBJECT_H

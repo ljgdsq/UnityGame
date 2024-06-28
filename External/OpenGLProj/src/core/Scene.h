@@ -13,17 +13,24 @@ class Scene {
     friend class Application;
     friend class GameObject;
     friend class EditorApplication;
-    void Update();
+    friend class Serializer;
+    friend class SceneSerializer;
+    void Update(const Context&ctx);
 
+public:
+    explicit Scene(const string &name);
+
+private:
     void Create();
 protected:
     std::vector<SceneNode*> nodes;
     static std::vector<class GameObject*> gameobjects;
     Context*context;
     class Canvas*canvas;
+    class MeshRenderer*meshRenderer;
     virtual void Render(const Context&ctx);
 public:
-
+    string name;
     virtual void OnCreate(){};
     virtual void OnUpdate(){
 
@@ -38,6 +45,8 @@ public:
    virtual std::vector<SceneNode*> GetNodes(){
         return nodes;
     }
+
+
 };
 
 
