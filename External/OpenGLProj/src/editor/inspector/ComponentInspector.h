@@ -8,7 +8,7 @@
 
 class ComponentInspector {
 public:
-    virtual void Inspect(class SceneNode*node)=0;
+    virtual void Inspect(class GameObject*node)=0;
 };
 
 

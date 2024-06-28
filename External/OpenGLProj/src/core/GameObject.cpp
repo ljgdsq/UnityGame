@@ -20,8 +20,14 @@ void GameObject::RemoveComponent(Component *component) {
     }
 }
 
+const string GameObject::getName() const {
+    return name;
+}
+
 
 template<>
 ImageComponent* GameObject::AddComponent(){
-    return  new ImageComponent(this);
+    const auto&comp=new ImageComponent(this);
+    comp->OnCreate();
+    return  comp;
 }

@@ -27,4 +27,4 @@ void Transform::OnDestroy() {
 Transform::Transform(GameObject *gameObject, const vec3 &position, const vec3 &scale, const vec3 &rotate) : Component(
         gameObject), position(position), scale(scale), rotate(rotate) {}
 
-Transform::Transform(GameObject *gameObject) : Component(gameObject) {}
+Transform::Transform(GameObject *gameObject) : Component(gameObject), position(0,0,0),scale(1,1,1), rotate(0) {}

@@ -114,7 +114,7 @@ Texture2D *ResourceManager::LoadTexture(std::string name) {
 }
 
 Texture2D *ResourceManager::GetTexture(std::string name) {
-    return Textures[name];
+    return LoadTexture(name);
 }
 
 void ResourceManager::Clear() {

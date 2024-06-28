@@ -11,7 +11,7 @@
 #include "ContentBrowser.h"
 #include "EditorMenuBar.h"
 #include "LogWindow.h"
-
+#include "core/GameObject.h"
 EditorScene::EditorScene() : hierarchy(nullptr), stats(nullptr) {}
 
 void EditorScene::OnCreate() {
@@ -80,9 +80,11 @@ vector<SceneNode *> EditorScene::GetNodes() {
 }
 
 void EditorScene::InspectNode(SceneNode *node) {
+//    inspector->InspectNode(node);
+}
+void EditorScene::InspectNode(GameObject *node) {
     inspector->InspectNode(node);
 }
-
 void EditorScene::SetGameBuffer(void *buffer) {
     if (editorPanel) {
         editorPanel->ShowGame(buffer);
@@ -96,5 +98,9 @@ void EditorScene::Save() {
 void EditorScene::setLogSink(ImGuiLogSink *sink) {
     if(logWindow)
         logWindow->setLogSink(sink);
+}
+
+vector<GameObject *> EditorScene::GetGameObjects() {
+    return runningScene->gameobjects;
 }
 

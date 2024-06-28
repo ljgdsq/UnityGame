@@ -7,17 +7,19 @@
 
 #include "EditorWidget.h"
 class SceneNode;
+class GameObject;
 class Inspector: public EditorWidget{
 private:
     std::string inspectName;
-     SceneNode*node= nullptr;
+    GameObject*node= nullptr;
      std::vector<class ComponentInspector*> componentInspectors;
 public:
     void Draw() override;
 
     Inspector(const std::string &name, EditorScene *scene);
 
-    void InspectNode( SceneNode*node);
+//    void InspectNode( SceneNode*node);
+    void InspectNode( GameObject*node);
 };
 
 

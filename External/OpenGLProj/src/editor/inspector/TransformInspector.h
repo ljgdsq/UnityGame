@@ -8,7 +8,7 @@
 
 class TransformInspector: public ComponentInspector{
 public:
-    void Inspect( SceneNode *node) override;
+    void Inspect(class GameObject *node) override;
 };
 
 

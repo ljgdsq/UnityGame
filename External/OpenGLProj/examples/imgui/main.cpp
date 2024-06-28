@@ -24,13 +24,29 @@ public:
 //        sp->Scale(0.5f,0.5f);
 //        this->AddChild(sp);
 //
-    auto sp1=UISprite::Create("container");
-    sp1->Position(0,0);
-    this->AddChild(sp1);
+//    auto sp1=UISprite::Create("container");
+//    sp1->Position(500,200);
+//    this->AddChild(sp1);
 
-    auto go=new GameObject("zzz");
-    auto comp=go->AddComponent<ImageComponent>();
-    comp->setTexture2D(ResourceManager::GetTexture("face"));
+        {
+            auto go=new GameObject("zzz");
+            auto comp=go->AddComponent<ImageComponent>();
+            comp->setTexture2D(ResourceManager::GetTexture("face"));
+            go->transform.position=vec3 (100,100,0);
+
+        }
+        {        int batch=20;
+            for (int i = 0; i <batch ; ++i) {
+                auto go=new GameObject("zzz"+ std::to_string(i));
+                auto comp=go->AddComponent<ImageComponent>();
+                comp->setTexture2D(ResourceManager::GetTexture("face"));
+                go->transform.scale=vec3 (0.5f,0.5f,1);
+                go->transform.position=vec3 (100+rand()%500,100+rand()%500,0);
+            }
+
+        }
+
+
 
 //
 //        sp2=UISprite::Create("container");

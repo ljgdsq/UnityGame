@@ -7,7 +7,7 @@
 #include "inspector/ComponentInspector.h"
 #include "editor/inspector/TransformInspector.h"
 #include "editor/inspector/TextureInspect.h"
-
+#include "core/GameObject.h"
 Inspector::Inspector(const std::string &name, EditorScene *scene) : EditorWidget(name, scene) {
     componentInspectors.push_back(new TransformInspector());
     componentInspectors.push_back(new TextureInspect());
@@ -25,7 +25,12 @@ void Inspector::Draw() {
     ImGui::End();
 }
 
-void Inspector::InspectNode(SceneNode *node) {
-    inspectName = node->GetName();
+//void Inspector::InspectNode(SceneNode *node) {
+//    inspectName = node->GetName();
+//    this->node=node;
+//}
+
+void Inspector::InspectNode(GameObject *node) {
+    inspectName = node->getName();
     this->node=node;
 }

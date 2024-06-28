@@ -18,7 +18,7 @@ class ContentBrowser;
 class EditorMenuBar;
 class LogWindow;
 using std::unique_ptr;
-
+class GameObject;
 class EditorScene: public Scene{
 
 private: //todo use smart pointer!
@@ -33,6 +33,7 @@ private: //todo use smart pointer!
 public:
     Scene *getRunningScene() const;
     void InspectNode(SceneNode*node);
+    void InspectNode(GameObject*node);
     void SetGameBuffer(void*buffer);
 private:
     Scene* runningScene;
@@ -47,6 +48,8 @@ public:
     void RenderWidget();
     void Save();
     std::vector<SceneNode *> GetNodes() override;
+
+    std::vector<GameObject*> GetGameObjects();
 };
 
 

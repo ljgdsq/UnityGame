@@ -7,9 +7,12 @@
 #include <vector>
 #include <queue>
 #include "Component.h"
+#include "buffer.h"
+#include "Context.h"
 
 enum CanvasDrawType{
-    Quad=1
+    Line=1,
+    Quad=2,
 };
 
 class CanvasDrawCommand{
@@ -32,9 +35,25 @@ public:
 };
 class CanvasItem:public Component{
 public:
-    virtual void Process()=0;
+    virtual void Process(const Context&ctx)=0;
 
     explicit CanvasItem(GameObject *gameObject);
+};
+struct Vertex {
+    vec3 position;
+    vec2 texCoords;
+
+    Vertex(const vec3 &position, const vec2 &texCoords) : position(position), texCoords(texCoords) {}
+
+    Vertex(float x, float y, float z, float u, float v) : position(x, y, z), texCoords(u, v) {}
+
+};
+
+struct Batch{
+    int shaderID;
+    int texID;
+    std::vector<Vertex> vertices; // 顶点数据
+    std::vector<unsigned int> indices; // 索引数据
 };
 
 class Canvas: public CanvasItem{
@@ -44,12 +63,22 @@ public:
     explicit Canvas(GameObject *gameObject);
 
 public:
-    void Process() override;
+    void Process(const Context&ctx) override;
     void Draw();
+    int batchCount=0;
+    void OnCreate() override;
 protected:
+    VertexArray* vao;
+    Buffer *vbo;
+    Buffer* ebo;
+
+    Batch quadBatch;
+    Batch otherBatch;
+    void FlushQuad();
+    void FlushOther();
     std::string GetType() override;
 
-    void OnCreate() override;
+
 
     void OnEnable() override;
 
@@ -58,14 +87,15 @@ protected:
     void OnDestroy() override;
 
 public:
+
     static std::vector<CanvasItem*> childs;
-    static std::queue<CanvasDrawCommand> rendererQueue;
+    static std::queue<CanvasDrawCommand*> rendererQueue;
     static void AddCanvasItem(CanvasItem*item);
     static void RemoveCanvasItem(CanvasItem*item);
-    static void SubmitDrawCommand(CanvasDrawCommand command);
+    static void SubmitDrawCommand(CanvasDrawCommand* command);
 private:
 
-    int drawCount=0;
+    bool isSameBatch(QuadDrawCommand* command);
 };
 
 

@@ -9,7 +9,7 @@
 
 class TextureInspect: public ComponentInspector{
 public:
-    void Inspect( SceneNode *node) override;
+    void Inspect(class GameObject *node) override;
 };
 
 #endif //OPENGLPROJ_TEXTUREINSPECT_H

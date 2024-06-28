@@ -17,6 +17,10 @@ using std::unique_ptr;
 class GameObject {
 private:
     string name;
+public:
+    const string getName() const;
+
+private:
     bool active;
     vector<Component*> components;
 public:

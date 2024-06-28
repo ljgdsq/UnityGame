@@ -4,9 +4,8 @@
 
 #include "TransformInspector.h"
 #include "imgui.h"
-#include "ui/SceneNode.h"
-
-void TransformInspector::Inspect(SceneNode *node) {
+#include "core/GameObject.h"
+void TransformInspector::Inspect(GameObject *node) {
     if (node) {
         ImGui::Text("Transform:");
 
@@ -23,19 +22,19 @@ void TransformInspector::Inspect(SceneNode *node) {
             // Display the "X" label and input
             ImGui::Text("X:");
             ImGui::SameLine();
-            ImGui::DragFloat("##X", &(node->position.x), 1.0f);
+            ImGui::DragFloat("##X", &(node->transform.position.x), 1.0f);
             ImGui::SameLine();
 
             // Display the "Y" label and input
             ImGui::Text("Y:");
             ImGui::SameLine();
-            ImGui::DragFloat("##Y", &(node->position.y), 1.0f);
+            ImGui::DragFloat("##Y", &(node->transform.position.y), 1.0f);
             ImGui::SameLine();
 
             // Display the "Z" label and input
             ImGui::Text("Z:");
             ImGui::SameLine();
-            ImGui::DragFloat("##Z", &(node->position.z), 1.0f);
+            ImGui::DragFloat("##Z", &(node->transform.position.z), 1.0f);
         }
 
         {
@@ -45,19 +44,19 @@ void TransformInspector::Inspect(SceneNode *node) {
 
             ImGui::Text("X:");
             ImGui::SameLine();
-            ImGui::DragFloat("##RX", &(node->rotate.x), 1.0f);
+            ImGui::DragFloat("##RX", &(node->transform.rotate.x), 1.0f);
             ImGui::SameLine();
 
             // Display the "Y" label and input
             ImGui::Text("Y:");
             ImGui::SameLine();
-            ImGui::DragFloat("##RY", &(node->rotate.y), 1.0f);
+            ImGui::DragFloat("##RY", &(node->transform.rotate.y), 1.0f);
             ImGui::SameLine();
 
             // Display the "Z" label and input
             ImGui::Text("Z:");
             ImGui::SameLine();
-            ImGui::DragFloat("##RZ", &(node->rotate.z), 1.0f);
+            ImGui::DragFloat("##RZ", &(node->transform.rotate.z), 1.0f);
         }
 
         {
@@ -67,19 +66,19 @@ void TransformInspector::Inspect(SceneNode *node) {
 
             ImGui::Text("X:");
             ImGui::SameLine();
-            ImGui::DragFloat("##SX", &(node->scale.x), 0.1f);
+            ImGui::DragFloat("##SX", &(node->transform.scale.x), 0.1f);
             ImGui::SameLine();
 
             // Display the "Y" label and input
             ImGui::Text("Y:");
             ImGui::SameLine();
-            ImGui::DragFloat("##SY", &(node->scale.y), 0.1f);
+            ImGui::DragFloat("##SY", &(node->transform.scale.y), 0.1f);
             ImGui::SameLine();
 
             // Display the "Z" label and input
             ImGui::Text("Z:");
             ImGui::SameLine();
-            ImGui::DragFloat("##SZ", &(node->scale.z), 0.1f);
+            ImGui::DragFloat("##SZ", &(node->transform.scale.z), 0.1f);
         }
 
 

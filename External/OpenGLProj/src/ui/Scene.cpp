@@ -15,14 +15,18 @@ void Scene::Update() {
 
 void Scene::Create() {
     canvas=new Canvas(0);
+    canvas->OnCreate();
     OnCreate();
 }
 
 void Scene::Render(const Context&ctx) {
-    canvas->Process();
+
     for(const auto node:nodes){
         node->Draw(ctx);
     }
+
+    canvas->Process(ctx);
+    canvas->Draw();
 }
 
 void Scene::AddChild(SceneNode *child) {

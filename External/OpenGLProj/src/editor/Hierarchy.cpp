@@ -6,6 +6,7 @@
 #include "imgui.h"
 #include "editor/EditorScene.h"
 #include "ContextMenu.h"
+#include "core/GameObject.h"
 static bool showpop= false;
 static int index=-1;
 
@@ -13,14 +14,14 @@ static int index=-1;
 
 void Hierarchy::Draw() {
     nodeNames.clear();
-    auto childs= scene->GetNodes();
+    auto childs= scene->GetGameObjects();
    for(const auto &child:childs){
-       nodeNames.push_back(child->GetName());
+       nodeNames.push_back(child->getName());
    }
 
    static ImGuiIO& io = ImGui::GetIO();
    ImGui::Begin(name.c_str());
-    if (ImGui::BeginListBox("##listbox 2", ImVec2(-FLT_MIN, 5 * ImGui::GetTextLineHeightWithSpacing())))
+    if (ImGui::BeginListBox("##listbox 2", ImVec2(-FLT_MIN, 20 * ImGui::GetTextLineHeightWithSpacing())))
     {
         for (int n = 0; n < childs.size(); n++)
         {

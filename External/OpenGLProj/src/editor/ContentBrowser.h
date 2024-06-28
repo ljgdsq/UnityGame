@@ -1,7 +1,3 @@
-//
-// Created by zhengshulin on 2024/6/24.
-//
-
 #ifndef OPENGLPROJ_CONTENTBROWSER_H
 #define OPENGLPROJ_CONTENTBROWSER_H
 
@@ -15,7 +11,7 @@ public:
     void ListFile();
 
     void ShowDirectory(const std::string &path);
-    std::vector<std::string> currentPath; // 保存当前路径的层次结构
+    std::vector<std::string> currentPath;
 };
 
 
