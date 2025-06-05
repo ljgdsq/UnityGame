@@ -3,3 +3,8 @@ godot
 spdlog
 chromium
 folly
+
+
+gfx framework
+https://github.com/floooh/sokol?tab=readme-ov-file
+bgfx
