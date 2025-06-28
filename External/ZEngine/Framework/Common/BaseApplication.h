@@ -18,7 +18,7 @@ namespace framework {
         void Update(float deltaTime) override;
 
         // Get the name of the application
-        const char* GetName() const override;
+        const char* GetName() const ;
 
         // Check if the application should exit
         bool ShouldExit() override;
