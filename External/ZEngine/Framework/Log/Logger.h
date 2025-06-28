@@ -7,7 +7,7 @@ class Logger
 {
     static bool initialized;
 public:
-    const std::vector<spdlog::sink_ptr>& custom_sinks = {}
+        static void Init(const std::vector<spdlog::sink_ptr>& custom_sinks = {});
 public:
     template <typename... Args>
     static void Log(const char *fmt, const Args &...args)
@@ -15,13 +15,13 @@ public:
         spdlog::info(fmt, args...);
     }
     template <typename... Args>
-    static void warn(const char *fmt, const Args &...args)
+    static void Warn(const char *fmt, const Args &...args)
     {
         spdlog::warn(fmt, args...);
     }
 
     template <typename... Args>
-    static void error(const char *fmt, const Args &...args)
+    static void Error(const char *fmt, const Args &...args)
     {
         spdlog::error(fmt, args...);
     }

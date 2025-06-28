@@ -54,3 +54,11 @@ target_link_libraries(zengine PRIVATE
     spdlog::spdlog
 )
 
+# Copy resource directory to output directory
+add_custom_command(TARGET zengine POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+    ${CMAKE_CURRENT_SOURCE_DIR}/Res
+    $<TARGET_FILE_DIR:zengine>/Res
+    COMMENT "Copying resource files to output directory"
+)
+
