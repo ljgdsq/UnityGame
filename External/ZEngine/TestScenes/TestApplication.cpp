@@ -2,6 +2,7 @@
 #include "TestScenes/TriangleTestScene.h"
 #include "TestScenes/QuadTestScene.h"
 #include "Framework/Core/SceneManager.h"
+#include "Framework/Core/Input.h"
 #include "Framework/Log/Logger.h"
 #include <GLFW/glfw3.h>
 
@@ -32,38 +33,35 @@ void TestApplication::InitScenes() {
 }
 
 void TestApplication::HandleInput() {
-    GLFWwindow* window = glfwGetCurrentContext();
-    if (!window) {
-        return;
-    }
+    // 使用Input系统处理场景切换
     
     // 按1键切换到三角形场景
-    static bool key1Pressed = false;
-    if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS) {
-        if (!key1Pressed) {
-            SceneManager::GetInstance().SetActiveScene("TriangleTest");
-            SceneManager::GetInstance().InitializeActiveScene();
-            Logger::Log("Switched to Triangle Test Scene");
-            key1Pressed = true;
-        }
-    } else {
-        key1Pressed = false;
+    if (Input::GetKeyDown(GLFW_KEY_1)) {
+        SceneManager::GetInstance().SetActiveScene("TriangleTest");
+        SceneManager::GetInstance().InitializeActiveScene();
+        Logger::Log("Switched to Triangle Test Scene");
     }
     
     // 按2键切换到四边形场景
-    static bool key2Pressed = false;
-    if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS) {
-        if (!key2Pressed) {
-            SceneManager::GetInstance().SetActiveScene("QuadTest");
-            SceneManager::GetInstance().InitializeActiveScene();
-            Logger::Log("Switched to Quad Test Scene");
-            key2Pressed = true;
-        }
-    } else {
-        key2Pressed = false;
+    if (Input::GetKeyDown(GLFW_KEY_2)) {
+        SceneManager::GetInstance().SetActiveScene("QuadTest");
+        SceneManager::GetInstance().InitializeActiveScene();
+        Logger::Log("Switched to Quad Test Scene");
+    }
+
+    // 按3键切换到线框渲染模式
+    if (Input::GetKeyDown(GLFW_KEY_3)) {
+        Logger::Log("Switched to wireframe rendering mode");
+        renderer->SetPolygonMode(PolygonMode::Line);
+    }
+
+    // 按4键切换到填充渲染模式
+    if (Input::GetKeyDown(GLFW_KEY_4)) {
+        Logger::Log("Switched to filled rendering mode");
+        renderer->SetPolygonMode(PolygonMode::Fill);
     }
     
-    // 可以在这里添加更多测试按键
+    // 可以在这里添加更多测试按键处理
 }
 
 } // namespace framework

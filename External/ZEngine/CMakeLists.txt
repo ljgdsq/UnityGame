@@ -3,6 +3,11 @@ project(zengine)
 
 set(CMAKE_CXX_STANDARD 17)
 
+# 设置编译选项，使用UTF-8编码
+if(MSVC)
+    add_compile_options(/utf-8)
+endif()
+
 # Set up only the minimal required include paths
 include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}

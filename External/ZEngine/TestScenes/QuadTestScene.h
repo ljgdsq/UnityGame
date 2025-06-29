@@ -3,16 +3,15 @@
 #include "Framework/Core/Scene.h"
 #include "Framework/Render/Shader.h"
 #include <glad/glad.h>
-
+#include "Framework/Render/Buffer.h"
 namespace framework {
 
 class QuadTestScene : public Scene {
 private:
     Shader* m_shader = nullptr;
-    unsigned int m_VAO = 0;
-    unsigned int m_VBO = 0;
-    unsigned int m_EBO = 0;  // 索引缓冲对象
-
+    VertexArray* VertexArrayObject = nullptr; 
+    Buffer* VertexBufferObject = nullptr;
+    Buffer* IndexBufferObject = nullptr;
 public:
     QuadTestScene() = default;
     ~QuadTestScene() override = default;

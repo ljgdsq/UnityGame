@@ -1,5 +1,8 @@
-#include "Framework/Interface/IApplication.hpp"
+#pragma once
 #include <string>
+#include "Framework/Interface/IApplication.hpp"
+#include "Framework/Render/Renderer.h"
+#include "Framework/Core/Input.h"
 namespace framework
 {
     class BaseApplication : public interface::IApplication
@@ -33,5 +36,9 @@ namespace framework
         virtual void HandleInput();
 
         virtual void InitScenes();
+
+        protected:
+        Renderer * renderer = nullptr;
+
     };
 } // namespace framework

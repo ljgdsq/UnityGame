@@ -21,26 +21,43 @@ void QuadTestScene::Initialize() {
         0, 1, 3,  // first triangle
         1, 2, 3   // second triangle
     };
-
     // 创建和配置顶点缓冲区、索引缓冲区和顶点数组对象
-    glGenVertexArrays(1, &m_VAO);
-    glGenBuffers(1, &m_VBO);
-    glGenBuffers(1, &m_EBO);
+    VertexArrayObject = new VertexArray();
+    VertexBufferObject = new Buffer(BufferType::VBO);
+    IndexBufferObject = new Buffer(BufferType::EBO);
+    VertexArrayObject->BindBuffer();
+    VertexBufferObject->BindBuffer();
+    IndexBufferObject->BindBuffer();
+    VertexBufferObject->UpdateData(vertices, sizeof(vertices));
+    IndexBufferObject->UpdateData(indices,  sizeof(vertices));
+
+    VertexArrayObject->AddLayout({0, 3, GL_FLOAT, false, 3 * sizeof(float), 0});
+    VertexArrayObject->EnableAttributes(0);
+    VertexBufferObject->UnbindBuffer();
+    VertexArrayObject->UnbindBuffer();
+
+    // // 创建和配置顶点缓冲区、索引缓冲区和顶点数组对象
+    // glGenVertexArrays(1, &m_VAO);
+    // glGenBuffers(1, &m_VBO);
+    // glGenBuffers(1, &m_EBO);
     
-    glBindVertexArray(m_VAO);
+    // glBindVertexArray(m_VAO);
 
-    glBindBuffer(GL_ARRAY_BUFFER, m_VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+    // glBindBuffer(GL_ARRAY_BUFFER, m_VBO);
+    // glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_EBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+    // glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_EBO);
+    // glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-    glEnableVertexAttribArray(0);
+    // glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+    // glEnableVertexAttribArray(0);
 
-    // 解绑缓冲区和顶点数组对象
-    glBindBuffer(GL_ARRAY_BUFFER, 0); 
-    glBindVertexArray(0); 
+    // // 解绑缓冲区和顶点数组对象
+    // glBindBuffer(GL_ARRAY_BUFFER, 0); 
+    // glBindVertexArray(0); 
+
+    Logger::Log("Quad Test Scene initialized successfully");
+    
 }
 
 void QuadTestScene::Update(float deltaTime) {
@@ -50,19 +67,19 @@ void QuadTestScene::Update(float deltaTime) {
 void QuadTestScene::Render() {
     // 使用着色器
     m_shader->Use();
-    
     // 绑定VAO并绘制正方形
-    glBindVertexArray(m_VAO);
+    VertexArrayObject->BindBuffer();
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 }
 
 void QuadTestScene::Shutdown() {
     Logger::Log("Shutting down Quad Test Scene");
     
+
+    VertexBufferObject->Destroy();
+    IndexBufferObject->Destroy();
     // 清理资源
-    glDeleteVertexArrays(1, &m_VAO);
-    glDeleteBuffers(1, &m_VBO);
-    glDeleteBuffers(1, &m_EBO);
+    VertexArrayObject->Destroy();
     
     if (m_shader) {
         delete m_shader;

@@ -1,8 +1,11 @@
 #include "Logger.h"
 bool Logger::initialized = false;
-void Logger::Init(const std::vector<spdlog::sink_ptr>& custom_sinks) {
-    if (initialized)return;
-    initialized= true;
+void Logger::Init(const std::vector<spdlog::sink_ptr> &custom_sinks)
+{
+    if (initialized)
+        return;
+    initialized = true;
+
     auto console_sink = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
     console_sink->set_level(spdlog::level::debug);
 
@@ -16,6 +19,4 @@ void Logger::Init(const std::vector<spdlog::sink_ptr>& custom_sinks) {
 
     spdlog::set_default_logger(logger);
     spdlog::set_level(spdlog::level::debug);
-    spdlog::debug("logger init!");
-
 }

@@ -3,6 +3,9 @@
 #include "glfw/glfw3.h"
 #include "Framework/Log/Logger.h"
 #include "Framework/Core/SceneManager.h"
+#include "Framework/Core/Input.h"
+#include <iostream>
+
 
 // Callback functions for GLFW
 static void framebuffer_size_callback(GLFWwindow *window, int width, int height)
@@ -24,9 +27,9 @@ namespace framework
     static const unsigned int SCR_HEIGHT = 600;
     void BaseApplication::Initialize()
     {
+        
         // Initialize the logger
         Logger::Init();
-        
         // glfw: initialize and configure
         // ------------------------------
         glfwInit();
@@ -56,6 +59,9 @@ namespace framework
             Logger::Error("Failed to initialize GLAD");
             return;
         }
+
+        renderer = new Renderer(window);
+        Input::GetInstance().Initialize(window);
     }
 
     void BaseApplication::HandleInput(){}
@@ -70,7 +76,6 @@ namespace framework
 
     void BaseApplication::Shutdown()
     {
-        // 确保场景已关闭
         SceneManager::GetInstance().ShutdownActiveScene();
     }
 
@@ -98,7 +103,7 @@ namespace framework
 
             // Process input
             ::processInput(window);
-            
+            Input::GetInstance().Update();
             // 处理子类的输入
             HandleInput();
 
@@ -107,15 +112,14 @@ namespace framework
 
             // Render
             // Clear the screen
-            glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-            glClear(GL_COLOR_BUFFER_BIT);
+         
+            renderer->Clear();
 
             // 渲染当前场景
             SceneManager::GetInstance().RenderActiveScene();
 
             // Swap buffers and poll IO events
-            glfwSwapBuffers(window);
-            glfwPollEvents();
+            renderer->SwapBuffers();
         }
 
         // 关闭当前场景
