@@ -1,7 +1,9 @@
 #include "Framework/Interface/IApplication.hpp"
-
-namespace framework {
-    class BaseApplication : public interface::IApplication {
+#include <string>
+namespace framework
+{
+    class BaseApplication : public interface::IApplication
+    {
     public:
         virtual ~BaseApplication() = default;
 
@@ -18,10 +20,18 @@ namespace framework {
         void Update(float deltaTime) override;
 
         // Get the name of the application
-        const char* GetName() const ;
+        const char *GetName() const;
 
         // Check if the application should exit
         bool ShouldExit() override;
 
+    protected:
+        // 设置初始场景
+        virtual void SetInitialScene(const std::string &sceneName);
+
+        // 处理输入 - 在子类中实现
+        virtual void HandleInput();
+
+        virtual void InitScenes();
     };
 } // namespace framework
