@@ -34,8 +34,15 @@ file(GLOB_RECURSE FRAMEWORK_SOURCES
     "Framework/*.cpp"
 )
 
+# Collect all test scenes source files
+file(GLOB_RECURSE TEST_SOURCES
+    "TestScenes/*.cpp"
+)
+
 # Add executable with all source files
-add_executable(zengine ${FRAMEWORK_SOURCES}
+add_executable(zengine 
+    ${FRAMEWORK_SOURCES}
+    ${TEST_SOURCES}
     main.cpp
 )
 

@@ -1,7 +1,7 @@
 #include <iostream>
 #include <string>
 #include "Framework/Interface/IApplication.hpp"
-#include "Framework/TestScenes/TestApplication.h"
+#include "TestScenes/TestApplication.h"
 
 int main() {
     framework::TestApplication app;

@@ -3,14 +3,14 @@
 #include "Framework/Core/Scene.h"
 #include "Framework/Render/Shader.h"
 #include <glad/glad.h>
-
+#include "Framework/Render/Buffer.h"
 namespace framework {
 
 class TriangleTestScene : public Scene {
 private:
     Shader* m_shader = nullptr;
-    unsigned int m_VAO = 0;
-    unsigned int m_VBO = 0;
+    VertexArray* VertexArrayObject = nullptr;
+    Buffer* VertexBufferObject = nullptr;
 
 public:
     TriangleTestScene() = default;

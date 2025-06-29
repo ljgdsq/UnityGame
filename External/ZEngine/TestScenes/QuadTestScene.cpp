@@ -1,4 +1,4 @@
-#include "Framework/TestScenes/QuadTestScene.h"
+#include "TestScenes/QuadTestScene.h"
 #include "Framework/Log/Logger.h"
 
 namespace framework {

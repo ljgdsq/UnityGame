@@ -1,6 +1,6 @@
-#include "Framework/TestScenes/TestApplication.h"
-#include "Framework/TestScenes/TriangleTestScene.h"
-#include "Framework/TestScenes/QuadTestScene.h"
+#include "TestScenes/TestApplication.h"
+#include "TestScenes/TriangleTestScene.h"
+#include "TestScenes/QuadTestScene.h"
 #include "Framework/Core/SceneManager.h"
 #include "Framework/Log/Logger.h"
 #include <GLFW/glfw3.h>
