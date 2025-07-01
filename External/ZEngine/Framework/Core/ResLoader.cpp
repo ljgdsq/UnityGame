@@ -3,8 +3,10 @@
 #include <fstream>
 #include <sstream>
 #include <cstdlib>
+#include <algorithm>
 
 // 初始化静态成员
+namespace framework {
 std::unique_ptr<ResLoader> ResLoader::s_instance = nullptr;
 
 ResLoader::ResLoader()
@@ -19,6 +21,15 @@ ResLoader& ResLoader::GetInstance()
         s_instance = std::make_unique<ResLoader>();
     }
     return *s_instance;
+}
+
+void ResLoader::Initialize(const std::string& assetsPath) {
+    m_assetsBasePath = assetsPath;
+    
+    // Set default subdirectories for runtime Res folder structure
+    m_texturesPath = m_assetsBasePath + "Textures/";
+    m_shadersPath = m_assetsBasePath + "Shaders/";
+    m_modelsPath = m_assetsBasePath + "Models/";
 }
 
 void ResLoader::InitializeSearchPaths()
@@ -156,3 +167,54 @@ void ResLoader::AddSearchPath(const std::string& path)
 {
     m_searchPaths.push_back(std::filesystem::path(path));
 }
+
+std::string ResLoader::GetResourcePath(const std::string& relativePath) const {
+    std::string fullPath = m_assetsBasePath + relativePath;
+    std::replace(fullPath.begin(), fullPath.end(), '\\', '/');
+    return fullPath;
+}
+
+std::string ResLoader::GetTexturePath(const std::string& filename) const {
+    // Search paths in order of priority
+    std::vector<std::string> searchPaths = {
+        m_texturesPath,           // Res/Textures/
+        m_assetsBasePath,         // Res/
+        "Textures/",              // Direct Textures/ folder
+        "./"                      // Current directory as fallback
+    };
+    
+    return FindFile(filename, searchPaths);
+}
+
+void ResLoader::SetTexturesDirectory(const std::string& path) {
+    m_texturesPath = path;
+    if (!m_texturesPath.empty() && m_texturesPath.back() != '/') {
+        m_texturesPath += '/';
+    }
+}
+
+void ResLoader::SetShadersDirectory(const std::string& path) {
+    m_shadersPath = path;
+    if (!m_shadersPath.empty() && m_shadersPath.back() != '/') {
+        m_shadersPath += '/';
+    }
+}
+
+void ResLoader::SetModelsDirectory(const std::string& path) {
+    m_modelsPath = path;
+    if (!m_modelsPath.empty() && m_modelsPath.back() != '/') {
+        m_modelsPath += '/';
+    }
+}
+
+std::string ResLoader::FindFile(const std::string& filename, const std::vector<std::string>& searchPaths) const {
+    for (const auto& path : searchPaths) {
+        const std::string fullPath = path + filename;
+        // 直接使用filesystem检查文件是否存在，避免循环调用
+        if (std::filesystem::exists(fullPath)) {
+            return fullPath;
+        }
+    }
+    return ""; // File not found
+}
+} // namespace framework

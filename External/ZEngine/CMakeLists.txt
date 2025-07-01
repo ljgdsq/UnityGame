@@ -11,6 +11,7 @@ endif()
 # Set up only the minimal required include paths
 include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}
+    ${CMAKE_CURRENT_SOURCE_DIR}/External/stb
 )
 
 # Add external dependencies as subdirectories
@@ -64,6 +65,11 @@ target_link_libraries(zengine PRIVATE
     ${OPENGL_LIBRARIES}
     rapidjson
     spdlog::spdlog
+)
+
+# Add stb include directory to target
+target_include_directories(zengine PRIVATE 
+    ${CMAKE_CURRENT_SOURCE_DIR}/External/stb
 )
 
 # Copy resource directory to output directory

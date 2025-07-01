@@ -1,0 +1,105 @@
+[2025-06-30 09:28:41.593] [info] Input system initialized
+[2025-06-30 09:28:41.594] [info] Scene 'TriangleTest' added to SceneManager
+[2025-06-30 09:28:41.594] [info] Scene 'QuadTest' added to SceneManager
+[2025-06-30 09:28:41.594] [info] Active scene set to 'TriangleTest'
+[2025-06-30 09:28:41.595] [info] Initializing scene 'TriangleTest'
+[2025-06-30 09:28:41.595] [info] Initializing Triangle Test Scene
+[2025-06-30 09:28:41.595] [info] Resource path found: D:\UnityGame\External\ZEngine\Res
+[2025-06-30 09:28:41.627] [info] Test Application Initialized
+[2025-06-30 09:28:41.627] [info] Press 1 to switch to Triangle Test Scene
+[2025-06-30 09:28:41.627] [info] Press 2 to switch to Quad Test Scene
+[2025-06-30 09:28:45.529] [info] Switched to filled rendering mode
+[2025-06-30 09:28:46.328] [info] Shutting down Triangle Test Scene
+[2025-06-30 09:28:46.329] [info] Active scene set to 'QuadTest'
+[2025-06-30 09:28:46.330] [info] Initializing scene 'QuadTest'
+[2025-06-30 09:28:46.330] [info] Initializing Quad Test Scene
+[2025-06-30 09:28:46.343] [info] Quad Test Scene initialized successfully
+[2025-06-30 09:28:46.343] [info] Switched to Quad Test Scene
+[2025-06-30 09:28:46.794] [info] Switched to wireframe rendering mode
+[2025-06-30 09:28:47.227] [info] Switched to filled rendering mode
+[2025-06-30 09:28:47.611] [info] Shutting down Quad Test Scene
+[2025-06-30 09:28:47.612] [info] Active scene set to 'TriangleTest'
+[2025-06-30 09:28:47.612] [info] Initializing scene 'TriangleTest'
+[2025-06-30 09:28:47.613] [info] Initializing Triangle Test Scene
+[2025-06-30 09:28:47.626] [info] Switched to Triangle Test Scene
+[2025-06-30 09:28:48.129] [info] Shutting down Triangle Test Scene
+[2025-06-30 09:28:48.130] [info] Active scene set to 'QuadTest'
+[2025-06-30 09:28:48.130] [info] Initializing scene 'QuadTest'
+[2025-06-30 09:28:48.131] [info] Initializing Quad Test Scene
+[2025-06-30 09:28:48.142] [info] Quad Test Scene initialized successfully
+[2025-06-30 09:28:48.142] [info] Switched to Quad Test Scene
+[2025-06-30 09:28:48.310] [info] Switched to wireframe rendering mode
+[2025-06-30 09:28:48.895] [info] Switched to filled rendering mode
+[2025-06-30 09:28:49.710] [info] Shutting down Quad Test Scene
+[2025-06-30 09:28:49.711] [info] Active scene set to 'QuadTest'
+[2025-06-30 09:28:49.712] [info] Initializing scene 'QuadTest'
+[2025-06-30 09:28:49.713] [info] Initializing Quad Test Scene
+[2025-06-30 09:28:49.726] [info] Quad Test Scene initialized successfully
+[2025-06-30 09:28:49.726] [info] Switched to Quad Test Scene
+[2025-06-30 09:28:50.810] [info] Shutting down Quad Test Scene
+[2025-06-30 09:28:50.811] [info] Active scene set to 'TriangleTest'
+[2025-06-30 09:28:50.812] [info] Initializing scene 'TriangleTest'
+[2025-06-30 09:28:50.812] [info] Initializing Triangle Test Scene
+[2025-06-30 09:28:50.826] [info] Switched to Triangle Test Scene
+[2025-06-30 09:28:51.362] [info] Shutting down Triangle Test Scene
+[2025-06-30 09:28:51.363] [info] Active scene set to 'QuadTest'
+[2025-06-30 09:28:51.363] [info] Initializing scene 'QuadTest'
+[2025-06-30 09:28:51.364] [info] Initializing Quad Test Scene
+[2025-06-30 09:28:51.376] [info] Quad Test Scene initialized successfully
+[2025-06-30 09:28:51.376] [info] Switched to Quad Test Scene
+[2025-06-30 09:28:51.745] [info] Shutting down Quad Test Scene
+[2025-06-30 09:28:51.746] [info] Active scene set to 'TriangleTest'
+[2025-06-30 09:28:51.746] [info] Initializing scene 'TriangleTest'
+[2025-06-30 09:28:51.747] [info] Initializing Triangle Test Scene
+[2025-06-30 09:28:51.759] [info] Switched to Triangle Test Scene
+[2025-06-30 09:28:53.176] [info] Switched to wireframe rendering mode
+[2025-06-30 09:28:53.661] [info] Switched to filled rendering mode
+[2025-06-30 09:28:53.944] [info] Switched to wireframe rendering mode
+[2025-06-30 09:28:54.110] [info] Switched to filled rendering mode
+[2025-06-30 09:28:54.276] [info] Switched to wireframe rendering mode
+[2025-06-30 09:28:57.260] [info] Shutting down scene 'TriangleTest'
+[2025-06-30 09:28:57.260] [info] Shutting down Triangle Test Scene
+[2025-06-30 09:28:57.285] [info] Shutting down scene 'TriangleTest'
+[2025-06-30 09:28:57.285] [info] Shutting down Triangle Test Scene
+[2025-07-01 09:26:38.787] [info] Input system initialized
+[2025-07-01 09:26:38.788] [info] Scene 'TriangleTest' added to SceneManager
+[2025-07-01 09:26:38.788] [info] Scene 'QuadTest' added to SceneManager
+[2025-07-01 09:26:38.788] [info] Active scene set to 'TriangleTest'
+[2025-07-01 09:26:38.788] [info] Initializing scene 'TriangleTest'
+[2025-07-01 09:26:38.788] [info] Initializing Triangle Test Scene
+[2025-07-01 09:26:38.788] [info] Resource path found: D:\UnityGame\External\ZEngine\Res
+[2025-07-01 09:26:38.789] [info] Test Application Initialized
+[2025-07-01 09:26:38.789] [info] Press 1 to switch to Triangle Test Scene
+[2025-07-01 09:26:38.789] [info] Press 2 to switch to Quad Test Scene
+[2025-07-01 09:26:41.739] [info] Shutting down scene 'TriangleTest'
+[2025-07-01 09:26:41.739] [info] Shutting down Triangle Test Scene
+[2025-07-01 09:26:41.764] [info] Shutting down scene 'TriangleTest'
+[2025-07-01 09:26:41.764] [info] Shutting down Triangle Test Scene
+[2025-07-01 09:26:53.386] [info] Input system initialized
+[2025-07-01 09:26:53.386] [info] Scene 'TriangleTest' added to SceneManager
+[2025-07-01 09:26:53.387] [info] Scene 'QuadTest' added to SceneManager
+[2025-07-01 09:26:53.387] [info] Active scene set to 'TriangleTest'
+[2025-07-01 09:26:53.387] [info] Initializing scene 'TriangleTest'
+[2025-07-01 09:26:53.387] [info] Initializing Triangle Test Scene
+[2025-07-01 09:26:53.387] [info] Resource path found: D:\UnityGame\External\ZEngine\Res
+[2025-07-01 09:26:53.388] [info] Test Application Initialized
+[2025-07-01 09:26:53.388] [info] Press 1 to switch to Triangle Test Scene
+[2025-07-01 09:26:53.388] [info] Press 2 to switch to Quad Test Scene
+[2025-07-01 09:26:55.787] [info] Shutting down scene 'TriangleTest'
+[2025-07-01 09:26:55.787] [info] Shutting down Triangle Test Scene
+[2025-07-01 09:26:55.809] [info] Shutting down scene 'TriangleTest'
+[2025-07-01 09:26:55.809] [info] Shutting down Triangle Test Scene
+[2025-07-01 10:00:57.666] [info] Resource path found: D:\UnityGame\External\ZEngine\Res
+[2025-07-01 10:00:57.964] [info] Input system initialized
+[2025-07-01 10:00:57.964] [info] Scene 'TriangleTest' added to SceneManager
+[2025-07-01 10:00:57.964] [info] Scene 'QuadTest' added to SceneManager
+[2025-07-01 10:00:57.965] [info] Active scene set to 'TriangleTest'
+[2025-07-01 10:00:57.965] [info] Initializing scene 'TriangleTest'
+[2025-07-01 10:00:57.965] [info] Initializing Triangle Test Scene
+[2025-07-01 10:00:57.966] [info] Test Application Initialized
+[2025-07-01 10:00:57.966] [info] Press 1 to switch to Triangle Test Scene
+[2025-07-01 10:00:57.966] [info] Press 2 to switch to Quad Test Scene
+[2025-07-01 10:00:59.747] [info] Shutting down scene 'TriangleTest'
+[2025-07-01 10:00:59.747] [info] Shutting down Triangle Test Scene
+[2025-07-01 10:00:59.769] [info] Shutting down scene 'TriangleTest'
+[2025-07-01 10:00:59.769] [info] Shutting down Triangle Test Scene

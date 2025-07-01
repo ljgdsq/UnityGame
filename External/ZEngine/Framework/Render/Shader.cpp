@@ -3,6 +3,7 @@
 #include "glad/gl.h"
 #include "Framework/Log/Logger.h"
 #include "Framework/Core/ResLoader.h"
+using namespace framework;
 Shader::Shader(const char *vPath, const char *fPath)
 {
     // Load shader source code from files

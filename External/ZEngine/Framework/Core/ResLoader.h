@@ -4,6 +4,8 @@
 #include <vector>
 #include <memory>
 
+namespace framework {
+
 class ResLoader
 {
 private:
@@ -16,9 +18,7 @@ private:
     // 单例实例
     static std::unique_ptr<ResLoader> s_instance;
 
-    // 查找文件的实际路径
-    std::filesystem::path FindResourcePath(const std::string& relativePath);
-    
+
     // 初始化搜索路径
     void InitializeSearchPaths();
 
@@ -43,4 +43,32 @@ public:
     
     // 添加搜索路径
     void AddSearchPath(const std::string& path);
+
+    // Initialize with base paths
+    void Initialize(const std::string& assetsPath = "Assets/");
+    
+        // 查找文件的实际路径
+    std::filesystem::path FindResourcePath(const std::string& relativePath);
+    
+    // Get full path for a resource
+    std::string GetResourcePath(const std::string& relativePath) const;
+    
+    // Get texture path with fallback search
+    std::string GetTexturePath(const std::string& filename) const;
+    
+    // Set resource directories
+    void SetTexturesDirectory(const std::string& path);
+    void SetShadersDirectory(const std::string& path);
+    void SetModelsDirectory(const std::string& path);
+
+private:
+    std::string m_assetsBasePath;
+    std::string m_texturesPath;
+    std::string m_shadersPath;
+    std::string m_modelsPath;
+    
+    // Helper function to find file in multiple locations
+    std::string FindFile(const std::string& filename, const std::vector<std::string>& searchPaths) const;
 };
+
+} // namespace framework

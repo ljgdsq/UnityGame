@@ -4,8 +4,8 @@
 #include "Framework/Core/SceneManager.h"
 #include "Framework/Core/Input.h"
 #include "Framework/Log/Logger.h"
-#include <GLFW/glfw3.h>
-
+#include "glfw/glfw3.h"
+#include "Framework/Render/Renderer.h"
 namespace framework {
 
 TestApplication::TestApplication() {

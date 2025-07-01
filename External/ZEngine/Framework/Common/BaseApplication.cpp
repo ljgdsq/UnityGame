@@ -4,8 +4,8 @@
 #include "Framework/Log/Logger.h"
 #include "Framework/Core/SceneManager.h"
 #include "Framework/Core/Input.h"
-#include <iostream>
-
+#include "Framework/Render/Renderer.h"
+#include "Framework/Core/ResLoader.h"
 
 // Callback functions for GLFW
 static void framebuffer_size_callback(GLFWwindow *window, int width, int height)
@@ -27,9 +27,11 @@ namespace framework
     static const unsigned int SCR_HEIGHT = 600;
     void BaseApplication::Initialize()
     {
-        
+
         // Initialize the logger
         Logger::Init();
+        ResLoader::GetInstance().Initialize("Res/");
+
         // glfw: initialize and configure
         // ------------------------------
         glfwInit();
@@ -64,12 +66,13 @@ namespace framework
         Input::GetInstance().Initialize(window);
     }
 
-    void BaseApplication::HandleInput(){}
-    void BaseApplication::InitScenes(){}
+    void BaseApplication::HandleInput() {}
+    void BaseApplication::InitScenes() {}
 
-    void BaseApplication::SetInitialScene(const std::string& sceneName)
+    void BaseApplication::SetInitialScene(const std::string &sceneName)
     {
-        if (SceneManager::GetInstance().SetActiveScene(sceneName)) {
+        if (SceneManager::GetInstance().SetActiveScene(sceneName))
+        {
             SceneManager::GetInstance().InitializeActiveScene();
         }
     }
@@ -82,8 +85,9 @@ namespace framework
     void BaseApplication::Run()
     {
         // Get the GLFW window pointer from Initialize method
-        GLFWwindow* window = glfwGetCurrentContext();
-        if (!window) {
+        GLFWwindow *window = glfwGetCurrentContext();
+        if (!window)
+        {
             Logger::Error("No active GLFW window context found!");
             return;
         }
@@ -112,7 +116,7 @@ namespace framework
 
             // Render
             // Clear the screen
-         
+
             renderer->Clear();
 
             // 渲染当前场景
@@ -142,7 +146,7 @@ namespace framework
 
     bool BaseApplication::ShouldExit()
     {
-        static GLFWwindow* window = glfwGetCurrentContext();
-        return glfwWindowShouldClose(window) ;
+        static GLFWwindow *window = glfwGetCurrentContext();
+        return glfwWindowShouldClose(window);
     }
 } // namespace framework
