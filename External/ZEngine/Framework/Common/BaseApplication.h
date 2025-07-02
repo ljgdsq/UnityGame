@@ -3,6 +3,8 @@
 #include "Framework/Interface/IApplication.hpp"
 #include "Framework/Render/Renderer.h"
 #include "Framework/Core/Input.h"
+#include "Framework/Performance/FrameRateManager.h"
+
 namespace framework
 {
     class BaseApplication : public interface::IApplication
@@ -37,8 +39,25 @@ namespace framework
 
         virtual void InitScenes();
 
-        protected:
-        Renderer * renderer = nullptr;
+        // 设置目标帧率 (fps)
+        void SetTargetFrameRate(int frameRate);
 
+        // 获取当前目标帧率
+        int GetTargetFrameRate() const;
+
+        // 启用/禁用垂直同步 (VSync)
+        void SetVSyncEnabled(bool enabled);
+
+        // 检查垂直同步是否启用
+        bool IsVSyncEnabled() const;
+        
+        // 设置帧率策略
+        void SetFrameRateStrategy(FrameRateStrategy strategy);
+
+        // 获取当前帧率
+        float GetCurrentFPS() const;
+
+    protected:
+        Renderer * renderer = nullptr;
     };
 } // namespace framework

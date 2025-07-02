@@ -2,7 +2,7 @@
 
 #include <string>
 #include <memory>
-
+#include "Framework/Log/Logger.h"
 namespace framework {
 
 class Scene {

@@ -17,11 +17,30 @@ Texture::~Texture() {
 }
 
 bool Texture::LoadFromFile(const std::string& filepath) {
-    // Use ResLoader to resolve the correct path
-    auto resLoader = ResLoader::GetInstance();
-    auto resolvedPath = resLoader.FindResourcePath("Textures/" + filepath);
+    // 策略1: 直接检查传入的路径是否存在
+    std::filesystem::path directPath(filepath);
+    std::filesystem::path resolvedPath;
     
+    if (std::filesystem::exists(directPath)) {
+        resolvedPath = directPath;
+        Logger::Debug("Texture loaded directly from path: {}", filepath);
+    } else {
+        // 策略2: 使用ResLoader查找资源
+        auto resLoader = ResLoader::GetInstance();
+        resolvedPath = resLoader.FindResourcePath(filepath);
+        
+        // 策略3: 尝试在Textures目录下查找
+        if (resolvedPath.empty()) {
+            resolvedPath = resLoader.FindResourcePath("Textures/" + filepath);
+            if (!resolvedPath.empty()) {
+                Logger::Debug("Texture found in Textures/ directory: {}", filepath);
+            }
+        }
+    }
+    
+    // 如果所有策略都失败，返回错误
     if (resolvedPath.empty()) {
+        Logger::Error("Failed to find texture: {}. Tried direct path, resource path, and Textures/ directory", filepath);
         return false;
     }
     
@@ -62,7 +81,7 @@ bool Texture::LoadFromFile(const std::string& filepath) {
     
     // Free image data
     stbi_image_free(data);
-    Logger::Log("Loaded texture:{} width:{} height:{} channels:{}",
+    Logger::Debug("Loaded texture:{} width:{} height:{} channels:{}",
                 m_filepath, m_width, m_height, m_channels);
     return true;
 }
@@ -83,8 +102,8 @@ void Texture::Delete() {
     }
 }
 
-std::unique_ptr<Texture> Texture::LoadTexture(const std::string& filename) {
-    auto texture = std::make_unique<Texture>();
+Texture* Texture::LoadTexture(const std::string& filename) {
+    auto texture = new Texture();
     if (texture->LoadFromFile(filename)) {
         return texture;
     }

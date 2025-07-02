@@ -1,2 +1,4 @@
 [Bb]uild
 [lL]og
+[lL]ogs/
+*.log

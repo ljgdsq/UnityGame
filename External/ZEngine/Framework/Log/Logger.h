@@ -13,6 +13,12 @@ public:
 
 public:
     template <typename... Args>
+    static void Debug(const char *fmt, const Args &...args)
+    {
+        spdlog::debug(fmt, args...);
+    }
+
+    template <typename... Args>
     static void Log(const char *fmt, const Args &...args)
     {
         spdlog::info(fmt, args...);

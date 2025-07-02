@@ -1,6 +1,7 @@
 #include "TestScenes/TestApplication.h"
 #include "TestScenes/TriangleTestScene.h"
 #include "TestScenes/QuadTestScene.h"
+#include "TestScenes/TextureScene.h"
 #include "Framework/Core/SceneManager.h"
 #include "Framework/Core/Input.h"
 #include "Framework/Log/Logger.h"
@@ -20,6 +21,11 @@ void TestApplication::InitScenes() {
     // 注册四边形测试场景
     auto quadScene = std::make_shared<QuadTestScene>();
     SceneManager::GetInstance().AddScene("QuadTest", quadScene);
+
+    // 注册纹理测试场景
+    auto textureScene = std::make_shared<TextureScene>();
+    SceneManager::GetInstance().AddScene("TextureTest", textureScene);
+
     
     // 可以在这里添加更多测试场景
     
@@ -30,6 +36,9 @@ void TestApplication::InitScenes() {
     Logger::Log("Test Application Initialized");
     Logger::Log("Press 1 to switch to Triangle Test Scene");
     Logger::Log("Press 2 to switch to Quad Test Scene");
+    Logger::Log("Press 3 to switch to Texture Test Scene");
+    Logger::Log("Press F1 to switch to Wireframe Mode");
+    Logger::Log("Press F2 to switch to Filled Mode");
 }
 
 void TestApplication::HandleInput() {
@@ -49,14 +58,22 @@ void TestApplication::HandleInput() {
         Logger::Log("Switched to Quad Test Scene");
     }
 
-    // 按3键切换到线框渲染模式
+
+    // 按3键切换到纹理测试场景
     if (Input::GetKeyDown(GLFW_KEY_3)) {
+        SceneManager::GetInstance().SetActiveScene("TextureTest");
+        SceneManager::GetInstance().InitializeActiveScene();
+        Logger::Log("Switched to Texture Test Scene");
+    }
+
+    // 按3键切换到线框渲染模式
+    if (Input::GetKeyDown(GLFW_KEY_F1)) {
         Logger::Log("Switched to wireframe rendering mode");
         renderer->SetPolygonMode(PolygonMode::Line);
     }
 
     // 按4键切换到填充渲染模式
-    if (Input::GetKeyDown(GLFW_KEY_4)) {
+    if (Input::GetKeyDown(GLFW_KEY_F2)) {
         Logger::Log("Switched to filled rendering mode");
         renderer->SetPolygonMode(PolygonMode::Fill);
     }

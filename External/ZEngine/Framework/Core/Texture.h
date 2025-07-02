@@ -1,6 +1,5 @@
 #pragma once
 #include <string>
-#include <memory>
 
 namespace framework {
 
@@ -13,7 +12,7 @@ public:
     bool LoadFromFile(const std::string& filepath);
     
     // Static factory method that uses ResLoader for path resolution
-    static std::unique_ptr<Texture> LoadTexture(const std::string& filename);
+    static Texture* LoadTexture(const std::string& filename);
     
     // Bind texture for rendering
     void Bind(unsigned int slot = 0) const;
