@@ -12,9 +12,9 @@ enum class PolygonMode
 class Renderer
 {
 public:
-    Renderer(GLFWwindow *window);
+    Renderer();
     virtual ~Renderer() = default;
-
+    virtual void Initialize();
     void Clear();
     void SwapBuffers();
 

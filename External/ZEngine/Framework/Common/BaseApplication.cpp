@@ -7,20 +7,6 @@
 #include "Framework/Render/Renderer.h"
 #include "Framework/Core/ResLoader.h"
 
-// Callback functions for GLFW
-static void framebuffer_size_callback(GLFWwindow *window, int width, int height)
-{
-    // make sure the viewport matches the new window dimensions; note that width and
-    // height will be significantly larger than specified on retina displays.
-    glViewport(0, 0, width, height);
-}
-
-static void processInput(GLFWwindow *window)
-{
-    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
-        glfwSetWindowShouldClose(window, true);
-}
-
 namespace framework
 {
     static const unsigned int SCR_WIDTH = 800;
@@ -32,41 +18,24 @@ namespace framework
         Logger::Init();
         ResLoader::GetInstance().Initialize("Res/");
 
-        // glfw: initialize and configure
+        // Renderer: initialize and configure
         // ------------------------------
-        glfwInit();
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-        glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+        renderer = new Renderer();
+        renderer->Initialize();
+        renderer->SetViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
+        Input::GetInstance().Initialize(glfwGetCurrentContext());
 
-#ifdef __APPLE__
-        glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-#endif
-
-        // --------------------
-        GLFWwindow *window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "ZEngine", NULL, NULL);
-        if (window == NULL)
-        {
-            Logger::Error("Failed to create GLFW window");
-            glfwTerminate();
-            return;
-        }
-        glfwMakeContextCurrent(window);
-        glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
-
-        // glad: load all OpenGL function pointers
-        // ---------------------------------------
-        if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
-        {
-            Logger::Error("Failed to initialize GLAD");
-            return;
-        }
-
-        renderer = new Renderer(window);
-        Input::GetInstance().Initialize(window);
     }
 
-    void BaseApplication::HandleInput() {}
+    void BaseApplication::HandleInput()
+    {
+        static GLFWwindow *window = glfwGetCurrentContext();
+        if (Input::GetInstance().GetKeyDown(GLFW_KEY_ESCAPE))
+        {
+            glfwSetWindowShouldClose(window, true);
+        }
+    }
+
     void BaseApplication::InitScenes() {}
 
     void BaseApplication::SetInitialScene(const std::string &sceneName)
@@ -106,8 +75,8 @@ namespace framework
             lastFrameTime = currentFrameTime;
 
             // Process input
-            ::processInput(window);
             Input::GetInstance().Update();
+
             // 处理子类的输入
             HandleInput();
 
