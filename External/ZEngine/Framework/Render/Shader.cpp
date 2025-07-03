@@ -1,4 +1,3 @@
-
 #include "shader.h"
 #include "glad/gl.h"
 #include "Framework/Log/Logger.h"
@@ -113,6 +112,10 @@ void Shader::SetMatrix4(const char *name, const glm::mat4 &matrix, bool useShade
     if (useShader)
         this->Use();
     glUniformMatrix4fv(glGetUniformLocation(this->id, name), 1, GL_FALSE, glm::value_ptr(matrix));
+}
+void Shader::SetMat4(const char *name, const glm::mat4 &matrix, bool useShader)
+{
+    SetMatrix4(name, matrix, useShader);
 }
 
 void Shader::checkCompileErrors(int object, std::string type)

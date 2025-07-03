@@ -26,6 +26,8 @@ public:
     void    SetVector4f (const char *name, float x, float y, float z, float w, bool useShader = false);
     void    SetVector4f (const char *name, const glm::vec4 &value, bool useShader = false);
     void    SetMatrix4  (const char *name, const glm::mat4 &matrix, bool useShader = false);
+    void    SetMat4     (const char *name, const glm::mat4 &matrix, bool useShader = false);
+    void    SetInt      (const char *name, int value, bool useShader = false) { SetInteger(name, value, useShader); }
 private:
     // Checks if compilation or linking failed and if so, print the error logs
     void    checkCompileErrors(int object, std::string type);

@@ -1,7 +1,11 @@
+#define GLM_ENABLE_EXPERIMENTAL
 #include "Framework/Core/GameObject.h"
 #include "Framework/Component/Transform.h"
 #include "Transform.h"
 #include "glm/gtc/type_ptr.hpp"
+#include "glm/gtx/quaternion.hpp"
+#include "glm/gtx/euler_angles.hpp"
+#include "Framework/Log/Logger.h"
 
 rapidjson::Value framework::Transform::Serialize() const
 {
@@ -71,4 +75,40 @@ void framework::Transform::Deserialize(const rapidjson::Value& jsonValue)
             scale.z = static_cast<float>(scaleArray[2].GetDouble());
         }
     }
+}
+
+void framework::Transform::SetRotation(const glm::vec3 &eulerAngles)
+{
+    // 将欧拉角转换为四元数
+    glm::quat quat = glm::quat(glm::radians(eulerAngles));
+    rotation = quat;
+}
+
+void framework::Transform::Rotate(const glm::vec3 &axis, float angle)
+{
+    // 创建旋转四元数
+    glm::quat deltaRotation = glm::angleAxis(glm::radians(angle), glm::normalize(axis));
+    
+    // 应用旋转
+    rotation = deltaRotation * rotation;
+    
+    // 确保四元数规范化
+    rotation = glm::normalize(rotation);
+}
+
+glm::mat4 framework::Transform::GetModelMatrix() const
+{
+    // 创建变换矩阵
+    glm::mat4 modelMatrix = glm::mat4(1.0f);
+    
+    // 应用平移
+    modelMatrix = glm::translate(modelMatrix, position);
+    
+    // 应用旋转
+    modelMatrix = modelMatrix * glm::toMat4(rotation);
+    
+    // 应用缩放
+    modelMatrix = glm::scale(modelMatrix, scale);
+    
+    return modelMatrix;
 }

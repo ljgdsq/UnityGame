@@ -11,6 +11,7 @@ class GameObject;
 // Base class for all components (not intended to be instantiated directly)
 class Component : public Serializable
 {
+    friend class GameObject; // Allow GameObject to access 
 public:
     explicit Component(GameObject *gameObject) : gameObject(gameObject) {}
 
@@ -26,7 +27,8 @@ public:
     // Serializes the component to a JSON value
     virtual rapidjson::Value Serialize() const override = 0;
 
-    virtual void Deserialize(const rapidjson::Value &jsonValue) = 0;
+
+    virtual void Deserialize(const rapidjson::Value& jsonValue) override = 0;
 
     bool IsEnabled() const { return isEnabled; }    
     void SetEnabled(bool enabled) { isEnabled = enabled; }  
@@ -59,7 +61,7 @@ class ComponentBase : public Component
     // serialization
     virtual ~ComponentBase() = default;
     virtual rapidjson::Value Serialize() const override = 0;
-    virtual void Deserialize() override = 0;
+    virtual void Deserialize(const rapidjson::Value& jsonValue) override = 0;
 
     // Returns the name of the component    
     virtual const char *GetName() const override { return GetTypeName(); }

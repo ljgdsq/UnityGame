@@ -2,6 +2,7 @@
 #include "TestScenes/TriangleTestScene.h"
 #include "TestScenes/QuadTestScene.h"
 #include "TestScenes/TextureScene.h"
+#include "TestScenes/CameraManagerExampleScene.h"
 #include "Framework/Core/SceneManager.h"
 #include "Framework/Core/Input.h"
 #include "Framework/Log/Logger.h"
@@ -26,6 +27,9 @@ void TestApplication::InitScenes() {
     auto textureScene = std::make_shared<TextureScene>();
     SceneManager::GetInstance().AddScene("TextureTest", textureScene);
 
+    // 注册相机管理器示例场景
+    auto cameraManagerScene = std::make_shared<CameraManagerExampleScene>();
+    SceneManager::GetInstance().AddScene("CameraManagerExample", cameraManagerScene);
     
     // 可以在这里添加更多测试场景
     
@@ -37,6 +41,7 @@ void TestApplication::InitScenes() {
     Logger::Log("Press 1 to switch to Triangle Test Scene");
     Logger::Log("Press 2 to switch to Quad Test Scene");
     Logger::Log("Press 3 to switch to Texture Test Scene");
+    Logger::Log("Press 4 to switch to Camera Manager Example Scene");
     Logger::Log("Press F1 to switch to Wireframe Mode");
     Logger::Log("Press F2 to switch to Filled Mode");
 }
@@ -58,21 +63,27 @@ void TestApplication::HandleInput() {
         Logger::Log("Switched to Quad Test Scene");
     }
 
-
     // 按3键切换到纹理测试场景
     if (Input::GetKeyDown(GLFW_KEY_3)) {
         SceneManager::GetInstance().SetActiveScene("TextureTest");
         SceneManager::GetInstance().InitializeActiveScene();
         Logger::Log("Switched to Texture Test Scene");
     }
+    
+    // 按4键切换到相机管理器示例场景
+    if (Input::GetKeyDown(GLFW_KEY_4)) {
+        SceneManager::GetInstance().SetActiveScene("CameraManagerExample");
+        SceneManager::GetInstance().InitializeActiveScene();
+        Logger::Log("Switched to Camera Manager Example Scene");
+    }
 
-    // 按3键切换到线框渲染模式
+    // 按F1键切换到线框渲染模式
     if (Input::GetKeyDown(GLFW_KEY_F1)) {
         Logger::Log("Switched to wireframe rendering mode");
         renderer->SetPolygonMode(PolygonMode::Line);
     }
 
-    // 按4键切换到填充渲染模式
+    // 按F2键切换到填充渲染模式
     if (Input::GetKeyDown(GLFW_KEY_F2)) {
         Logger::Log("Switched to filled rendering mode");
         renderer->SetPolygonMode(PolygonMode::Fill);
