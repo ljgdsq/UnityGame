@@ -1,7 +1,7 @@
 # ZEngine 开发任务清单
 
 ## 🚀 优先任务
-
+-  [ ] fix ResLoder can not load Res/***
 - [ ] 封装Sprite
   - [ ] 矩阵变换
   - [ ] GameObject
