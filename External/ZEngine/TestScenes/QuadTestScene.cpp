@@ -64,7 +64,7 @@ void QuadTestScene::Update(float deltaTime) {
     // 这个简单的测试场景不需要更新逻辑
 }
 
-void QuadTestScene::Render() {
+void QuadTestScene::Render(Renderer*) {
     // 使用着色器
     m_shader->Use();
     // 绑定VAO并绘制正方形

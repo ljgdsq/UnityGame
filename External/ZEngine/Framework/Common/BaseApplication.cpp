@@ -4,10 +4,11 @@
 #include "Framework/Log/Logger.h"
 #include "Framework/Core/SceneManager.h"
 #include "Framework/Core/Input.h"
-#include "Framework/Render/Renderer.h"
 #include "Framework/Core/ResLoader.h"
 #include "Framework/Performance/FrameRateManager.h"
 #include "Framework/Performance/FrameRateMonitor.h"
+#include "Framework/Render/RenderComponent.h"
+#include "Framework/Render/Renderer.h"
 
 namespace framework
 {
@@ -97,12 +98,13 @@ namespace framework
             // 更新帧率管理器
             FrameRateManager::GetInstance().Update(deltaTime);
 
+
             // Render
             // Clear the screen
             renderer->Clear();
 
             // 渲染当前场景
-            SceneManager::GetInstance().RenderActiveScene();
+            SceneManager::GetInstance().RenderActiveScene(renderer);
 
             // Swap buffers and poll IO events
             renderer->SwapBuffers();
@@ -191,4 +193,5 @@ namespace framework
     {
         return FrameRateMonitor::GetInstance().GetCurrentFPS();
     }
+
 } // namespace framework

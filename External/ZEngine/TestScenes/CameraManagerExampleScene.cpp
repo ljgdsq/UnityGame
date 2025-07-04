@@ -58,7 +58,7 @@ void CameraManagerExampleScene::Update(float deltaTime) {
     }
 }
 
-void CameraManagerExampleScene::Render() {
+void CameraManagerExampleScene::Render(Renderer*renderer) {
     // 获取主相机
     Camera* mainCamera = CameraManager::GetInstance().GetMainCamera();
     if (!mainCamera) {

@@ -1,12 +1,10 @@
 #pragma once
-#include "RenderComponent.h"
-#include "MeshFilter.h"
+#include "Framework/Render/RenderComponent.h"
 
 namespace framework {
 
 class MeshFilter;
-class Mesh;
-
+class GameObject;
 /**
  * @brief 网格渲染器组件
  * 负责渲染MeshFilter中的网格数据

@@ -13,7 +13,7 @@ public:
 
     void Initialize() override;
     void Update(float deltaTime) override;
-    void Render() override;
+    void Render(Renderer*) override;
     void Shutdown() override;
 
     const char *GetName() const override { return "TextureScene"; }

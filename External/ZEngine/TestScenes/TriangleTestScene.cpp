@@ -47,7 +47,7 @@ void TriangleTestScene::Update(float deltaTime) {
     // 这个简单的测试场景不需要更新逻辑
 }
 
-void TriangleTestScene::Render() {
+void TriangleTestScene::Render(Renderer*) {
     // 使用着色器
     m_shader->Use();
     VertexArrayObject->BindBuffer();

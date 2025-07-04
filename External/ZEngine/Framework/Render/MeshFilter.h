@@ -1,5 +1,5 @@
 #pragma once
-#include "Framework/Core/Component.h"
+#include "Framework/Component/Component.h"
 #include "Framework/Render/Mesh.h"
 #include <memory>
 

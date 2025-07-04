@@ -42,7 +42,7 @@ void TextureScene::Update(float deltaTime)
 {
 }
 
-void TextureScene::Render()
+void TextureScene::Render(Renderer*)
 {
     shader->Use();
     texture->Bind();

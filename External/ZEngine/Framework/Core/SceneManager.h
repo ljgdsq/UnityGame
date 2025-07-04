@@ -6,7 +6,7 @@
 #include <memory>
 
 namespace framework {
-
+class Renderer; // 前向声明渲染器
 class SceneManager {
 private:
     std::unordered_map<std::string, ScenePtr> m_scenes;
@@ -45,7 +45,7 @@ public:
     void UpdateActiveScene(float deltaTime);
     
     // 渲染活动场景
-    void RenderActiveScene();
+    void RenderActiveScene(Renderer* renderer);
     
     // 关闭活动场景
     void ShutdownActiveScene();

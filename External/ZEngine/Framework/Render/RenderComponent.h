@@ -1,19 +1,20 @@
 #pragma once
-#include "Framework/Core/Component.h"
+#include "Framework/Component/Component.h"
 #include "glm/glm.hpp"
 
 namespace framework {
 
 class Material;
 class Renderer;
-
+class GameObject;
 /**
  * @brief 可渲染组件基类
  * 所有可渲染的组件都应该继承此类
  */
 class RenderComponent : public ComponentBase<RenderComponent> {
 public:
-    RenderComponent(GameObject* owner);
+    RenderComponent(GameObject* owner)
+        : ComponentBase<RenderComponent>(owner) {}
     virtual ~RenderComponent() = default;
 
     // 渲染接口

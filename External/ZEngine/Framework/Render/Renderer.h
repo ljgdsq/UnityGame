@@ -8,21 +8,23 @@ enum class PolygonMode
     Line = 0x1B01,      // GL_LINE
     Point = 0x1B00      // GL_POINT
 };
+namespace framework {
+    class Renderer
+    {
+    public:
+        Renderer();
+        virtual ~Renderer() = default;
+        virtual void Initialize();
+        void Clear();
+        void SwapBuffers();
 
-class Renderer
-{
-public:
-    Renderer();
-    virtual ~Renderer() = default;
-    virtual void Initialize();
-    void Clear();
-    void SwapBuffers();
+        void SetPolygonMode(PolygonMode mode);
+        void EnableDepthTest(bool enable = true);
+        void EnableBlending(bool enable = true);
+        void SetViewport(int x, int y, int width, int height);
 
-    void SetPolygonMode(PolygonMode mode);
-    void EnableDepthTest(bool enable = true);
-    void EnableBlending(bool enable = true);
-    void SetViewport(int x, int y, int width, int height);
+    protected:
+        GLFWwindow* window = nullptr;
+    };
 
-protected:
-    GLFWwindow *window = nullptr;
-};
+}

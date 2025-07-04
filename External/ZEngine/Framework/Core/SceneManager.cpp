@@ -1,6 +1,6 @@
 #include "Framework/Core/SceneManager.h"
 #include "Framework/Log/Logger.h"
-
+#include "Framework/Render/Renderer.h"
 namespace framework {
 
 // 初始化静态成员
@@ -68,9 +68,9 @@ void SceneManager::UpdateActiveScene(float deltaTime) {
     }
 }
 
-void SceneManager::RenderActiveScene() {
+void SceneManager::RenderActiveScene(Renderer* renderer) {
     if (m_activeScene) {
-        m_activeScene->Render();
+        m_activeScene->Render(renderer);
     }
 }
 
