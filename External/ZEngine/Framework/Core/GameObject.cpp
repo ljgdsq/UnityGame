@@ -1,5 +1,9 @@
 #include "Framework/Core/GameObject.h"
-#include "GameObject.h"
+#include "Framework/Component/Transform.h"
+framework::GameObject::GameObject()
+{
+    transform = AddComponent<Transform>();
+}
 
 void framework::GameObject::AddChild(GameObject *child)
 {

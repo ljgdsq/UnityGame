@@ -1,6 +1,8 @@
 # ZEngine 开发任务清单
 
 ## 🚀 优先任务
+- [ ] GameObject生命周期管理
+- [ ] Scene渲染流程完善
 -  [ ] fix ResLoder can not load Res/***
 - [ ] 封装Sprite
   - [ ] 矩阵变换

@@ -62,19 +62,9 @@ namespace framework
         // 设置远裁剪面
         void SetFarPlane(float far);
 
-    // 设置清除颜色
-    void SetClearColor(const glm::vec4 &color) { clearColor = color; }
-    
-    // 获取清除颜色
-    const glm::vec4& GetClearColor() const { return clearColor; }
-    
-    // 清除颜色 - 设为公开以便示例程序访问
-    glm::vec4 clearColor = glm::vec4(0.2f, 0.3f, 0.3f, 1.0f);
-
-
         void SetPerspectiveProjection(float fov, float aspect, float near, float far);
-       
         void SetOrthographicProjection(float left, float right, float bottom, float top, float near, float far);
+        glm::vec4 clearColor = glm::vec4(0.2f, 0.3f, 0.3f, 1.0f); // 清除颜色
 
     private:
         void RecalculateViewMatrix();
@@ -95,6 +85,5 @@ namespace framework
         float farPlane = 100.0f; // 远裁剪面
         glm::vec2 orthoSize  = glm::vec2(10.0f, 10.0f); // 正交投影时的大小
         glm::vec2 orthoOffset = glm::vec2(0.0f, 0.0f); // 正交投影时的偏移
-        //glm::vec4 clearColor = glm::vec4(0.2f, 0.3f, 0.3f, 1.0f); // 清除颜色
     };
 }

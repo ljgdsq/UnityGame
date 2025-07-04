@@ -39,6 +39,7 @@ public:
 
 protected:
     virtual void OnCreate() {};
+    virtual void OnInitialize() {};
     virtual void OnEnable() {};
     virtual void OnStart() {};
     virtual void OnUpdate(float deltaTime){};

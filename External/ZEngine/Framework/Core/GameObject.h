@@ -11,7 +11,7 @@ namespace framework
     class GameObject
     {
     public:
-        GameObject() = default;
+        GameObject();
         virtual ~GameObject() = default;
 
         // Get the name of the GameObject

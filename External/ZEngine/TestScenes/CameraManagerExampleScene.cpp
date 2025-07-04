@@ -231,7 +231,7 @@ void CameraManagerExampleScene::CreateCube() {
     // 创建多个立方体
     for (int i = 0; i < 5; ++i) {
         GameObject* cube = new GameObject();
-        auto transform = cube->AddComponent<Transform>();
+        auto transform = cube->GetTransform();
         
         // 设置立方体位置
         float angle = i * (360.0f / 5);
@@ -257,14 +257,14 @@ void CameraManagerExampleScene::CreateCameras() {
     
     // 1. 主相机 - 透视投影
     GameObject* mainCameraObj = new GameObject();
-    auto mainCameraTransform = mainCameraObj->AddComponent<Transform>();
+    auto mainCameraTransform = mainCameraObj->GetTransform();
     mainCameraTransform->SetPosition(glm::vec3(0.0f, 2.0f, 8.0f));
     mainCameraTransform->SetRotation(glm::vec3(-15.0f, 0.0f, 0.0f));
     
     Camera* mainCamera = mainCameraObj->AddComponent<Camera>();
     mainCamera->SetProjectionType(ProjectionType::Perspective);
     mainCamera->SetPerspectiveProjection(45.0f, 16.0f/9.0f, 0.1f, 100.0f);
-    mainCamera->SetClearColor(glm::vec4(0.2f, 0.3f, 0.3f, 1.0f));
+    mainCamera->clearColor=glm::vec4(0.2f, 0.3f, 0.3f, 1.0f);
     mainCamera->SetMainCamera(true);
     
     m_cameras.push_back(mainCamera);
@@ -273,45 +273,44 @@ void CameraManagerExampleScene::CreateCameras() {
     
     // 2. 侧面相机 - 透视投影
     GameObject* sideCameraObj = new GameObject();
-    auto sideCameraTransform = sideCameraObj->AddComponent<Transform>();
+    auto sideCameraTransform = sideCameraObj->GetTransform();
     sideCameraTransform->SetPosition(glm::vec3(8.0f, 2.0f, 0.0f));
     sideCameraTransform->SetRotation(glm::vec3(-15.0f, -90.0f, 0.0f));
     
     Camera* sideCamera = sideCameraObj->AddComponent<Camera>();
     sideCamera->SetProjectionType(ProjectionType::Perspective);
     sideCamera->SetPerspectiveProjection(45.0f, 16.0f/9.0f, 0.1f, 100.0f);
-    sideCamera->SetClearColor(glm::vec4(0.3f, 0.2f, 0.3f, 1.0f));
-    
+    sideCamera->clearColor = glm::vec4(0.3f, 0.2f, 0.3f, 1.0f);
+
     m_cameras.push_back(sideCamera);
     m_gameObjects.push_back(sideCameraObj);
     CameraManager::GetInstance().RegisterCamera(sideCamera);
     
     // 3. 顶部相机 - 正交投影
     GameObject* topCameraObj = new GameObject();
-    auto topCameraTransform = topCameraObj->AddComponent<Transform>();
+    auto topCameraTransform = topCameraObj->GetTransform();
     topCameraTransform->SetPosition(glm::vec3(0.0f, 10.0f, 0.0f));
     topCameraTransform->SetRotation(glm::vec3(-90.0f, 0.0f, 0.0f));
     
     Camera* topCamera = topCameraObj->AddComponent<Camera>();
     topCamera->SetProjectionType(ProjectionType::Orthographic);
     topCamera->SetOrthographicProjection(-10.0f, 10.0f, -10.0f, 10.0f, 0.1f, 100.0f);
-    topCamera->SetClearColor(glm::vec4(0.3f, 0.3f, 0.2f, 1.0f));
-    
+
     m_cameras.push_back(topCamera);
     m_gameObjects.push_back(topCameraObj);
     CameraManager::GetInstance().RegisterCamera(topCamera);
     
     // 4. 远距离相机 - 透视投影
     GameObject* farCameraObj = new GameObject();
-    auto farCameraTransform = farCameraObj->AddComponent<Transform>();
+    auto farCameraTransform = farCameraObj->GetTransform();
     farCameraTransform->SetPosition(glm::vec3(0.0f, 2.0f, 15.0f));
     farCameraTransform->SetRotation(glm::vec3(-10.0f, 0.0f, 0.0f));
     
     Camera* farCamera = farCameraObj->AddComponent<Camera>();
     farCamera->SetProjectionType(ProjectionType::Perspective);
     farCamera->SetPerspectiveProjection(30.0f, 16.0f/9.0f, 0.1f, 100.0f);
-    farCamera->SetClearColor(glm::vec4(0.1f, 0.1f, 0.3f, 1.0f));
-    
+    farCamera->clearColor = glm::vec4(0.1f, 0.1f, 0.3f, 1.0f);
+
     m_cameras.push_back(farCamera);
     m_gameObjects.push_back(farCameraObj);
     CameraManager::GetInstance().RegisterCamera(farCamera);
