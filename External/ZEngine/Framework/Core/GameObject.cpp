@@ -1,28 +1,78 @@
 #include "Framework/Core/GameObject.h"
 #include "Framework/Component/Transform.h"
-framework::GameObject::GameObject()
-{
-    transform = AddComponent<Transform>();
-}
 
-void framework::GameObject::AddChild(GameObject *child)
+namespace framework
 {
-    if (child)
+    GameObject::GameObject()
     {
-        children.push_back(child);
-        child->SetParent(this);
+        transform = AddComponent<Transform>();
     }
-}
 
-void framework::GameObject::RemoveChild(GameObject *child)
-{
-    if (child)
+    GameObject::GameObject(std::string name)
     {
-        auto it = std::find(children.begin(), children.end(), child);
-        if (it != children.end())
+        transform = AddComponent<Transform>();
+        this->name = name;
+    }
+
+    void GameObject::AddChild(GameObject *child)
+    {
+        if (child)
         {
-            children.erase(it);
-            child->SetParent(nullptr);
+            children.push_back(child);
+            child->SetParent(this);
         }
     }
-}
+
+    void GameObject::RemoveChild(GameObject *child)
+    {
+        if (child)
+        {
+            auto it = std::find(children.begin(), children.end(), child);
+            if (it != children.end())
+            {
+                children.erase(it);
+                child->SetParent(nullptr);
+            }
+        }
+    }
+
+    void GameObject::OnCreate()
+    {
+    }
+
+    void GameObject::OnInitialize()
+    {
+        // Initialize all components
+        for (auto &pair : components)
+        {
+            for (auto *component : pair.second)
+            {
+                component->OnInitialize();
+            }
+        }
+    }
+
+    void GameObject::OnDestroy()
+    {
+        // Destroy all components
+        for (auto &pair : components)
+        {
+            for (auto *component : pair.second)
+            {
+                component->OnDestroy();
+                delete component; // Clean up memory
+            }
+            pair.second.clear();
+        }
+        components.clear();
+
+        // Clear children
+        for (auto *child : children)
+        {
+            child->SetParent(nullptr);
+            delete child; // Clean up memory
+        }
+        children.clear();
+    }
+
+} // namespace framework

@@ -21,7 +21,10 @@ namespace framework
         virtual void Shutdown() = 0;
 
         virtual const char *GetName() const = 0;
-
+    protected:
+        virtual void AddGameObject(GameObject *gameObject);
+        virtual void RemoveGameObject(GameObject *gameObject);
+  
     private:
         // 禁止拷贝和赋值
         Scene(const Scene &) = delete;

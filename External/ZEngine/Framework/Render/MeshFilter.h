@@ -11,7 +11,9 @@ namespace framework {
  */
 class MeshFilter : public ComponentBase<MeshFilter> {
 public:
-    MeshFilter(GameObject* owner);
+    MeshFilter(GameObject* owner): ComponentBase<MeshFilter>(owner), m_mesh(nullptr) {
+        // 在构造函数中可以进行初始化操作
+    };
     ~MeshFilter() = default;
 
     // 设置网格数据（共享模式）
@@ -28,6 +30,25 @@ public:
     
     // 检查是否有有效网格
     bool HasMesh() const { return m_mesh && !m_mesh->GetVertices().empty(); }
+
+
+    virtual void Deserialize(const rapidjson::Value& jsonValue) override {
+        // // 从JSON值反序列化网格数据
+        // if (jsonValue.HasMember("mesh")) {
+        //     m_mesh = std::make_shared<Mesh>();
+        //     m_mesh->Deserialize(jsonValue["mesh"]);
+        // }
+    }
+
+    virtual rapidjson::Value Serialize() const override {
+        // // 序列化网格数据为JSON值
+        // rapidjson::Value jsonValue(rapidjson::kObjectType);
+        // if (m_mesh) {
+        //     jsonValue.AddMember("mesh", m_mesh->Serialize(), GetAllocator());
+        // }
+        // return jsonValue;
+        return rapidjson::Value(); // 返回空值，实际实现中应返回有效的JSON值
+    }
 
 private:
     std::shared_ptr<Mesh> m_mesh; // 存储网格数据

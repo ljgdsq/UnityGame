@@ -12,7 +12,13 @@ namespace framework
     {
     public:
         GameObject();
+        GameObject(std::string name);
         virtual ~GameObject() = default;
+
+        // Initialize the GameObject
+        void OnCreate();
+        void OnInitialize();
+        void OnDestroy();
 
         // Get the name of the GameObject
         const std::string &GetName() const { return name; }
@@ -36,6 +42,9 @@ namespace framework
         template <typename T>
         std::vector<T *> GetComponents() const;
 
+        template <typename T>
+        std::vector<T *> GetComponentsOfType() const;
+
         // Check if the GameObject has a component of type T
         template <typename T>
         bool HasComponent() const;
@@ -49,7 +58,6 @@ namespace framework
         std::vector<T *> GetComponentsInChildren(bool includeInactive = false) const;
 
 #pragma endregion
-
 
 #pragma region "Child Management"
 
@@ -132,6 +140,29 @@ namespace framework
     }
 
     template <typename T>
+    std::vector<T *> GameObject::GetComponentsOfType() const
+    {
+        static_assert(std::is_base_of<Component, T>::value, "GetComponentsOfType T must be a subclass of Component");
+        std::vector<T *> result;
+
+        // 遍历所有组件类型
+        for (const auto &pair : components)
+        {
+            for (auto component : pair.second)
+            {
+                // 尝试动态转换为目标类型
+                T *converted = dynamic_cast<T *>(component);
+                if (converted)
+                {
+                    result.push_back(converted);
+                }
+            }
+        }
+
+        return result;
+    }
+
+    template <typename T>
     void GameObject::RemoveComponent()
     {
         static_assert(std::is_base_of<Component, T>::value, "RemoveComponent T must be a subclass of Component");
@@ -150,7 +181,6 @@ namespace framework
             components.erase(it);
         }
     }
-
 
     template <typename T>
     std::vector<T *> GameObject::GetComponentsInChildren(bool includeInactive) const

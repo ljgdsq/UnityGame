@@ -25,6 +25,7 @@ namespace framework
         if (shader)
         {
             m_shader = shader;
+            m_shader->Use();
         }
         else
         {
@@ -35,7 +36,14 @@ namespace framework
 
     void Material::SetTexture(const std::string &textureName, int slot)
     {
-       
+        if (m_shader)
+        {
+            m_shader->SetInt(textureName.c_str(), slot, true);
+        }
+        else
+        {
+            Logger::Error("Material shader is not set.");
+        }
         
     }
 

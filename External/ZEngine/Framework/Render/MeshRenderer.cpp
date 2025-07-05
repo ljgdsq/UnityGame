@@ -5,6 +5,7 @@
 #include "Framework/Render/Material.h"
 #include "Framework/Component/Transform.h"
 #include "glad/glad.h"
+#include "Framework/Manager/CameraManager.h"
 namespace framework
 {
 
@@ -31,20 +32,29 @@ namespace framework
 
         // 设置变换矩阵
         glm::mat4 modelMatrix = transform->GetModelMatrix();
-
+        auto camera = CameraManager::GetInstance().GetMainCamera();
         // 使用材质渲染网格
         if (m_material)
         {
             m_material->Use();
             m_material->SetMatrix("model", modelMatrix);
+            m_material ->SetMatrix("view", camera->GetViewMatrix());
+            m_material->SetMatrix("projection", camera->GetProjectionMatrix());
         }
+        mesh->Use();
 
-        glDrawElements(GL_TRIANGLES, mesh->GetIndices().size(), GL_UNSIGNED_INT, mesh->GetIndices().data());
+        // 绘制元素（使用 EBO 时最后一个参数应该是 0）
+        glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(mesh->GetIndices().size()), GL_UNSIGNED_INT, 0);
     }
 
     void MeshRenderer::OnInitialize()
     {
         m_meshFilter = GetMeshFilter();
+    }
+
+    void MeshRenderer::SetMaterial(Material *material)
+    {
+        m_material = material;
     }
 
     MeshFilter *MeshRenderer::GetMeshFilter()

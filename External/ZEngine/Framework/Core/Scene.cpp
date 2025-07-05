@@ -2,6 +2,7 @@
 #include "Framework/Core/GameObject.h"
 #include "Framework/Render/RenderComponent.h"
 #include <algorithm>
+#include "Scene.h"
 namespace framework
 {
     void Scene::CollectRenderComponents(std::vector<RenderComponent *> &renderComponents)
@@ -12,13 +13,14 @@ namespace framework
         {
             if (gameObject)
             {
-                auto components = gameObject->GetComponents<RenderComponent>();
+                // 这里只会找到确切的 RenderComponent 类型，不包括子类
+                auto components = gameObject->GetComponentsOfType<RenderComponent>();
                 renderComponents.insert(renderComponents.end(), components.begin(), components.end());
             }
         }
     }
 
-    void Scene::SortRenderComponents( std::vector<RenderComponent *> &renderComponents)
+    void Scene::SortRenderComponents(std::vector<RenderComponent *> &renderComponents)
     {
         // 按渲染层级和排序顺序进行排序
         std::sort(renderComponents.begin(), renderComponents.end(),
@@ -34,7 +36,7 @@ namespace framework
                   });
     }
 
-    void Scene::Render(Renderer* renderer)
+    void Scene::Render(Renderer *renderer)
     {
         static std::vector<RenderComponent *> renderComponents;
         CollectRenderComponents(renderComponents);
@@ -49,6 +51,42 @@ namespace framework
             {
                 component->Render(renderer);
             }
+        }
+    }
+
+    void Scene::AddGameObject(GameObject *gameObject)
+    {
+        if (gameObject)
+        {
+            m_gameObjects.push_back(gameObject);
+            gameObject->SetActive(true); // 确保新添加的游戏对象是激活状态
+            gameObject->OnCreate();      // 调用创建时的回调
+            gameObject->OnInitialize();  // 调用初始化时的回调
+        }
+        else
+        {
+            Logger::Error("Attempted to add a null GameObject to the scene.");
+        }
+    }
+
+    void Scene::RemoveGameObject(GameObject *gameObject)
+    {
+        if (gameObject)
+        {
+            auto it = std::find(m_gameObjects.begin(), m_gameObjects.end(), gameObject);
+            if (it != m_gameObjects.end())
+            {
+                gameObject->OnDestroy(); // 调用销毁时的回调
+                m_gameObjects.erase(it); // 从场景中移除游戏对象
+            }
+            else
+            {
+                Logger::Warn("GameObject not found in the scene.");
+            }
+        }
+        else
+        {
+            Logger::Error("Attempted to remove a null GameObject from the scene.");
         }
     }
 
