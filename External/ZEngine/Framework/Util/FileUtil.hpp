@@ -48,6 +48,5 @@ namespace framework
                    lowerFilePath.compare(lowerFilePath.size() - lowerExtension.size(), lowerExtension.size(), lowerExtension) == 0;
 
         }
-    }
-
+    };
 }

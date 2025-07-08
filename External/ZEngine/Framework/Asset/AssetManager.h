@@ -2,11 +2,13 @@
 #include <string>
 #include <memory>
 #include <mutex>
+#include <unordered_map>
+#include <vector>
 #include "Framework/Asset/Asset.h"
 
 namespace framework
 {
-
+    class AssetLoader;
     class AssetManager
     {
     public:
@@ -62,6 +64,5 @@ namespace framework
 
     private:
         static AssetManager *s_instance; // 单例实例
-    }
-
+    };
 }

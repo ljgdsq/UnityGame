@@ -1,5 +1,6 @@
 #include "Framework/Asset/MeshAsset.h"
-
+#include "Framework/Log/Logger.h"
+#include "Framework/Render/Mesh.h"
 namespace framework
 {
     MeshAsset::MeshAsset(const std::string &name)
@@ -7,14 +8,16 @@ namespace framework
     {
     }
 
-    ~MeshAsset::~MeshAsset()
+    MeshAsset::~MeshAsset()
     {
-        // 资源卸载时可以在这里添加清理逻辑
     }
-
     long MeshAsset::GetSize() const
     {
-        return m_mesh ? m_mesh->GetSize() : 0;
+        if (m_mesh)
+        {
+            return m_mesh->GetVertices().size() * sizeof(float) + m_mesh->GetIndices().size() * sizeof(unsigned int);
+        }
+        return 0; // 如果没有网格数据，返回0        
     }
 
     std::shared_ptr<Mesh> MeshAsset::GetMesh() const
@@ -26,8 +29,9 @@ namespace framework
         m_mesh = mesh;
         if (m_mesh)
         {
-            m_vertexCount = m_mesh->GetVertexCount();
-            m_triangleCount = m_mesh->GetTriangleCount();
+            Logger::Error("MeshAsset::SetMesh: m_mesh->GetVertices().size() / 3 may error");
+            m_vertexCount = m_mesh->GetVertices().size() / 3; // 假设每个顶点有3个分量（x, y, z）
+            m_triangleCount = m_mesh->GetIndices().size() / 3; //
         }
         else
         {

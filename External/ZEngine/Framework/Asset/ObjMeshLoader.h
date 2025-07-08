@@ -26,9 +26,10 @@ namespace framework{
         private:
         bool ParseObjFile(const std::string &filePath, std::vector<ObjVertex> &vertices, std::vector<unsigned int> &indices);
         std::vector<std::string> SplitString(const std::string &str, char delimiter);
-        bool ParseVertex(const std::string &line, ObjVertex &vertex);
-        bool ParseFace(const std::string &line, std::vector<unsigned int> &indices
+        bool ParseVertex(const std::string &line, glm::vec3 &position
         );
+        // bool ParseFace(const std::string &line, std::vector<unsigned int> &indices
+        // );
         bool ParseNormal(const std::string &line, glm::vec3 &normal);
         bool ParseTexCoord(const std::string &line, glm::vec2 &texCoord);
         void GenerateNormals(std::vector<ObjVertex> &vertices, const std::vector<unsigned int> &indices);

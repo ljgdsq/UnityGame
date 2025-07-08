@@ -1,7 +1,8 @@
 #include "Framework/Asset/AssetManager.h"
 #include "Framework/Log/Logger.h"
 #include "Framework/Asset/AssetLoader.h"
-
+#include "Framework/Core/ResLoader.h"
+#include "Framework/Util/FileUtil.hpp"
 namespace framework {
     AssetManager* AssetManager::s_instance = nullptr;
 
@@ -161,10 +162,7 @@ return asset;
     }
 
     void AssetManager::PreloadAssets(const std::vector<std::string> &assetPaths) {
-        for (const auto &path : assetPaths) {
-            LoadAsset(path);
-        }
-        Logger::Log("Preloaded {} assets", assetPaths.size());
+        Logger::Error("PreloadAssets is not implemented yet");
     }
 
     long AssetManager::GetTotalAssetsSize() const {

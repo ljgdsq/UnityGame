@@ -1,4 +1,4 @@
-#pragma one
+#pragma once
 #include <string>
 namespace framework
 {
@@ -7,7 +7,7 @@ namespace framework
         Unknown = 0, // 未知类型
         Texture,
         Shader,
-        Model,
+        Mesh,
         Audio,
         Font,
         Count // 用于计数
@@ -16,7 +16,7 @@ namespace framework
     class Asset
     {
     public:
-        Asset(AssetType type, const std::string &name)
+        Asset(const std::string &name,AssetType type)
             : m_type(type), m_name(name) {}
         virtual ~Asset() = default;
         // basae info

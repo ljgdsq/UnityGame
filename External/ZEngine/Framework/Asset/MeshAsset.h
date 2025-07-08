@@ -2,6 +2,7 @@
 #include "Framework/Asset/Asset.h"
 #include "Framework/Render/Buffer.h"
 #include "Framework/Render/Mesh.h"
+#include "Framework/Log/Logger.h"
 #include <memory>
 #include <string>
 
@@ -23,6 +24,18 @@ namespace framework
         long GetVertexCount() const;
         // 获取三角形数量
         long GetTriangleCount() const;
+
+
+        // 重载 Asset 的方法
+        void Load() override {
+
+            Logger::Error("MeshAsset::Load is not implemented yet");
+
+        }
+        void Unload() override {
+            Logger::Error("MeshAsset::Unload is not implemented yet");
+        }
+
 
     private:
         std::shared_ptr<Mesh> m_mesh; // 网格数据

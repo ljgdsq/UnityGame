@@ -2,6 +2,7 @@
 
 ## 🚀 优先任务
 - [ ] GameObject生命周期管理
+- [ ] asset load system
 - [ ] Scene渲染流程完善
 -  [ ] fix ResLoder can not load Res/***
 - [ ] 封装Sprite
