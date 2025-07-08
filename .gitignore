@@ -26,7 +26,6 @@
 .vs/
 
 .idea
-.vscode
 .vs
 .history
 *.csproj.*
