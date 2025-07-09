@@ -14,7 +14,7 @@ public:
 
 private:
     // 提取文件名（去掉路径）
-    static std::string ExtractFileName(const char* filePath)
+    static std::string ExtractFileName(const char *filePath)
     {
         std::filesystem::path path(filePath);
         return path.filename().string();
@@ -22,36 +22,35 @@ private:
 
 public:
     template <typename... Args>
-    static void Debug(const char* file, int line, const char *fmt, const Args &...args)
+    static void Debug(const char *file, int line, const char *fmt, const Args &...args)
     {
         std::string location = "[" + ExtractFileName(file) + ":" + std::to_string(line) + "] ";
         spdlog::debug(location + fmt, args...);
     }
 
     template <typename... Args>
-    static void Log(const char* file, int line, const char *fmt, const Args &...args)
+    static void Log(const char *file, int line, const char *fmt, const Args &...args)
     {
         std::string location = "[" + ExtractFileName(file) + ":" + std::to_string(line) + "] ";
         spdlog::info(location + fmt, args...);
     }
-    
+
     template <typename... Args>
-    static void Warn(const char* file, int line, const char *fmt, const Args &...args)
+    static void Warn(const char *file, int line, const char *fmt, const Args &...args)
     {
         std::string location = "[" + ExtractFileName(file) + ":" + std::to_string(line) + "] ";
         spdlog::warn(location + fmt, args...);
     }
 
     template <typename... Args>
-    static void Error(const char* file, int line, const char *fmt, const Args &...args)
+    static void Error(const char *file, int line, const char *fmt, const Args &...args)
     {
         std::string location = "[" + ExtractFileName(file) + ":" + std::to_string(line) + "] ";
         spdlog::error(location + fmt, args...);
     }
 
-
     // 兼容旧的日志方法，不显示文件名和行号
-    // === 兼容性API：不带文件名行号的版本 ===
+
     template <typename... Args>
     static void Debug(const char *fmt, const Args &...args)
     {
@@ -63,7 +62,7 @@ public:
     {
         spdlog::info(fmt, args...);
     }
-    
+
     template <typename... Args>
     static void Warn(const char *fmt, const Args &...args)
     {
@@ -77,9 +76,19 @@ public:
     }
 };
 
+#if _DEBUG
+
 // 便利宏，自动传递文件名和行号
 #define LOG_DEBUG(fmt, ...) Logger::Debug(__FILE__, __LINE__, fmt, ##__VA_ARGS__)
-#define LOG_INFO(fmt, ...)  Logger::Log(__FILE__, __LINE__, fmt, ##__VA_ARGS__)
-#define LOG_WARN(fmt, ...)  Logger::Warn(__FILE__, __LINE__, fmt, ##__VA_ARGS__)
+#define LOG_INFO(fmt, ...) Logger::Log(__FILE__, __LINE__, fmt, ##__VA_ARGS__)
+#define LOG_WARN(fmt, ...) Logger::Warn(__FILE__, __LINE__, fmt, ##__VA_ARGS__)
 #define LOG_ERROR(fmt, ...) Logger::Error(__FILE__, __LINE__, fmt, ##__VA_ARGS__)
 
+#else
+
+#define LOG_DEBUG(fmt, ...) Logger::Debug(fmt, ##__VA_ARGS__)
+#define LOG_INFO(fmt, ...) Logger::Log(fmt, ##__VA_ARGS__)
+#define LOG_WARN(fmt, ...) Logger::Warn(fmt, ##__VA_ARGS__)
+#define LOG_ERROR(fmt, ...) Logger::Error(fmt, ##__VA_ARGS__)
+
+#endif
