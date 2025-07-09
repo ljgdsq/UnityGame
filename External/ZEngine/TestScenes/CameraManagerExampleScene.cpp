@@ -7,8 +7,6 @@
 #include <glm/gtc/type_ptr.hpp>
 #include "glfw/glfw3.h"
 namespace framework {
-#define LOG_INFO Logger::Debug
-#define LOG_ERROR Logger::Error
 
 void CameraManagerExampleScene::Initialize() {
     LOG_INFO("Initializing CameraManagerExampleScene");

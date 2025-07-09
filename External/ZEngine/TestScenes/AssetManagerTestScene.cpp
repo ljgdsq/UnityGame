@@ -24,7 +24,7 @@ namespace framework
 
         AssetManager::GetInstance().RegisterLoader(std::make_shared<ObjMeshLoader>());
 
-        Logger::Log("=== Initializing AssetManager Mesh Test Scene ===");
+        LOG_INFO("=== Initializing AssetManager Mesh Test Scene ===");
         
         // 1. 创建主相机
         GameObject* mainCameraObj = new GameObject();
@@ -53,17 +53,17 @@ namespace framework
         // CreateMeshObjectsFromAssets();
         
         // 4. 显示操作说明
-        Logger::Log("=== MeshAsset Test Scene Controls ===");
-        Logger::Log("1 - Test ObjMeshLoader Registration");
-        Logger::Log("2 - Test Obj Mesh Loading");
-        Logger::Log("3 - Test MeshAsset Management");
-        Logger::Log("4 - Test MeshFilter Integration");
-        Logger::Log("5 - Test Mesh Memory Management");
-        Logger::Log("6 - Print Mesh Asset Statistics");
-        Logger::Log("U - Unload All Mesh Assets");
-        Logger::Log("R - Reload All Mesh Assets");
-        Logger::Log("WASD - Move camera");
-        Logger::Log("=== ====================== ===");
+        LOG_INFO("=== MeshAsset Test Scene Controls ===");
+        LOG_INFO("1 - Test ObjMeshLoader Registration");
+        LOG_INFO("2 - Test Obj Mesh Loading");
+        LOG_INFO("3 - Test MeshAsset Management");
+        LOG_INFO("4 - Test MeshFilter Integration");
+        LOG_INFO("5 - Test Mesh Memory Management");
+        LOG_INFO("6 - Print Mesh Asset Statistics");
+        LOG_INFO("U - Unload All Mesh Assets");
+        LOG_INFO("R - Reload All Mesh Assets");
+        LOG_INFO("WASD - Move camera");
+        LOG_INFO("=== ====================== ===");
     }
 
     void AssetManagerTestScene::Update(float deltaTime)
@@ -122,7 +122,7 @@ namespace framework
 
     void AssetManagerTestScene::Shutdown()
     {
-        Logger::Log("=== Shutting down AssetManager Mesh Test Scene ===");
+        LOG_INFO("=== Shutting down AssetManager Mesh Test Scene ===");
         
         // 清理测试对象
         m_testObjects.clear();
@@ -131,7 +131,7 @@ namespace framework
 
     void AssetManagerTestScene::TestMeshLoaderRegistration()
     {
-        Logger::Log("=== Testing MeshLoader Registration ===");
+        LOG_INFO("=== Testing MeshLoader Registration ===");
         
         auto& assetManager = AssetManager::GetInstance();
         
@@ -139,45 +139,45 @@ namespace framework
         auto objLoader = std::make_shared<ObjMeshLoader>();
         assetManager.RegisterLoader(objLoader);
         
-        Logger::Log("ObjMeshLoader registered successfully");
+        LOG_INFO("ObjMeshLoader registered successfully");
         
         // 验证loader能够处理.obj文件
         auto supportedExtensions = objLoader->GetSupportedExtensions();
-        Logger::Log("ObjMeshLoader supports {} extensions:", supportedExtensions.size());
+        LOG_INFO("ObjMeshLoader supports {} extensions:", supportedExtensions.size());
         for (const auto& ext : supportedExtensions) {
-            Logger::Log("  - {}", ext);
+            LOG_INFO("  - {}", ext);
         }
         
-        Logger::Log("=== MeshLoader Registration Complete ===");
+        LOG_INFO("=== MeshLoader Registration Complete ===");
     }
 
     void AssetManagerTestScene::TestObjMeshLoading()
     {
-        Logger::Log("=== Testing Obj Mesh Loading ===");
+        LOG_INFO("=== Testing Obj Mesh Loading ===");
         
         auto& assetManager = AssetManager::GetInstance();
         
         // 尝试加载每个测试网格文件
         for (const auto& meshPath : m_testMeshPaths) {
-            Logger::Log("Attempting to load mesh: {}", meshPath);
+            LOG_INFO("Attempting to load mesh: {}", meshPath);
 
             auto asset = assetManager.LoadAsset(meshPath, AssetType::Mesh);
             if (asset) {
                 auto meshAsset = std::dynamic_pointer_cast<MeshAsset>(asset);
                 if (meshAsset) {
-                    Logger::Log("Successfully loaded MeshAsset: {}", meshAsset->GetName());
-                    Logger::Log("  - Vertex count: {}", meshAsset->GetVertexCount());
-                    Logger::Log("  - Triangle count: {}", meshAsset->GetTriangleCount());
-                    Logger::Log("  - Size: {} bytes", meshAsset->GetSize());
+                    LOG_INFO("Successfully loaded MeshAsset: {}", meshAsset->GetName());
+                    LOG_INFO("  - Vertex count: {}", meshAsset->GetVertexCount());
+                    LOG_INFO("  - Triangle count: {}", meshAsset->GetTriangleCount());
+                    LOG_INFO("  - Size: {} bytes", meshAsset->GetSize());
                 } else {
-                    Logger::Warn("Asset is not a MeshAsset: {}", meshPath);
+                    LOG_WARN("Asset is not a MeshAsset: {}", meshPath);
                 }
             } else {
-                Logger::Warn("Failed to load mesh asset: {}", meshPath);
+                LOG_WARN("Failed to load mesh asset: {}", meshPath);
             }
         }
         
-        Logger::Log("=== Obj Mesh Loading Complete ===");
+        LOG_INFO("=== Obj Mesh Loading Complete ===");
     }
 
     void AssetManagerTestScene::TestMeshAssetCreationAndManagement()

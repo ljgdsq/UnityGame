@@ -41,6 +41,32 @@
 			],
 			"detail": "运行 build.bat 脚本编译项目"
 		},
+    		{
+			"type": "shell",
+			"label": "Run Project",
+			"command": "${workspaceFolder}\\run.bat",
+			"group": "test",
+			"options": {
+				"shell": {
+					"executable": "cmd.exe",
+					"args": ["/c"]
+				},
+				"cwd": "${workspaceFolder}"
+			},
+			"presentation": {
+				"echo": true,
+				"reveal": "always",
+				"focus": true,
+				"panel": "shared",
+				"showReuseMessage": true,
+				"clear": false
+			},
+			"problemMatcher": [
+				"$msCompile",
+				"$gcc"
+			],
+			"detail": "运行项目"
+		},
 		{
 			"type": "shell",
 			"label": "Build and Run Project",

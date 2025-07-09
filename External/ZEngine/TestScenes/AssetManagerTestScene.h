@@ -43,9 +43,7 @@ namespace framework
         
         // 测试资源名称列表 - 专注于网格资源
         std::vector<std::string> m_testMeshPaths = {
-            "Models/primitives/Cube.obj",
-            "Models/primitives/Sphere.obj",
-            "Models/primitives/Plane.obj"
+            "Res/Models/primitives/Cube.obj"
         };
         
         // 测试方法 - 专注于MeshAsset, MeshLoader, MeshFilter
