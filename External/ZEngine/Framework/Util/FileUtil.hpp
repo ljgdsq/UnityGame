@@ -10,6 +10,9 @@ namespace framework
         FileUtil() = default;
 
     public:
+        /// @brief 提取文件名 
+        /// @param filePath 文件路径
+        /// @return 文件名
         static std::string ExtractFileName(const std::string &filePath)
         {
             size_t lastSlash = filePath.find_last_of("/\\");

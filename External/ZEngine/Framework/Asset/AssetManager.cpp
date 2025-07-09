@@ -6,6 +6,15 @@
 namespace framework {
     AssetManager* AssetManager::s_instance = nullptr;
 
+
+    AssetManager& AssetManager::GetInstance() {
+        if (!s_instance) {
+            s_instance = new AssetManager();
+            Logger::Log("AssetManager instance created");
+        }
+        return *s_instance;
+    }
+
     AssetManager::~AssetManager() {
         UnloadAllAssets();
         m_assets.clear();

@@ -3,6 +3,7 @@
 #include "TestScenes/QuadTestScene.h"
 #include "TestScenes/TextureScene.h"
 #include "TestScenes/MeshTestScene.h"
+#include "TestScenes/AssetManagerTestScene.h"
 #include "TestScenes/CameraManagerExampleScene.h"
 #include "Framework/Core/SceneManager.h"
 #include "Framework/Core/Input.h"
@@ -32,6 +33,10 @@ void TestApplication::InitScenes() {
     auto meshTestScene = std::make_shared<MeshTestScene>();
     SceneManager::GetInstance().AddScene("MeshTest", meshTestScene);
 
+    // 注册AssetManager测试场景
+    auto assetManagerTestScene = std::make_shared<AssetManagerTestScene>();
+    SceneManager::GetInstance().AddScene("AssetManagerTest", assetManagerTestScene);
+
     // 注册相机管理器示例场景
     auto cameraManagerScene = std::make_shared<CameraManagerExampleScene>();
     SceneManager::GetInstance().AddScene("CameraManagerExample", cameraManagerScene);
@@ -48,7 +53,7 @@ void TestApplication::InitScenes() {
     Logger::Log("Press 3 to switch to Texture Test Scene");
     Logger::Log("Press 4 to switch to Camera Manager Example Scene");
     Logger::Log("Press 5 to switch to Mesh Test Scene");
-
+    Logger::Log("Press 6 to switch to AssetManager Test Scene");
     Logger::Log("Press F1 to switch to Wireframe Mode");
     Logger::Log("Press F2 to switch to Filled Mode");
 }
@@ -89,6 +94,13 @@ void TestApplication::HandleInput() {
         SceneManager::GetInstance().SetActiveScene("MeshTest");
         SceneManager::GetInstance().InitializeActiveScene();
         Logger::Log("Switched to Mesh Test Scene");
+    }
+
+    // 按6键切换到AssetManager测试场景
+    if (Input::GetKeyDown(GLFW_KEY_6)) {
+        SceneManager::GetInstance().SetActiveScene("AssetManagerTest");
+        SceneManager::GetInstance().InitializeActiveScene();
+        Logger::Log("Switched to AssetManager Test Scene");
     }
 
     // 按F1键切换到线框渲染模式

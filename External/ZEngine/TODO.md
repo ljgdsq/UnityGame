@@ -9,6 +9,9 @@
   - [ ] 矩阵变换
   - [ ] GameObject
 - [ ] imgui editor
+- [ ] remove unused third part executable build cmake config
+
+## 💦 基础架构重构
 
 ## 🏗️ 核心功能
 

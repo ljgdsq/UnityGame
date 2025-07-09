@@ -18,10 +18,31 @@ void framework::Mesh::SetVertices(const std::vector<float> &vertices)
         m_vertexArray = new VertexArray();
     }
     m_vertexArray->BindBuffer();
-    m_vertexArray->AddLayout({0, 3, GL_FLOAT, false, 5 * sizeof(float), 0});
-    m_vertexArray->AddLayout({1, 2, GL_FLOAT, false, 5 * sizeof(float), 3 * sizeof(float)}); // 修复：纹理坐标偏移应该是 3 * sizeof(float)
-    m_vertexArray->EnableAttributes(0);
-    m_vertexArray->EnableAttributes(1);
+    
+    // 检测顶点数据格式（根据顶点分量数量）
+    // 如果是8个分量：position(3) + normal(3) + texCoord(2)
+    // 如果是5个分量：position(3) + texCoord(2)
+    
+    if (vertices.size() % 8 == 0) {
+        // 8分量格式：position(3) + normal(3) + texCoord(2)
+        m_vertexArray->AddLayout({0, 3, GL_FLOAT, false, 8 * sizeof(float), 0}); // position
+        m_vertexArray->AddLayout({1, 3, GL_FLOAT, false, 8 * sizeof(float), 3 * sizeof(float)}); // normal
+        m_vertexArray->AddLayout({2, 2, GL_FLOAT, false, 8 * sizeof(float), 6 * sizeof(float)}); // texCoord
+        m_vertexArray->EnableAttributes(0);
+        m_vertexArray->EnableAttributes(1);
+        m_vertexArray->EnableAttributes(2);
+    } else if (vertices.size() % 5 == 0) {
+        // 5分量格式：position(3) + texCoord(2)
+        m_vertexArray->AddLayout({0, 3, GL_FLOAT, false, 5 * sizeof(float), 0}); // position
+        m_vertexArray->AddLayout({1, 2, GL_FLOAT, false, 5 * sizeof(float), 3 * sizeof(float)}); // texCoord
+        m_vertexArray->EnableAttributes(0);
+        m_vertexArray->EnableAttributes(1);
+    } else {
+        // 默认只有位置数据（3分量）
+        m_vertexArray->AddLayout({0, 3, GL_FLOAT, false, 3 * sizeof(float), 0}); // position
+        m_vertexArray->EnableAttributes(0);
+    }
+    
     m_vertexArray->UnbindBuffer();
 }
 

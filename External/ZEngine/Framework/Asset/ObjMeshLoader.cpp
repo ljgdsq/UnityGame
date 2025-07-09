@@ -7,6 +7,7 @@
 #include "Framework/Util/FileUtil.hpp"
 #include <sstream>
 #include <unordered_map>
+#include "ObjMeshLoader.h"
 
 namespace framework
 {
@@ -50,6 +51,9 @@ namespace framework
 
         meshAsset->SetMesh(mesh);
         Logger::Debug("Successfully loaded OBJ mesh: {}", assetName);
+        Logger::Debug("  - Vertices: {} (raw count: {})", vertices.size(), meshVertices.size() / 8);
+        Logger::Debug("  - Indices: {}", indices.size());
+        Logger::Debug("  - Triangles: {}", indices.size() / 3);
         return meshAsset;
     }
 
@@ -128,9 +132,13 @@ namespace framework
             }
             else if (line.substr(0, 2) == "f ")
             {
-                //先不解析
-                Logger::Error("Parsing faces is not implemented yet in ObjMeshLoader, line: {}, content: {}", lineNumber, line);
-            }
+                // 面
+                if (!ParseFace(line, positions, texCoords, normals, vertices, indices, vertexCache))
+                {
+                    Logger::Error("Failed to parse face at line {}: {}", lineNumber, line);
+                    return false;
+                }
+             }
         }
         // 如果没有法线数据，生成默认法线
         if (normals.empty() && !vertices.empty())
@@ -138,6 +146,13 @@ namespace framework
             Logger::Debug("No normals found, generating normals for mesh");
             GenerateNormals(vertices, indices);
         }
+
+        Logger::Debug("OBJ parsing complete:");
+        Logger::Debug("  - Input positions: {}", positions.size());
+        Logger::Debug("  - Input texCoords: {}", texCoords.size());  
+        Logger::Debug("  - Input normals: {}", normals.size());
+        Logger::Debug("  - Output vertices: {}", vertices.size());
+        Logger::Debug("  - Output indices: {}", indices.size());
 
         return !vertices.empty() && !indices.empty();
     }
@@ -200,107 +215,118 @@ namespace framework
         return true;
     }
 
-    // bool ObjMeshLoader::ParseFace(const std::string &line,
-    //                               const std::vector<glm::vec3> &positions,
-    //                               const std::vector<glm::vec2> &texCoords,
-    //                               const std::vector<glm::vec3> &normals,
-    //                               std::vector<ObjVertex> &vertices,
-    //                               std::vector<unsigned int> &indices,
-    //                               std::unordered_map<std::string, unsigned int> &vertexCache)
-    // {
+    bool ObjMeshLoader::ParseFace(const std::string &line,
+                                  const std::vector<glm::vec3> &positions,
+                                  const std::vector<glm::vec2> &texCoords,
+                                  const std::vector<glm::vec3> &normals,
+                                  std::vector<ObjVertex> &vertices,
+                                  std::vector<unsigned int> &indices,
+                                  std::unordered_map<std::string, unsigned int> &vertexCache)
+    {
 
-    //     std::stringstream ss(line.substr(2)); // 跳过 "f "
-    //     std::string vertexStr;
-    //     std::vector<unsigned int> faceIndices;
+        std::stringstream ss(line.substr(2)); // 跳过 "f "
+        std::string vertexStr;
+        std::vector<unsigned int> faceIndices;
 
-    //     while (ss >> vertexStr)
-    //     {
-    //         // 检查缓存
-    //         auto it = vertexCache.find(vertexStr);
-    //         if (it != vertexCache.end())
-    //         {
-    //             faceIndices.push_back(it->second);
-    //             continue;
-    //         }
+        while (ss >> vertexStr)
+        {
+            // 检查缓存
+            auto it = vertexCache.find(vertexStr);
+            if (it != vertexCache.end())
+            {
+                faceIndices.push_back(it->second);
+                continue;
+            }
 
-    //         // 解析顶点字符串 (position/texCoord/normal)
-    //         auto parts = SplitString(vertexStr, '/');
-    //         if (parts.empty())
-    //         {
-    //             return false;
-    //         }
+            // 解析顶点字符串 (position/texCoord/normal)
+            auto parts = SplitString(vertexStr, '/');
+            if (parts.empty())
+            {
+                return false;
+            }
 
-    //         ObjVertex vertex;
+            ObjVertex vertex;
 
-    //         // 解析位置索引
-    //         try
-    //         {
-    //             int posIndex = std::stoi(parts[0]) - 1; // OBJ 索引从 1 开始
-    //             if (posIndex < 0 || posIndex >= static_cast<int>(positions.size()))
-    //             {
-    //                 return false;
-    //             }
-    //             vertex.position = positions[posIndex];
-    //         }
-    //         catch (const std::exception &e)
-    //         {
-    //             return false;
-    //         }
+            // 解析位置索引
+            try
+            {
+                int posIndex = std::stoi(parts[0]) - 1; // OBJ 索引从 1 开始
+                if (posIndex < 0 || posIndex >= static_cast<int>(positions.size()))
+                {
+                    return false;
+                }
+                vertex.position = positions[posIndex];
+            }
+            catch (const std::exception &e)
+            {
+                return false;
+            }
 
-    //         // 解析纹理坐标索引
-    //         if (parts.size() > 1 && !parts[1].empty())
-    //         {
-    //             try
-    //             {
-    //                 int texIndex = std::stoi(parts[1]) - 1;
-    //                 if (texIndex >= 0 && texIndex < static_cast<int>(texCoords.size()))
-    //                 {
-    //                     vertex.texCoords = texCoords[texIndex];
-    //                 }
-    //             }
-    //             catch (const std::exception &e)
-    //             {
-    //                 // 忽略纹理坐标解析错误
-    //             }
-    //         }
+            // 解析纹理坐标索引
+            if (parts.size() > 1 && !parts[1].empty())
+            {
+                try
+                {
+                    int texIndex = std::stoi(parts[1]) - 1;
+                    if (texIndex >= 0 && texIndex < static_cast<int>(texCoords.size()))
+                    {
+                        vertex.texCoords = texCoords[texIndex];
+                    }
+                }
+                catch (const std::exception &e)
+                {
+                    Logger::Error("Failed to parse texture coordinate index: {}", e.what());
+                }
+            }
 
-    //         // 解析法线索引
-    //         if (parts.size() > 2 && !parts[2].empty())
-    //         {
-    //             try
-    //             {
-    //                 int normalIndex = std::stoi(parts[2]) - 1;
-    //                 if (normalIndex >= 0 && normalIndex < static_cast<int>(normals.size()))
-    //                 {
-    //                     vertex.normal = normals[normalIndex];
-    //                 }
-    //             }
-    //             catch (const std::exception &e)
-    //             {
-    //                 // 忽略法线解析错误
-    //             }
-    //         }
+            // 解析法线索引
+            if (parts.size() > 2 && !parts[2].empty())
+            {
+                try
+                {
+                    int normalIndex = std::stoi(parts[2]) - 1;
+                    if (normalIndex >= 0 && normalIndex < static_cast<int>(normals.size()))
+                    {
+                        vertex.normal = normals[normalIndex];
+                    }
+                }
+                catch (const std::exception &e)
+                {
+                    // 忽略法线解析错误
+                    Logger::Error("Failed to parse normal index: {}", e.what());
+                }
+            }
 
-    //         // 添加顶点并缓存
-    //         unsigned int vertexIndex = static_cast<unsigned int>(vertices.size());
-    //         vertices.push_back(vertex);
-    //         vertexCache[vertexStr] = vertexIndex;
-    //         faceIndices.push_back(vertexIndex);
-    //     }
+            // 添加顶点并缓存
+            unsigned int vertexIndex = static_cast<unsigned int>(vertices.size());
+            vertices.push_back(vertex);
+            vertexCache[vertexStr] = vertexIndex;
+            faceIndices.push_back(vertexIndex);
+        }
 
-    //     // 三角化面（如果是四边形或更多边）
-    //     if (faceIndices.size() >= 3)
-    //     {
-    //         for (size_t i = 1; i < faceIndices.size() - 1; ++i)
-    //         {
-    //             indices.push_back(faceIndices[0]);
-    //             indices.push_back(faceIndices[i]);
-    //             indices.push_back(faceIndices[i + 1]);
-    //         }
-    //     }
+        // 三角化面（如果是四边形或更多边）
+        if (faceIndices.size() >= 3)
+        {
+            for (size_t i = 1; i < faceIndices.size() - 1; ++i)
+            {
+                unsigned int i0 = faceIndices[0];
+                unsigned int i1 = faceIndices[i];
+                unsigned int i2 = faceIndices[i + 1];
+                
+                // 验证索引有效性
+                if (i0 < vertices.size() && i1 < vertices.size() && i2 < vertices.size()) {
+                    indices.push_back(i0);
+                    indices.push_back(i1);  
+                    indices.push_back(i2);
+                } else {
+                    Logger::Error("Invalid face indices: {}, {}, {} (vertex count: {})", i0, i1, i2, vertices.size());
+                    return false;
+                }
+            }
+        }
 
-    //     return true;
-    // }
+        return true;
+    }
    
    
    

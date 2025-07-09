@@ -15,14 +15,7 @@ namespace framework
         AssetManager() = default;
         ~AssetManager();
 
-        AssetManager *GetInstance()
-        {
-            if (!s_instance)
-            {
-                s_instance = new AssetManager();
-            }
-            return s_instance;
-        }
+        static AssetManager &GetInstance();
 
     public:
         void RegisterLoader(std::shared_ptr<AssetLoader> loader);
