@@ -4,9 +4,9 @@
 #include <typeindex>
 #include <unordered_map>
 #include <vector>
+#include "Framework/Component/Component.h"
 namespace framework
 {
-    class Component;
     class Transform;
     class GameObject
     {

@@ -8,6 +8,22 @@ if(MSVC)
     add_compile_options(/utf-8)
 endif()
 
+# 针对 Clang 和 GCC 编译器禁用 RapidJSON 相关的警告
+if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang" OR CMAKE_CXX_COMPILER_ID STREQUAL "AppleClang")
+    add_compile_options(-Wno-expansion-to-defined)
+    add_compile_options(-Wno-deprecated-declarations)
+    add_compile_options(-Wno-deprecated-copy-with-user-provided-copy)
+elseif(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+    add_compile_options(-Wno-expansion-to-defined)
+    add_compile_options(-Wno-deprecated-declarations)
+endif()
+
+# 设置 RapidJSON 选项，禁用示例和测试
+set(RAPIDJSON_BUILD_DOC OFF CACHE BOOL "Build RapidJSON documentation" FORCE)
+set(RAPIDJSON_BUILD_EXAMPLES OFF CACHE BOOL "Build RapidJSON examples" FORCE)
+set(RAPIDJSON_BUILD_TESTS OFF CACHE BOOL "Build RapidJSON tests" FORCE)
+set(RAPIDJSON_BUILD_THIRDPARTY_GTEST OFF CACHE BOOL "Build RapidJSON third-party gtest" FORCE)
+
 # Set up only the minimal required include paths
 include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}

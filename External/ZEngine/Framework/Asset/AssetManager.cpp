@@ -83,7 +83,7 @@ namespace framework {
         }
 
         // 加载新资源
-        auto asset = LoadAsset(assetPath);
+        auto asset = LoadAsset<Asset>(assetPath);
         if (asset)
         {
             return std::dynamic_pointer_cast<T>(asset);

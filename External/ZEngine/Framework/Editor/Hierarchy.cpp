@@ -3,11 +3,12 @@
 #include "Framework/Core/GameObject.h"
 #include "Framework/Editor/ContextMenu.h"
 namespace fk = framework;
-static bool showpop= false;
-static int index=-1;
-static    int selectIndex=-1;
+
 namespace editor
 {
+    static bool showpop = false;
+    static int index = -1;
+    static int selectIndex = -1;
     HierarchyWidget::HierarchyWidget()
         : EditorWidget("Hierarchy")
     {
@@ -43,7 +44,8 @@ namespace editor
     void HierarchyWidget::Render()
     {
         auto activeScene = fk::SceneManager::GetInstance().GetActiveScene();
-        if (activeScene == nullptr)return;
+        if (activeScene == nullptr)
+            return;
         auto childs = activeScene->GetAllGameObjects();
 
         static ImGuiIO &io = ImGui::GetIO();
