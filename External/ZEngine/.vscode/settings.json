@@ -1,5 +1,6 @@
 {
     "files.associations": {
+        "*.lua.txt": "lua",
         "memory": "cpp",
         "algorithm": "cpp",
         "array": "cpp",
@@ -79,6 +80,7 @@
         "xtr1common": "cpp",
         "xtree": "cpp",
         "xutility": "cpp",
-        "typeindex": "cpp"
+        "typeindex": "cpp",
+        "__config": "cpp"
     }
 }
