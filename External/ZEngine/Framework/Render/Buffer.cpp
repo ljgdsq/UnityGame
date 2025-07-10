@@ -95,6 +95,20 @@ void Buffer::Destroy()
     valid = false;
 }
 
+FrameBuffer::FrameBuffer(unsigned int width, unsigned int height) : Buffer(BufferType::FBO), width(width), height(height)
+{
+    GenFrameBuffer();
+}
+
+FrameBuffer::~FrameBuffer()
+{
+    Destroy();
+}
+
+void FrameBuffer::UpdateData(const void *data, size_t size, BufferUsage usage)
+{
+}
+
 void Buffer::UpdateData(const void *data, size_t size, BufferUsage usage)
 {
     if (!valid)
@@ -112,6 +126,56 @@ void Buffer::UpdateData(const void *data, size_t size, BufferUsage usage)
         // VAO and FBO do not use UpdateData
         break;
     }
+}
+
+unsigned int FrameBuffer::GetColorBuffer() const
+{
+    return colorAttachment;
+}
+
+int FrameBuffer::GetWidth() const
+{
+    return width;
+}
+
+int FrameBuffer::GetHeight() const
+{
+    return height;
+}
+
+void FrameBuffer::Destroy()
+{
+    Buffer::Destroy();
+    // glDeleteFramebuffers(1, &id);
+    glDeleteTextures(1, &colorAttachment);
+    glDeleteRenderbuffers(1, &rbo);
+}
+
+void FrameBuffer::GenFrameBuffer()
+{
+    glBindFramebuffer(GL_FRAMEBUFFER, id);
+    glGenTextures(1, &colorAttachment);
+    glBindTexture(GL_TEXTURE_2D, colorAttachment);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glBindTexture(GL_TEXTURE_2D, 0);
+
+    // Attach texture to framebuffer
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorAttachment, 0);
+
+    // Create and attach a renderbuffer for depth and stencil attachment (if needed)
+    glGenRenderbuffers(1, &rbo);
+    glBindRenderbuffer(GL_RENDERBUFFER, rbo);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, width, height);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo);
+
+    // Check if framebuffer is complete
+    if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+    {
+        valid = false;
+    }
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
 VertexArray::VertexArray() : Buffer(BufferType::VAO)

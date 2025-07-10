@@ -21,6 +21,14 @@ namespace framework
         virtual void Shutdown() = 0;
 
         virtual const char *GetName() const = 0;
+
+    public:
+        // 获取场景中的所有游戏对象
+        std::vector<GameObject *> GetAllGameObjects() const
+        {
+            return m_gameObjects;
+        }
+
     protected:
         virtual void AddGameObject(GameObject *gameObject);
         virtual void RemoveGameObject(GameObject *gameObject);

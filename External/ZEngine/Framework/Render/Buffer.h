@@ -27,12 +27,13 @@ public:
     virtual void Destroy();
 
     virtual void UpdateData(const void *data, size_t size, BufferUsage usage = BufferUsage::StaticDraw);
+
 private:
     void GenBuffer();
-private:
+protected:
+    bool valid;
     unsigned int id;
     BufferType type;
-    bool valid;
 };
 
 struct BufferLayout
@@ -54,4 +55,26 @@ public:
     ~VertexArray() override;
     void AddLayout(BufferLayout layout);
     void EnableAttributes(int startIndex = 0);
+};
+
+class FrameBuffer : public Buffer
+{
+private:
+    unsigned int colorAttachment;
+    unsigned int rbo;
+    unsigned int width;
+    unsigned int height;
+
+public:
+    FrameBuffer(unsigned int width, unsigned int height);
+    ~FrameBuffer() override;
+    virtual void UpdateData(const void *data, size_t size, BufferUsage usage = BufferUsage::StaticDraw) override;
+    unsigned int GetColorBuffer() const;
+    int GetWidth() const;
+
+    int GetHeight() const;
+    virtual void Destroy() override;
+
+private:
+    void GenFrameBuffer();
 };

@@ -98,11 +98,11 @@ namespace framework
             // 更新帧率管理器
             FrameRateManager::GetInstance().Update(deltaTime);
 
-
+            BegineFrame();
             // Render
             // Clear the screen
             renderer->Clear();
-            BegineFrame();
+
             // 渲染当前场景
             SceneManager::GetInstance().RenderActiveScene(renderer);
             EndFrame();
@@ -149,6 +149,7 @@ namespace framework
 
     void BaseApplication::Update(float deltaTime)
     {
+        OnUpdate(deltaTime);
         // 更新当前场景
         SceneManager::GetInstance().UpdateActiveScene(deltaTime);
     }

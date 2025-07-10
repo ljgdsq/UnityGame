@@ -13,104 +13,44 @@
 #include "Framework/Render/Shader.h"
 #include "Framework/Component/Camera.h"
 #include "Framework/Manager/CameraManager.h"
+#include "Framework/Asset/AssetManager.h"
+#include "Framework/Asset/ObjMeshLoader.h"
+#include "Framework/Asset/MeshAsset.h"
 namespace framework
 {
     void MeshTestScene::Initialize()
     {
+        AssetManager::GetInstance().RegisterLoader(std::make_shared<ObjMeshLoader>());
+
         Logger::Log("Initializing Mesh Test Scene");
 
-            // 1. 主相机 - 透视投影
-    GameObject* mainCameraObj = new GameObject();
+        // 1. 主相机 - 透视投影
+        GameObject *mainCameraObj = new GameObject("MainCamera");
 
-        Camera* mainCamera = mainCameraObj->AddComponent<Camera>();
-    mainCamera->SetProjectionType(ProjectionType::Perspective);
-    mainCamera->SetPerspectiveProjection(45.0f, 16.0f/9.0f, 0.1f, 100.0f);
-    mainCamera->SetMainCamera(true);        CameraManager::GetInstance().RegisterCamera(mainCamera);
+        Camera *mainCamera = mainCameraObj->AddComponent<Camera>();
+        mainCamera->SetProjectionType(ProjectionType::Perspective);
+        mainCamera->SetPerspectiveProjection(45.0f, 16.0f / 9.0f, 0.1f, 100.0f);
+        mainCamera->SetMainCamera(true);
+        CameraManager::GetInstance().RegisterCamera(mainCamera);
         CameraManager::GetInstance().SetMainCamera(mainCamera);
-        
+
         // 添加相机到场景
         AddGameObject(mainCameraObj);
 
-        auto shader = new Shader("Shaders/CameraExample.vs", "Shaders/CameraExample.fs");
-
+        auto shader = new Shader("Shaders/MeshTest.vs", "Shaders/MeshTest.fs");
         auto texture = Texture::LoadTexture("Textures/container.png");
 
-        auto maertial= new Material();
+        auto maertial = new Material();
         maertial->SetShader(shader);
 
         maertial->SetTexture("texture1", 0);
- float vertices[] = {
-        // 位置                 // 纹理坐标
-        // 前面
-        -0.5f, -0.5f,  0.5f,   0.0f, 0.0f,
-         0.5f, -0.5f,  0.5f,   1.0f, 0.0f,
-         0.5f,  0.5f,  0.5f,   1.0f, 1.0f,
-        -0.5f,  0.5f,  0.5f,   0.0f, 1.0f,
-        
-        // 后面
-        -0.5f, -0.5f, -0.5f,   0.0f, 0.0f,
-         0.5f, -0.5f, -0.5f,   1.0f, 0.0f,
-         0.5f,  0.5f, -0.5f,   1.0f, 1.0f,
-        -0.5f,  0.5f, -0.5f,   0.0f, 1.0f,
-        
-        // 左面
-        -0.5f, -0.5f, -0.5f,   0.0f, 0.0f,
-        -0.5f, -0.5f,  0.5f,   1.0f, 0.0f,
-        -0.5f,  0.5f,  0.5f,   1.0f, 1.0f,
-        -0.5f,  0.5f, -0.5f,   0.0f, 1.0f,
-        
-        // 右面
-         0.5f, -0.5f, -0.5f,   0.0f, 0.0f,
-         0.5f, -0.5f,  0.5f,   1.0f, 0.0f,
-         0.5f,  0.5f,  0.5f,   1.0f, 1.0f,
-         0.5f,  0.5f, -0.5f,   0.0f, 1.0f,
-        
-        // 上面
-        -0.5f,  0.5f, -0.5f,   0.0f, 0.0f,
-         0.5f,  0.5f, -0.5f,   1.0f, 0.0f,
-         0.5f,  0.5f,  0.5f,   1.0f, 1.0f,
-        -0.5f,  0.5f,  0.5f,   0.0f, 1.0f,
-        
-        // 下面
-        -0.5f, -0.5f, -0.5f,   0.0f, 0.0f,
-         0.5f, -0.5f, -0.5f,   1.0f, 0.0f,
-         0.5f, -0.5f,  0.5f,   1.0f, 1.0f,
-        -0.5f, -0.5f,  0.5f,   0.0f, 1.0f
-    };
-        // 立方体索引数据
-    unsigned int indices[] = {
-        // 前面
-        0, 1, 2,
-        2, 3, 0,
-        
-        // 后面
-        4, 5, 6,
-        6, 7, 4,
-        
-        // 左面
-        8, 9, 10,
-        10, 11, 8,
-        
-        // 右面
-        12, 13, 14,
-        14, 15, 12,
-        
-        // 上面
-        16, 17, 18,
-        18, 19, 16,
-        
-        // 下面
-        20, 21, 22,
-        22, 23, 20
-    };
-        auto mesh = std::make_unique<Mesh>();
-        mesh->SetVertices(std::vector<float>(vertices, vertices + sizeof(vertices) / sizeof(float)));
-        mesh->SetIndices(std::vector<unsigned int>(indices, indices + sizeof(indices) / sizeof(unsigned int)));
 
+        auto meshAsset = std::dynamic_pointer_cast<MeshAsset>
+        (AssetManager::GetInstance().LoadAsset("Models/primitives/Cube.obj", AssetType::Mesh));
 
         m_cubeObject = new GameObject("Cube");
         auto meshFilter = m_cubeObject->AddComponent<MeshFilter>();
-        meshFilter->SetMesh(std::move(mesh));
+        meshFilter->SetMesh(meshAsset->GetMesh());
 
         auto meshRenderer = m_cubeObject->AddComponent<MeshRenderer>();
         meshRenderer->SetMaterial(maertial);
@@ -119,13 +59,11 @@ namespace framework
         m_cubeObject->GetTransform()->SetScale(glm::vec3(1.0f, 1.0f, 1.0f));
 
         AddGameObject(m_cubeObject);
-
-
     }
 
     void MeshTestScene::Update(float deltaTime)
     {
-       // 使用键盘的wasd 让cube移动
+        // 使用键盘的wasd 让cube移动
         if (Input::GetKeyDown(GLFW_KEY_W))
         {
             m_cubeObject->GetTransform()->SetPosition(m_cubeObject->GetTransform()->GetPosition() + glm::vec3(0.0f, 0.1f, 0.0f));
@@ -142,7 +80,6 @@ namespace framework
         {
             m_cubeObject->GetTransform()->SetPosition(m_cubeObject->GetTransform()->GetPosition() + glm::vec3(0.1f, 0.0f, 0.0f));
         }
-        
     }
     void MeshTestScene::Render(Renderer *renderer)
     {

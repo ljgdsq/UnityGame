@@ -1,28 +1,46 @@
 #include "TestScenes/TestApplication.h"
+#include "glad/glad.h"
+#include "glfw/glfw3.h"
+#include "Framework/Log/Logger.h"
 #include "imgui.h"
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
-#include "glfw/glfw3.h"
+#include "Framework/Core/SceneManager.h"
 #include "TestEditorApplication.h"
+#include "TestScenes/MeshTestScene.h"
+#include "Framework/Render/Buffer.h"
 
 framework::TestEditorApplication::TestEditorApplication()
 {
-
+    hierarchyWidget = new editor::HierarchyWidget();
 }
 
 void framework::TestEditorApplication::InitScenes()
 {
+
+    gameFrameBuffer = new FrameBuffer(1280, 720);
+
+    hierarchyWidget->Initialize();
+        gameView = new editor::GameView();
+    gameView->SetGameFrameBuffer(gameFrameBuffer);
+    gameView->Initialize();
+    auto assetManagerTestScene = std::make_shared<MeshTestScene>();
+    SceneManager::GetInstance().AddScene("MeshTestScene", assetManagerTestScene);
+
+    SetInitialScene("MeshTestScene");
+
     ImGui::CreateContext();
     ImGuiIO &io = ImGui::GetIO();
-    (void) io;
-    io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
-    io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
-    io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;         // Enable Docking
-    io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;       // Enable Multi-Viewport / Platform Windows
+    (void)io;
+    io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard; // Enable Keyboard Controls
+    io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;  // Enable Gamepad Controls
+    io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;     // Enable Docking
+    io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;   // Enable Multi-Viewport / Platform Windows
     ImGui::StyleColorsDark();
 
     ImGuiStyle &style = ImGui::GetStyle();
-    if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable) {
+    if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+    {
         style.WindowRounding = 0.0f;
         style.Colors[ImGuiCol_WindowBg].w = 1.0f;
     }
@@ -37,39 +55,50 @@ void framework::TestEditorApplication::HandleInput()
 
 void framework::TestEditorApplication::BegineFrame()
 {
+    gameFrameBuffer->BindBuffer();
 }
 
 void framework::TestEditorApplication::EndFrame()
 {
-    
+    gameFrameBuffer->UnbindBuffer();
+    renderer->Clear();
+
+    // 开始ImGui渲染
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplGlfw_NewFrame();
     ImGui::NewFrame();
     static ImGuiID id = ImGui::GetID("EditorPanelDockSpace");
     ImGui::DockSpaceOverViewport(id, ImGui::GetMainViewport());
-    // if (editorScene) {
-    //     editorScene->SetGameBuffer(GetContext()->fbo);
-    //     editorScene->RenderWidget();
-    // }
+
+    hierarchyWidget->Render();
+    gameView->Render();
+
     ImGuiIO &io = ImGui::GetIO();
 
-
     ImGui::Begin("Dear ImGui Demo");
-    ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);
+    ImGui::Text("FPS: %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);
+    ImGui::Text("FBO size: %dx%d", gameFrameBuffer->GetWidth(), gameFrameBuffer->GetHeight());
+    ImGui::Text("Color texture ID: %u", gameFrameBuffer->GetColorBuffer());
     ImGui::End();
 
     ImGui::Render();
 
-
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
     // Update and Render additional Platform Windows
-    // (Platform functions may change the current OpenGL context, so we save/restore it to make it easier to paste this code elsewhere.
-    //  For this specific demo app we could also call glfwMakeContextCurrent(window) directly)
-    if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable) {
+    if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+    {
         GLFWwindow *backup_current_context = glfwGetCurrentContext();
         ImGui::UpdatePlatformWindows();
         ImGui::RenderPlatformWindowsDefault();
         glfwMakeContextCurrent(backup_current_context);
+    }
+}
+
+void framework::TestEditorApplication::OnUpdate(float deltaTime)
+{
+    if (hierarchyWidget)
+    {
+        hierarchyWidget->Update(deltaTime);
     }
 }

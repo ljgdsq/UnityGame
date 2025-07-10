@@ -39,6 +39,8 @@ namespace framework
 
         virtual void InitScenes();
 
+        virtual void OnUpdate(float deltaTime) {};
+
         // 设置目标帧率 (fps)
         void SetTargetFrameRate(int frameRate);
 

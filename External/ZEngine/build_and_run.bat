@@ -21,4 +21,4 @@ if %ERRORLEVEL% NEQ 0 (
 call run.bat
 
 :: 暂停，以便查看输出
-pause
+@REM pause

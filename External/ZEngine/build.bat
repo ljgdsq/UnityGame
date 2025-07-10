@@ -43,4 +43,4 @@ echo [信息] 返回原始目录: %cd%
 echo [信息] 构建过程完成
 
 :: 暂停，以便查看输出
-pause
+@REM pause
