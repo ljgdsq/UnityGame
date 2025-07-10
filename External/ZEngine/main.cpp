@@ -1,10 +1,11 @@
 #include <iostream>
 #include <string>
 #include "Framework/Interface/IApplication.hpp"
-#include "TestScenes/TestApplication.h"
+// #include "TestScenes/TestApplication.h"
+#include "TestScenes/TestEditorApplication.h"
 
 int main() {
-    framework::TestApplication app;
+    framework::TestEditorApplication app;
     app.Initialize();
     app.Run();
     app.Shutdown();

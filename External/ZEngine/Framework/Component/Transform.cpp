@@ -9,7 +9,7 @@
 
 rapidjson::Value framework::Transform::Serialize() const
 {
-    rapidjson::Document doc;
+    static rapidjson::Document doc;
     auto& allocator = doc.GetAllocator();
     rapidjson::Value value(rapidjson::kObjectType);
     

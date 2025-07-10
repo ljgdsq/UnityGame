@@ -25,10 +25,13 @@ namespace framework {
             }
 
             virtual rapidjson::Value Serialize() const override {
+                static rapidjson::Document doc;
+                auto& allocator = doc.GetAllocator();
+
                 // 实现序列化逻辑
                 rapidjson::Value jsonValue(rapidjson::kObjectType);
-                jsonValue.AddMember("renderMode", static_cast<int>(renderMode), jsonValue.GetAllocator());
-                jsonValue.AddMember("sortingOrder", sortingOrder, jsonValue.GetAllocator());
+                jsonValue.AddMember("renderMode", static_cast<int>(renderMode),allocator);
+                jsonValue.AddMember("sortingOrder", sortingOrder, allocator);
                 // 序列化UI元素等
                 return jsonValue;
             }
@@ -49,5 +52,5 @@ namespace framework {
             UICamera* uiCamera = nullptr; // 关联的UI摄像机
             int sortingOrder = 0; // 渲染顺序
             std::vector<UIElement*> uiElements; // UI元素列表
-    }
+    };
 }

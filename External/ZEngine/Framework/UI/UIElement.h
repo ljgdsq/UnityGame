@@ -7,15 +7,11 @@ namespace framework
     class UIElement : public ComponentBase<UIElement>
     {
     public:
+        explicit UIElement(GameObject *gameObject) : ComponentBase<UIElement>(gameObject) {}
+
         virtual const char *GetName() const = 0;
         virtual rapidjson::Value Serialize() const = 0;
         virtual void Deserialize(const rapidjson::Value &jsonValue) = 0;
-
-    public:
-        virtual const char *GetName() const override
-        {
-            return "UIElement";
-        }
 
     protected:
         glm::vec2 sizeDelta = {100, 100}; // 尺寸

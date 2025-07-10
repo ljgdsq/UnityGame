@@ -58,6 +58,10 @@ namespace framework
         float GetCurrentFPS() const;
 
     protected:
+        virtual void BegineFrame(){};
+        virtual void EndFrame(){};
+    protected:
         Renderer * renderer = nullptr;
+
     };
 } // namespace framework

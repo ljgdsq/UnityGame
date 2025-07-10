@@ -1,6 +1,6 @@
 #pragma once
 #include "Framework/UI/UIElement.h"
-#include "Framework/Renderer/Texture.h"
+#include "Framework/Core/Texture.h"
 namespace framework
 {
     class UIImage : public UIElement

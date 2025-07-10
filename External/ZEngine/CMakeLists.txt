@@ -19,6 +19,7 @@ add_subdirectory(External/glm)
 add_subdirectory(External/glfw)
 add_subdirectory(External/rapidjson)
 add_subdirectory(External/spdlog)
+add_subdirectory(External/imgui)
 
 # 添加 GLAD
 add_library(glad External/glad/src/gl.c )
@@ -62,6 +63,7 @@ target_link_libraries(zengine PRIVATE
     glfw 
     glad 
     glm 
+    imgui
     ${OPENGL_LIBRARIES}
     rapidjson
     spdlog::spdlog

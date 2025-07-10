@@ -102,10 +102,10 @@ namespace framework
             // Render
             // Clear the screen
             renderer->Clear();
-
+            BegineFrame();
             // 渲染当前场景
             SceneManager::GetInstance().RenderActiveScene(renderer);
-
+            EndFrame();
             // Swap buffers and poll IO events
             renderer->SwapBuffers();
             
