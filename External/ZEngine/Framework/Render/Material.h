@@ -1,10 +1,12 @@
 #pragma once
 #include <string>
+#include <unordered_map>
 #include "glm/glm.hpp"
 namespace framework {
     class Material {
     public:
-        Material() = default;
+        Material(const std::string& name) : m_name(name) {}
+        Material():m_name("DefaultMaterial") {} // 默认构造函数，设置默认名称
         virtual ~Material() = default;
         void Use();
         // 设置着色器

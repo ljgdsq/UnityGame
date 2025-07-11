@@ -2,6 +2,7 @@
 #include "Framework/Core/SceneManager.h"
 #include "Framework/Core/GameObject.h"
 #include "Framework/Editor/ContextMenu.h"
+#include "Framework/Editor/EditorContext.h"
 namespace fk = framework;
 static bool showpop= false;
 static int index=-1;
@@ -56,7 +57,7 @@ namespace editor
                 if (ImGui::Selectable((childs[n]->GetName() + "##" + std::to_string(n)).c_str(), is_selected, ImGuiButtonFlags_MouseButtonRight | ImGuiButtonFlags_MouseButtonLeft))
                 {
                     selectIndex = n;
-                    // scene->InspectNode(childs[n]);
+                    EditorContext::GetInstance()->SetSelectedGameObject(childs[n]);
                 }
 
                 if (ImGui::IsItemClicked(ImGuiMouseButton_Right))

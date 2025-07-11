@@ -1,6 +1,8 @@
 #pragma once
 #include <string>
 #include "imgui.h"
+#include "Framework/Core/GameObject.h"
+#include "Framework/Component/Transform.h"
 namespace editor
 {
     class EditorWidget

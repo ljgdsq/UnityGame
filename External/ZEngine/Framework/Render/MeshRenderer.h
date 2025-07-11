@@ -18,7 +18,6 @@ public:
     // RenderComponent接口实现
     void Render(Renderer* renderer) override;
     virtual void OnInitialize() override;
-    void SetMaterial(Material* material);
 
     virtual rapidjson::Value Serialize() const override {
         // 序列化为JSON值
@@ -42,8 +41,6 @@ private:
     
     // 获取MeshFilter组件
     MeshFilter* GetMeshFilter();
-    // 设置材质
-    Material* m_material = nullptr;
 
 };
 

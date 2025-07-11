@@ -13,6 +13,8 @@
 framework::TestEditorApplication::TestEditorApplication()
 {
     hierarchyWidget = new editor::HierarchyWidget();
+    inspectorWidget = new editor::Inspector();
+    contentBrowser = new editor::ContentBrowser();
 }
 
 void framework::TestEditorApplication::InitScenes()
@@ -24,6 +26,8 @@ void framework::TestEditorApplication::InitScenes()
         gameView = new editor::GameView();
     gameView->SetGameFrameBuffer(gameFrameBuffer);
     gameView->Initialize();
+    inspectorWidget->Initialize();
+    contentBrowser->Initialize();
     auto assetManagerTestScene = std::make_shared<MeshTestScene>();
     SceneManager::GetInstance().AddScene("MeshTestScene", assetManagerTestScene);
 
@@ -72,6 +76,8 @@ void framework::TestEditorApplication::EndFrame()
 
     hierarchyWidget->Render();
     gameView->Render();
+    inspectorWidget->Render();
+    contentBrowser->Render();
 
     ImGuiIO &io = ImGui::GetIO();
 
@@ -100,5 +106,15 @@ void framework::TestEditorApplication::OnUpdate(float deltaTime)
     if (hierarchyWidget)
     {
         hierarchyWidget->Update(deltaTime);
+    }
+
+    if (gameView)
+    {
+        gameView->Update(deltaTime);
+    }
+
+    if (inspectorWidget)
+    {
+        inspectorWidget->Update(deltaTime);
     }
 }

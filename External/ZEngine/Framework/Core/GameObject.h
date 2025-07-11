@@ -94,6 +94,15 @@ namespace framework
     // =============================================
 
     template <typename T>
+    bool GameObject::HasComponent() const
+    {
+        static_assert(std::is_base_of<Component, T>::value, "HasComponent T must be a subclass of Component");
+        auto typeIndex = std::type_index(typeid(T));
+        return components.find(typeIndex) != components.end() && !components.at(typeIndex).empty();
+    }
+
+
+    template <typename T>
     T *GameObject::AddComponent()
     {
         static_assert(std::is_base_of<Component, T>::value, "AddComponent T must be a subclass of Component");

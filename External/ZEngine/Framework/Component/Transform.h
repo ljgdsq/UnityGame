@@ -4,11 +4,18 @@
 #include "glm/glm.hpp"
 #include "glm/gtc/quaternion.hpp"
 #include "glm/gtc/matrix_transform.hpp"
+
+namespace editor {
+    class TransformInspector;
+}
+
 namespace framework
 {
     class GameObject;
     class Transform : public ComponentBase<Transform>
     {
+        friend class editor::TransformInspector;
+
     public:
         explicit Transform(GameObject *gameObject) : ComponentBase(gameObject) {}
 
@@ -17,7 +24,7 @@ namespace framework
 
         // Serializes the component to a JSON value
         rapidjson::Value Serialize() const override;
-        void Deserialize(const rapidjson::Value& jsonValue) override;
+        void Deserialize(const rapidjson::Value &jsonValue) override;
 
         // Getters and setters for position, rotation, scale
         glm::vec3 GetPosition() const { return position; }
@@ -25,16 +32,16 @@ namespace framework
 
         glm::quat GetRotation() const { return rotation; }
         void SetRotation(const glm::quat &rot) { rotation = rot; }
-        
+
         // 设置欧拉角旋转
         void SetRotation(const glm::vec3 &eulerAngles);
-        
+
         // 旋转变换
         void Rotate(const glm::vec3 &axis, float angle);
 
         glm::vec3 GetScale() const { return scale; }
         void SetScale(const glm::vec3 &scl) { scale = scl; }
-        
+
         // 获取模型矩阵
         glm::mat4 GetModelMatrix() const;
 

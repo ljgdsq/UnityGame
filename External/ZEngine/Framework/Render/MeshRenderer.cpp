@@ -52,10 +52,6 @@ namespace framework
         m_meshFilter = GetMeshFilter();
     }
 
-    void MeshRenderer::SetMaterial(Material *material)
-    {
-        m_material = material;
-    }
 
     MeshFilter *MeshRenderer::GetMeshFilter()
     {

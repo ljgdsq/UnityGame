@@ -44,8 +44,6 @@ void ContentBrowser::ListFile() {
         root /= dir;
     }
     ShowDirectory(root.string());
-
-
 }
 
 void ContentBrowser::ShowDirectory(const string &path) {
