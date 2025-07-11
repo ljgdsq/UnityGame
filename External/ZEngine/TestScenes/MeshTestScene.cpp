@@ -43,7 +43,9 @@ namespace framework
         auto maertial = new Material();
         maertial->SetShader(shader);
 
-        maertial->SetTexture("texture1", 0);
+        // maertial->SetTexture("texture1", 0);
+
+        maertial->SetTexture("texture1", texture, 0, TextureType::DIFFUSE);
 
         auto meshAsset = std::dynamic_pointer_cast<MeshAsset>
         (AssetManager::GetInstance().LoadAsset("Models/primitives/Cube.obj", AssetType::Mesh));

@@ -97,8 +97,9 @@ namespace editor
 
             if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_SourceAllowNullID))
             {
+                // 确保字符串正确终止
                 ImGui::SetDragDropPayload("CONTENT_BROWSER_FILE", file.c_str(), file.size() + 1);
-                ImGui::Text("Dragging %s", file.c_str());
+                ImGui::Text("Dragging: %s", filePath.filename().string().c_str());
                 ImGui::EndDragDropSource();
             }
         }

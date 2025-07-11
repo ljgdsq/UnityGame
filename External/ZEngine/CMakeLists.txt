@@ -13,6 +13,7 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang" OR CMAKE_CXX_COMPILER_ID STREQUAL "App
     add_compile_options(-Wno-expansion-to-defined)
     add_compile_options(-Wno-deprecated-declarations)
     add_compile_options(-Wno-deprecated-copy-with-user-provided-copy)
+    add_compile_options(-Wno-int-to-void-pointer-cast)
 elseif(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
     add_compile_options(-Wno-expansion-to-defined)
     add_compile_options(-Wno-deprecated-declarations)
