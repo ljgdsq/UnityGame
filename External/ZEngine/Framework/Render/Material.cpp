@@ -1,14 +1,15 @@
 #include "Framework/Render/Material.h"
 #include "Framework/Log/Logger.h"
 #include "Framework/Render/Shader.h"
-#include "Material.h"
+#include "Framework/Component/Light/Light.h"
+#include "Framework/Component/Transform.h"
+#include "Framework/Manager/CameraManager.h"
 namespace framework
 {
     // 纹理类型辅助函数实现
     const char *TextureTypeToString(TextureType type)
     {
-        switch (type)
-        {
+        switch (type) {
         case TextureType::DIFFUSE:
             return "Diffuse";
         case TextureType::NORMAL:
@@ -64,6 +65,7 @@ namespace framework
             Logger::Error("Material shader is not set.");
         }
         ApplyTextures(); // 确保在使用材质时应用所有纹理
+        ApplyLights();   // 应用光照数据
     }
 
     void Material::SetShader(const std::string &shaderName)
@@ -265,5 +267,115 @@ namespace framework
                 Logger::Error("Texture '{}' is null in material '{}'.", binding.name, m_name);
             }
         }
+    }
+
+    void Material::ClearLights()
+    {
+        m_lights.clear();
+    }
+
+    void Material::AddLight(Light* light)
+    {
+        if (light)
+        {
+            m_lights.push_back(light);
+        }
+    }
+
+    void Material::ApplyLights() const
+    {
+        if (!m_shader)
+        {
+            Logger::Error("Material shader is not set when applying lights.");
+            return;
+        }
+
+        Logger::Log("Applying lights to shader '{}' in material '{}'.", m_shader->id, m_name);
+        Logger::Log("Number of lights to apply: {}", m_lights.size());
+
+        // 设置光源数量
+        int lightCount = std::min(static_cast<int>(m_lights.size()), 8); // 限制最多8个光源
+        m_shader->SetInt("u_lightCount", lightCount, true);
+
+        // 应用每个光源的数据
+        for (int i = 0; i < lightCount; ++i)
+        {
+            const Light* light = m_lights[i];
+            if (!light) continue;
+
+            std::string lightPrefix = "u_lights[" + std::to_string(i) + "]";
+
+            // 设置光源类型
+            m_shader->SetInt((lightPrefix + ".type").c_str(), static_cast<int>(light->GetLightType()), true);
+
+            // 设置光源颜色和强度
+            m_shader->SetVector3f((lightPrefix + ".color").c_str(), light->GetColor(), true);
+            m_shader->SetFloat((lightPrefix + ".intensity").c_str(), light->GetIntensity(), true);
+
+            // 获取光源的Transform组件来获取位置和方向
+            if (light->GetGameObject())
+            {
+                auto transform = light->GetGameObject()->GetComponent<Transform>();
+                if (transform)
+                {
+                    // 设置光源位置（对于点光源和聚光灯）
+                    glm::vec3 position = transform->GetPosition();
+                    m_shader->SetVector3f((lightPrefix + ".position").c_str(), position, true);
+
+                    // 设置光源方向（对于方向光和聚光灯）
+                    glm::vec3 forward = transform->GetForward();
+                    m_shader->SetVector3f((lightPrefix + ".direction").c_str(), forward, true);
+                }
+            }
+
+            // 设置衰减参数（可以后续从Light类获取）
+            float range = 10.0f;
+            if (light->GetLightType() == LightType::Point || light->GetLightType() == LightType::Spot)
+            {
+                range = 20.0f; // 点光源和聚光灯的默认范围
+            }
+            
+            m_shader->SetFloat((lightPrefix + ".range").c_str(), range, true);
+            m_shader->SetFloat((lightPrefix + ".constant").c_str(), 1.0f, true);
+            m_shader->SetFloat((lightPrefix + ".linear").c_str(), 0.09f, true);
+            m_shader->SetFloat((lightPrefix + ".quadratic").c_str(), 0.032f, true);
+
+            // 聚光灯参数（如果是聚光灯）
+            if (light->GetLightType() == LightType::Spot)
+            {
+                // 内角和外角的余弦值
+                float innerAngle = glm::cos(glm::radians(12.5f)); // 25度锥角
+                float outerAngle = glm::cos(glm::radians(15.0f));  // 30度锥角
+                m_shader->SetFloat((lightPrefix + ".spotInnerAngle").c_str(), innerAngle, true);
+                m_shader->SetFloat((lightPrefix + ".spotOuterAngle").c_str(), outerAngle, true);
+            } else {
+                // 非聚光灯的默认值
+                m_shader->SetFloat((lightPrefix + ".spotInnerAngle").c_str(), -1.0f, true);
+                m_shader->SetFloat((lightPrefix + ".spotOuterAngle").c_str(), -1.0f, true);
+            }
+        }
+
+        // 设置环境光
+        glm::vec3 ambientLight(0.2f, 0.2f, 0.2f); // 默认暗淡的环境光
+        m_shader->SetVector3f("u_ambientLight", ambientLight, true);
+
+        // 设置相机位置（用于镜面反射计算）
+        // TODO: 从CameraManager获取当前相机位置
+        glm::vec3 viewPosition(0.0f, 0.0f, 5.0f); // 临时默认位置
+
+        auto camera=CameraManager::GetInstance().GetMainCamera();
+        auto trans=camera->GetGameObject()->GetTransform();
+
+
+        m_shader->SetVector3f("u_viewPosition", trans->GetPosition(), true);
+
+        // 设置默认材质属性
+        glm::vec3 diffuseColor(1.0f, 1.0f, 1.0f);  // 白色漫反射
+        glm::vec3 specularColor(0.5f, 0.5f, 0.5f); // 灰色镜面反射
+        float shininess = 32.0f;                     // 默认光泽度
+
+        m_shader->SetVector3f("u_diffuseColor", diffuseColor, true);
+        m_shader->SetVector3f("u_specularColor", specularColor, true);
+        m_shader->SetFloat("u_shininess", shininess, true);
     }
 }

@@ -44,6 +44,8 @@ namespace framework {
             Logger::Error("Failed to initialize GLAD");
             return;
         }
+
+        glEnable(GL_DEPTH_TEST); // 启用深度测试
     }
 
     void Renderer::Clear()

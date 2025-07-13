@@ -1,5 +1,6 @@
 #include "Framework/Core/GameObject.h"
 #include "Framework/Component/Transform.h"
+#include "GameObject.h"
 
 namespace framework
 {
@@ -74,5 +75,10 @@ namespace framework
         }
         children.clear();
     }
+    void GameObject::SetActive(bool active)
+    {
+        isActive = active;
+    }
 
 } // namespace framework
+

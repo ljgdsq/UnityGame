@@ -45,6 +45,11 @@ namespace framework
         // 获取模型矩阵
         glm::mat4 GetModelMatrix() const;
 
+        // 获取方向向量
+        glm::vec3 GetForward() const;
+        glm::vec3 GetRight() const;
+        glm::vec3 GetUp() const;
+
     private:
         glm::vec3 position = glm::vec3(0.0f);
         glm::quat rotation = glm::quat(1.0f, 0.0f, 0.0f, 0.0f);

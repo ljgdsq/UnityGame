@@ -2,6 +2,7 @@
 #pragma once
 #include <string>
 #include <typeinfo>
+#include "glm/glm.hpp"
 #include "Framework/Core/Serializable.h"
 #include "Framework/Log/Logger.h"
 

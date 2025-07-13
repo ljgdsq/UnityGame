@@ -29,6 +29,6 @@ namespace framework
         private:
             // 场景中的游戏对象
             GameObject* m_cubeObject = nullptr;
-
+            GameObject* m_lightObject = nullptr;
     };
 } // namespace framework

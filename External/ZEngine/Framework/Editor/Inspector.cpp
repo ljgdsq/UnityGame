@@ -2,6 +2,7 @@
 #include "Framework/Editor/Inspector/TransformInspector.h"
 #include "Framework/Editor/Inspector/MeshRendererInspector.h"
 #include "Framework/Editor/EditorContext.h"
+#include "Framework/Editor/Inspector/LightInspector.h"
 namespace editor
 {
 
@@ -12,6 +13,8 @@ namespace editor
         m_inspectors.push_back(new TransformInspector());
         // 可以在这里添加更多的组件检查器
         m_inspectors.push_back(new MeshRendererInspector());
+
+        m_inspectors.push_back(new LightInspector()); // 添加光照检查器
     }
 
     void Inspector::Initialize()

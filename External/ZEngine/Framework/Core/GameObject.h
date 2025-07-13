@@ -27,7 +27,7 @@ namespace framework
         // Check if the GameObject is active
         bool IsActive() const { return isActive; }
         // Set the active state of the GameObject
-        void SetActive(bool active) { isActive = active; }
+        void SetActive(bool active);
 
 #pragma region "Component Management"
 
@@ -114,6 +114,7 @@ namespace framework
         T *component = new T(this);
         components[typeIndex].push_back(component);
         component->OnCreate();
+        component->OnEnable();
         return component;
     }
 
@@ -183,6 +184,7 @@ namespace framework
             {
                 if (component)
                 {
+                    component->OnDisable();
                     component->OnDestroy();
                     delete component;
                 }

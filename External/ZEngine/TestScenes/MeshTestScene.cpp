@@ -5,7 +5,7 @@
 #include "Framework/Core/ResLoader.h"
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
-#include "glfw/glfw3.h"
+#include "GLFW/glfw3.h"
 #include "Framework/Render/MeshRenderer.h"
 #include "Framework/Render/Mesh.h"
 #include "Framework/Render/Material.h"
@@ -16,6 +16,7 @@
 #include "Framework/Asset/AssetManager.h"
 #include "Framework/Asset/ObjMeshLoader.h"
 #include "Framework/Asset/MeshAsset.h"
+#include "Framework/Component/Light/Light.h"
 namespace framework
 {
     void MeshTestScene::Initialize()
@@ -37,7 +38,7 @@ namespace framework
         // 添加相机到场景
         AddGameObject(mainCameraObj);
 
-        auto shader = new Shader("Shaders/MeshTest.vs", "Shaders/MeshTest.fs");
+        auto shader = new Shader("Shaders/BaseLight.vs", "Shaders/BaseLight.fs");
         auto texture = Texture::LoadTexture("Textures/container.png");
 
         auto maertial = new Material();
@@ -57,10 +58,27 @@ namespace framework
         auto meshRenderer = m_cubeObject->AddComponent<MeshRenderer>();
         meshRenderer->SetMaterial(maertial);
         meshRenderer->SetVisible(true);
-        m_cubeObject->GetTransform()->SetPosition(glm::vec3(0.0f, 0.0f, -2.0f));
+        m_cubeObject->GetTransform()->SetPosition(glm::vec3(-1.0f, -1.0f, -9.0f));
         m_cubeObject->GetTransform()->SetScale(glm::vec3(1.0f, 1.0f, 1.0f));
 
         AddGameObject(m_cubeObject);
+
+
+        m_lightObject = new GameObject("Light");
+        auto light = m_lightObject->AddComponent<Light>();
+        m_lightObject->GetTransform()->SetScale(glm::vec3(0.1f, 0.1f, 0.1f));
+        m_lightObject->GetTransform()->SetPosition(glm::vec3(-2.0f, -1.0f, -5.0f));
+        m_lightObject->GetTransform()->SetRotation(glm::vec3(0.0f, 0.0f,    0.0f));
+        light->SetLightType(LightType::Directional);
+        light->SetColor(glm::vec3(1.0f, 1.0f, 1.0f));
+        light->SetIntensity(1.0f);
+
+        auto lightMeshFilter=m_lightObject->AddComponent<MeshFilter>();
+        lightMeshFilter->SetMesh(meshAsset->GetMesh());
+        auto lightMeshRenderer = m_lightObject->AddComponent<MeshRenderer>();
+        lightMeshRenderer->SetMaterial(maertial);
+        AddGameObject(m_lightObject);
+
     }
 
     void MeshTestScene::Update(float deltaTime)
@@ -82,10 +100,14 @@ namespace framework
         {
             m_cubeObject->GetTransform()->SetPosition(m_cubeObject->GetTransform()->GetPosition() + glm::vec3(0.1f, 0.0f, 0.0f));
         }
+        // let cube auto rotate around y axis
+        m_cubeObject->GetTransform()->Rotate(glm::vec3(0.0f, 1.0f, 0.0f), deltaTime * 50.0f);
+
     }
     void MeshTestScene::Render(Renderer *renderer)
     {
         Scene::Render(renderer);
+    
     }
     void MeshTestScene::Shutdown()
     {

@@ -112,3 +112,24 @@ glm::mat4 framework::Transform::GetModelMatrix() const
     
     return modelMatrix;
 }
+
+glm::vec3 framework::Transform::GetForward() const
+{
+    // 在OpenGL中，默认前向是-Z方向
+    glm::vec3 forward = glm::vec3(0.0f, 0.0f, -1.0f);
+    return glm::normalize(rotation * forward);
+}
+
+glm::vec3 framework::Transform::GetRight() const
+{
+    // 右向是+X方向
+    glm::vec3 right = glm::vec3(1.0f, 0.0f, 0.0f);
+    return glm::normalize(rotation * right);
+}
+
+glm::vec3 framework::Transform::GetUp() const
+{
+    // 上向是+Y方向
+    glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
+    return glm::normalize(rotation * up);
+}

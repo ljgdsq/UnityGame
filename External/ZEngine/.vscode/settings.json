@@ -82,5 +82,10 @@
         "xutility": "cpp",
         "typeindex": "cpp",
         "__config": "cpp"
-    }
+    },
+    "cmake.debugConfig": {
+        "MIMode": "lldb",
+        "miDebuggerPath": "/usr/bin/lldb"
+    },
+    "C_Cpp.default.debuggerPath": "/usr/bin/lldb"
 }

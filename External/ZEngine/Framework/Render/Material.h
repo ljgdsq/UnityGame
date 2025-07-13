@@ -51,8 +51,16 @@ namespace framework
         size_t GetTextureCount() const;
         TextureBinding *GetTextureAtIndex(size_t index);
 
+        // Light support methods
+        void ClearLights();
+        void AddLight(class Light* light);
+        void ApplyLights() const;
+
         private:
           void ApplyTextures() const; // 应用所有纹理到着色器
+          
+          // Light-related members
+          std::vector<class Light*> m_lights; // 当前材质使用的光源列表
     };
 
 }

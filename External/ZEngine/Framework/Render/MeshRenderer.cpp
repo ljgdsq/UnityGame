@@ -4,6 +4,7 @@
 #include "Framework/Render/Renderer.h"
 #include "Framework/Render/Material.h"
 #include "Framework/Component/Transform.h"
+#include "Framework/Manager/LightManager.h"
 #include "glad/glad.h"
 #include "Framework/Manager/CameraManager.h"
 namespace framework
@@ -36,6 +37,9 @@ namespace framework
         // 使用材质渲染网格
         if (m_material)
         {
+            // 应用光照到材质
+            LightManager::ApplyLights(m_material);
+            
             m_material->Use();
             m_material->SetMatrix("model", modelMatrix);
             m_material ->SetMatrix("view", camera->GetViewMatrix());

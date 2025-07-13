@@ -4,6 +4,7 @@
 #include "Framework/Editor/ContentBrowser.h"
 #include "Framework/Common/BaseApplication.h"
 #include "Framework/Editor/Inspector.h"
+
 namespace framework {
 
 class TestEditorApplication : public BaseApplication {
