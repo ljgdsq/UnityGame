@@ -9,6 +9,7 @@
 #include "TestEditorApplication.h"
 #include "TestScenes/MeshTestScene.h"
 #include "Framework/Render/Buffer.h"
+#include "Framework/Editor/ComponentRegistration.h"
 
 framework::TestEditorApplication::TestEditorApplication()
 {
@@ -19,11 +20,13 @@ framework::TestEditorApplication::TestEditorApplication()
 
 void framework::TestEditorApplication::InitScenes()
 {
+    // 注册所有组件
+    RegisterAllComponents();
 
     gameFrameBuffer = new FrameBuffer(1280, 720);
 
     hierarchyWidget->Initialize();
-        gameView = new editor::GameView();
+    gameView = new editor::GameView();
     gameView->SetGameFrameBuffer(gameFrameBuffer);
     gameView->Initialize();
     inspectorWidget->Initialize();
@@ -50,16 +53,16 @@ void framework::TestEditorApplication::InitScenes()
     }
     // Setup Platform/Renderer backends
     ImGui_ImplGlfw_InitForOpenGL(glfwGetCurrentContext(), true);
-    
+
     // Use appropriate GLSL version based on OpenGL version
 #ifdef __APPLE__
     // macOS with OpenGL 3.3 Core Profile should use GLSL 330
-    const char* glsl_version = "#version 330 core";
+    const char *glsl_version = "#version 330 core";
 #else
     // Other platforms can use GLSL 130 or 330
-    const char* glsl_version = "#version 130";
+    const char *glsl_version = "#version 130";
 #endif
-    
+
     ImGui_ImplOpenGL3_Init(glsl_version);
 }
 

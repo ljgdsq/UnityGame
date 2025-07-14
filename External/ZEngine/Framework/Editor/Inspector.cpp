@@ -3,11 +3,12 @@
 #include "Framework/Editor/Inspector/MeshRendererInspector.h"
 #include "Framework/Editor/EditorContext.h"
 #include "Framework/Editor/Inspector/LightInspector.h"
+#include "Framework/Editor/ComponentMenuHelper.h"
 namespace editor
 {
 
-    Inspector::Inspector(): EditorWidget("Inspector"),
-      m_selectedGameObject(nullptr)
+    Inspector::Inspector() : EditorWidget("Inspector"),
+                             m_selectedGameObject(nullptr)
     {
         // 初始化组件检查器
         m_inspectors.push_back(new TransformInspector());
@@ -57,6 +58,17 @@ namespace editor
     {
         if (!m_selectedGameObject)
             return;
+
+        // 添加组件按钮
+        if (ImGui::Button("Add Component", ImVec2(-1, 0)))
+        {
+            ComponentMenuHelper::OpenAddComponentMenu(m_selectedGameObject);
+        }
+
+        // 渲染组件菜单
+        ComponentMenuHelper::RenderAddComponentMenu();
+
+        ImGui::Separator();
 
         // 遍历所有组件检查器并调用Inspect方法
         for (auto inspector : m_inspectors)

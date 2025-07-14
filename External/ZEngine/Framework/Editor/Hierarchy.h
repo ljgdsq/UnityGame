@@ -14,7 +14,8 @@ namespace editor
         void Render() override;
         void Shutdown() override;
 
-        private:
-        class ContextMenu* contextMenu; // 上下文菜单
+    private:
+        class ContextMenu *contextMenu;          // 选中物体的上下文菜单
+        class ContextMenu *emptyAreaContextMenu; // 空白区域的上下文菜单
     };
 } // namespace editor

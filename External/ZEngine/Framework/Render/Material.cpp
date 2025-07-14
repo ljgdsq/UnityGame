@@ -290,9 +290,6 @@ namespace framework
             return;
         }
 
-        Logger::Log("Applying lights to shader '{}' in material '{}'.", m_shader->id, m_name);
-        Logger::Log("Number of lights to apply: {}", m_lights.size());
-
         // 设置光源数量
         int lightCount = std::min(static_cast<int>(m_lights.size()), 8); // 限制最多8个光源
         m_shader->SetInt("u_lightCount", lightCount, true);
@@ -334,7 +331,7 @@ namespace framework
             {
                 range = 20.0f; // 点光源和聚光灯的默认范围
             }
-            
+
             m_shader->SetFloat((lightPrefix + ".range").c_str(), range, true);
             m_shader->SetFloat((lightPrefix + ".constant").c_str(), 1.0f, true);
             m_shader->SetFloat((lightPrefix + ".linear").c_str(), 0.09f, true);

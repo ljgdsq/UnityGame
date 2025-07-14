@@ -29,10 +29,14 @@ namespace framework
             return m_gameObjects;
         }
 
+        // 编辑器接口：添加和移除 GameObject
+        void AddGameObjectFromEditor(GameObject *gameObject) { AddGameObject(gameObject); }
+        void RemoveGameObjectFromEditor(GameObject *gameObject) { RemoveGameObject(gameObject); }
+
     protected:
         virtual void AddGameObject(GameObject *gameObject);
         virtual void RemoveGameObject(GameObject *gameObject);
-  
+
     private:
         // 禁止拷贝和赋值
         Scene(const Scene &) = delete;
