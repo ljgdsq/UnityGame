@@ -5,41 +5,66 @@
 #include "Framework/Log/Logger.h"
 #include <memory>
 #include <string>
+#include <vector>
 
 namespace framework
 {
+    enum class MeshPrimitive
+    {
+        Cube,
+        Sphere,
+        Plane,
+        Cylinder,
+        Capsule
+    };
+
     class MeshAsset : public Asset
     {
     public:
         MeshAsset(const std::string &name);
+        MeshAsset(const std::string &name, const std::string &assetId);
         virtual ~MeshAsset() override;
 
+        // Asset interface
+        void Load() override;
+        void Unload() override;
         long GetSize() const override;
+
+        // Serialization
+        rapidjson::Value Serialize(rapidjson::Document::AllocatorType &allocator) const override;
+        void Deserialize(const rapidjson::Value &json) override;
 
         // 网格数据
         std::shared_ptr<Mesh> GetMesh() const;
-        // 设置网格数据
         void SetMesh(const std::shared_ptr<Mesh> &mesh);
-        // 获取顶点数量
+
+        // 统计信息
         long GetVertexCount() const;
-        // 获取三角形数量
         long GetTriangleCount() const;
 
+        // 文件加载
+        bool LoadFromFile(const std::string &filePath);
 
-        // 重载 Asset 的方法
-        void Load() override {
+        // 创建基本几何体
+        void CreatePrimitive(MeshPrimitive primitive);
 
-            Logger::Error("MeshAsset::Load is not implemented yet");
+    private:
+        // 文件格式加载器
+        bool LoadOBJ(const std::string &filePath);
+        bool LoadZEngineMesh(const std::string &filePath);
 
-        }
-        void Unload() override {
-            Logger::Error("MeshAsset::Unload is not implemented yet");
-        }
+        // 基本几何体生成
+        void CreateCube();
+        void CreateSphere();
+        void CreatePlane();
 
+        // 辅助方法
+        void UpdateMeshStatistics();
+        void GenerateThumbnail() override;
 
     private:
         std::shared_ptr<Mesh> m_mesh; // 网格数据
-        long m_vertexCount = 0; // 顶点数量
-        long m_triangleCount = 0; // 三角形数量
+        long m_vertexCount = 0;       // 顶点数量
+        long m_triangleCount = 0;     // 三角形数量
     };
 } // namespace framework

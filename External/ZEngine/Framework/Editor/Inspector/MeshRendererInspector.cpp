@@ -39,52 +39,58 @@ namespace editor
         auto textures = material->GetAllTextures();
         for (const auto &texture : textures)
         {
-            if (texture.texture && texture.texture->GetId() > 0)
+            // 使用新的AssetTextureBinding结构
+            auto textureAsset = texture.GetTextureAsset();
+            if (textureAsset && textureAsset->IsLoaded())
             {
-                ImGui::Text("Texture:");
-                ImGui::Text("width :%d", texture.texture->GetWidth());
-                ImGui::SameLine();
-                ImGui::Text("height:%d", texture.texture->GetHeight());
-
-                // 创建一个明确的拖拽目标区域
-                ImGui::PushID(texture.slot); // 为每个纹理创建唯一ID
-
-                // 绘制纹理图像
-                ImGui::Image((void *)texture.texture->GetId(), ImVec2(128, 128));
-
-                // 在图像上设置拖拽目标
-                if (ImGui::BeginDragDropTarget())
+                auto texturePtr = textureAsset->GetTexture();
+                if (texturePtr && texturePtr->GetId() > 0)
                 {
-                    if (const ImGuiPayload *payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_FILE"))
+                    ImGui::Text("Texture:");
+                    ImGui::Text("width :%d", texturePtr->GetWidth());
+                    ImGui::SameLine();
+                    ImGui::Text("height:%d", texturePtr->GetHeight());
+
+                    // 创建一个明确的拖拽目标区域
+                    ImGui::PushID(texture.slot); // 为每个纹理创建唯一ID
+
+                    // 绘制纹理图像
+                    ImGui::Image((void *)texturePtr->GetId(), ImVec2(128, 128));
+
+                    // 在图像上设置拖拽目标
+                    if (ImGui::BeginDragDropTarget())
                     {
-                        // 确保payload数据正确终止
-                        std::string filePath;
-                        if (payload->DataSize > 0)
+                        if (const ImGuiPayload *payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_FILE"))
                         {
-                            filePath = (const char *)payload->Data;
-                        }
+                            // 确保payload数据正确终止
+                            std::string filePath;
+                            if (payload->DataSize > 0)
+                            {
+                                filePath = (const char *)payload->Data;
+                            }
 
-                        Logger::Debug("Drag texture received: {}", filePath.c_str());
+                            Logger::Debug("Drag texture received: {}", filePath.c_str());
 
-                        Texture *newTexture = Texture::LoadTexture(filePath);
-                        if (newTexture)
-                        {
-                            material->SetTexture(texture.name, newTexture, texture.slot);
-                            Logger::Debug("Texture set: {}", texture.name.c_str());
+                            Texture *newTexture = Texture::LoadTexture(filePath);
+                            if (newTexture)
+                            {
+                                material->SetTexture(texture.name, newTexture, texture.slot);
+                                Logger::Debug("Texture set: {}", texture.name.c_str());
+                            }
+                            else
+                            {
+                                Logger::Error("Failed to load texture from file: {}", filePath.c_str());
+                            }
                         }
-                        else
-                        {
-                            Logger::Error("Failed to load texture from file: {}", filePath.c_str());
-                        }
+                        ImGui::EndDragDropTarget();
                     }
-                    ImGui::EndDragDropTarget();
+
+                    ImGui::Text("Shader Param Name: %s", texture.name.c_str());
+                    ImGui::Text("Slot :%d", texture.slot);
+                    ImGui::Separator();
+
+                    ImGui::PopID();
                 }
-
-                ImGui::Text("Shader Param Name: %s", texture.name.c_str());
-                ImGui::Text("Slot :%d", texture.slot);
-                ImGui::Separator();
-
-                ImGui::PopID();
             }
         }
     }

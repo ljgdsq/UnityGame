@@ -68,6 +68,12 @@ void framework::TestEditorApplication::InitScenes()
 
 void framework::TestEditorApplication::HandleInput()
 {
+    if (Input::GetKeyDown(GLFW_KEY_ESCAPE))
+    {
+        Logger::Log("Escape key pressed, exiting application.");
+        glfwSetWindowShouldClose(glfwGetCurrentContext(), true);
+    }
+
 }
 
 void framework::TestEditorApplication::BegineFrame()

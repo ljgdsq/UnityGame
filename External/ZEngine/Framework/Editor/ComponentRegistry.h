@@ -3,10 +3,11 @@
 #include <vector>
 #include <functional>
 #include <unordered_map>
+#include "Framework/Core/GameObject.h"
 
 namespace framework
 {
-    class GameObject;
+
     class Component;
 
     // 组件创建器类型
