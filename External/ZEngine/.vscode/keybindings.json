@@ -1,0 +1,92 @@
+[
+    // 模拟 IntelliJ IDEA 风格的快捷键
+    {
+        "key": "ctrl+shift+n",
+        "command": "workbench.action.quickOpen",
+        "when": "!inQuickOpen"
+    },
+    {
+        "key": "ctrl+shift+a",
+        "command": "workbench.action.showCommands"
+    },
+    {
+        "key": "ctrl+shift+f",
+        "command": "workbench.action.findInFiles"
+    },
+    {
+        "key": "ctrl+n",
+        "command": "workbench.action.files.newUntitledFile"
+    },
+    {
+        "key": "ctrl+alt+l",
+        "command": "editor.action.formatDocument"
+    },
+    {
+        "key": "ctrl+d",
+        "command": "editor.action.duplicateSelection"
+    },
+    {
+        "key": "ctrl+y",
+        "command": "editor.action.deleteLines"
+    },
+    {
+        "key": "alt+j",
+        "command": "editor.action.addSelectionToNextFindMatch"
+    },
+    {
+        "key": "ctrl+shift+up",
+        "command": "editor.action.moveLinesUpAction"
+    },
+    {
+        "key": "ctrl+shift+down",
+        "command": "editor.action.moveLinesDownAction"
+    },
+    {
+        "key": "ctrl+shift+enter",
+        "command": "editor.action.insertLineBefore"
+    },
+    {
+        "key":"ctrl+alt+left",
+        "command": "workbench.action.navigateBack"
+    },
+    {
+        "key":"ctrl+alt+right",
+        "command": "workbench.action.navigateForward"
+    },
+    {
+        "key": "shift+enter",
+        "command": "editor.action.insertLineAfter"
+    },
+    {
+        "key": "ctrl+alt+t",
+        "command": "editor.action.surroundWithSnippet"
+    },
+    {
+        "key": "f2",
+        "command": "editor.action.rename"
+    },
+    {
+        "key": "ctrl+b",
+        "command": "editor.action.revealDefinition"
+    },
+    {
+        "key": "ctrl+alt+b",
+        "command": "editor.action.goToImplementation"
+    },
+    {
+        "key": "ctrl+u",
+        "command": "editor.action.goToDeclaration"
+    },
+    {
+        "key": "alt+f7",
+        "command": "references-view.findReferences"
+    },
+    {
+        "key": "ctrl+f12",
+        "command": "workbench.action.gotoSymbol"
+    },
+    {
+        "key": "ctrl+alt+f12",
+        "command": "workbench.action.showAllSymbols"
+    }
+]
