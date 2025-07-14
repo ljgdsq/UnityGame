@@ -3,18 +3,16 @@
 #include "Framework/Render/MeshRenderer.h"
 #include "Framework/Core/GameObject.h"
 #include "Framework/Render/Material.h"
+
 namespace editor
 {
-    class MeshRendererInspector : public ComponentInspector
+    class MeshRendererInspector : public TypedComponentInspector<framework::MeshRenderer>
     {
     public:
         void Inspect(framework::GameObject *node) override;
 
-        // 新增：组件信息相关方法
+        // 组件显示名称
         std::string GetComponentDisplayName() const override;
-        bool IsComponentEnabled(framework::GameObject *obj) const override;
-        void SetComponentEnabled(framework::GameObject *obj, bool enabled) override;
-        bool RemoveComponent(framework::GameObject *obj) override;
 
     private:
         void RenderMaterial(framework::GameObject *node);

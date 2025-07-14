@@ -50,31 +50,4 @@ namespace editor
         return "Light";
     }
 
-    bool LightInspector::IsComponentEnabled(framework::GameObject *obj) const
-    {
-        if (!obj || !obj->HasComponent<Light>())
-            return false;
-
-        Light *light = obj->GetComponent<Light>();
-        return light && light->IsEnabled();
-    }
-
-    void LightInspector::SetComponentEnabled(framework::GameObject *obj, bool enabled)
-    {
-        if (!obj || !obj->HasComponent<Light>())
-            return;
-
-        Light *light = obj->GetComponent<Light>();
-        if (light)
-            light->SetEnabled(enabled);
-    }
-
-    bool LightInspector::RemoveComponent(framework::GameObject *obj)
-    {
-        if (!obj || !obj->HasComponent<Light>())
-            return false;
-        obj->RemoveComponent<Light>();
-        return true;
-    }
-
 } // namespace editor

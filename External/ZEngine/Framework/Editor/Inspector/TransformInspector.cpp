@@ -131,29 +131,4 @@ namespace editor
         return "Transform";
     }
 
-    bool TransformInspector::IsComponentEnabled(framework::GameObject *obj) const
-    {
-        if (!obj || !obj->HasComponent<Transform>())
-            return false;
-
-        Transform *transform = obj->GetComponent<Transform>();
-        return transform && transform->IsEnabled();
-    }
-
-    void TransformInspector::SetComponentEnabled(framework::GameObject *obj, bool enabled)
-    {
-        if (!obj || !obj->HasComponent<Transform>())
-            return;
-
-        Transform *transform = obj->GetComponent<Transform>();
-        if (transform)
-            transform->SetEnabled(enabled);
-    }
-
-    bool TransformInspector::RemoveComponent(framework::GameObject *obj)
-    {
-        // Transform 组件通常不允许删除，因为它是基础组件
-        return false;
-    }
-
 }

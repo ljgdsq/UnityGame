@@ -6,19 +6,16 @@
 
 namespace editor
 {
-    class LightInspector : public ComponentInspector
+    class LightInspector : public TypedComponentInspector<framework::Light>
     {
     public:
-        explicit LightInspector() : ComponentInspector() {}
+        explicit LightInspector() : TypedComponentInspector<framework::Light>() {}
 
         // Override the Inspect method to handle Light components
         void Inspect(framework::GameObject *node) override;
 
-        // 新增：组件信息相关方法
+        // 组件显示名称
         std::string GetComponentDisplayName() const override;
-        bool IsComponentEnabled(framework::GameObject *obj) const override;
-        void SetComponentEnabled(framework::GameObject *obj, bool enabled) override;
-        bool RemoveComponent(framework::GameObject *obj) override;
 
     private:
         void RenderLightProperties(framework::Light *light);

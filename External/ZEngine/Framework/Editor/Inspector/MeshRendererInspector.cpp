@@ -95,31 +95,4 @@ namespace editor
         return "Mesh Renderer";
     }
 
-    bool MeshRendererInspector::IsComponentEnabled(framework::GameObject *obj) const
-    {
-        if (!obj || !obj->HasComponent<MeshRenderer>())
-            return false;
-
-        MeshRenderer *meshRenderer = obj->GetComponent<MeshRenderer>();
-        return meshRenderer && meshRenderer->IsEnabled();
-    }
-
-    void MeshRendererInspector::SetComponentEnabled(framework::GameObject *obj, bool enabled)
-    {
-        if (!obj || !obj->HasComponent<MeshRenderer>())
-            return;
-
-        MeshRenderer *meshRenderer = obj->GetComponent<MeshRenderer>();
-        if (meshRenderer)
-            meshRenderer->SetEnabled(enabled);
-    }
-
-    bool MeshRendererInspector::RemoveComponent(framework::GameObject *obj)
-    {
-        if (!obj || !obj->HasComponent<MeshRenderer>())
-            return false;
-        obj->RemoveComponent<MeshRenderer>();
-        return true;
-    }
-
 } // namespace editor
