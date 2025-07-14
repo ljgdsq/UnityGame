@@ -3,8 +3,10 @@
 #include "Framework/Editor/Inspector/ComponentInspector.h"
 
 #include <vector>
-namespace editor {
-    class Inspector : public EditorWidget {
+namespace editor
+{
+    class Inspector : public EditorWidget
+    {
     public:
         Inspector();
         ~Inspector() override = default;
@@ -21,19 +23,30 @@ namespace editor {
         // 销毁检查器小部件
         void Shutdown() override;
 
-        public:
-            // 设置当前选中的游戏对象
-            void SetSelectedGameObject(framework::GameObject *gameObject);
+    public:
+        // 设置当前选中的游戏对象
+        void SetSelectedGameObject(framework::GameObject *gameObject);
 
-        private:
-            // 当前选中的游戏对象
-            framework::GameObject* m_selectedGameObject = nullptr;
+    private:
+        // 当前选中的游戏对象
+        framework::GameObject *m_selectedGameObject = nullptr;
 
-            // 渲染检查器内容
-            void RenderInspectorContent();
-            
-            std::vector<ComponentInspector*> m_inspectors; // 存储所有组件检查器
-        };
+        // 渲染检查器内容
+        void RenderInspectorContent();
 
+        // 新增：渲染单个组件检查器
+        void RenderComponentInspector(ComponentInspector *inspector, size_t index);
+
+        // 新增：渲染组件头部（折叠箭头 + 启用切换 + 组件名称）
+        bool RenderComponentHeader(ComponentInspector *inspector, bool &enabled);
+
+        // 新增：渲染组件操作按钮（更多菜单 + 删除按钮）
+        void RenderComponentActions(ComponentInspector *inspector);
+
+        // 新增：检查对象是否有特定组件
+        bool HasComponent(ComponentInspector *inspector, framework::GameObject *obj);
+
+        std::vector<ComponentInspector *> m_inspectors; // 存储所有组件检查器
+    };
 
 }

@@ -10,8 +10,14 @@ namespace editor
     public:
         void Inspect(framework::GameObject *node) override;
 
+        // 新增：组件信息相关方法
+        std::string GetComponentDisplayName() const override;
+        bool IsComponentEnabled(framework::GameObject *obj) const override;
+        void SetComponentEnabled(framework::GameObject *obj, bool enabled) override;
+        bool RemoveComponent(framework::GameObject *obj) override;
+
     private:
         void RenderMaterial(framework::GameObject *node);
-        void RenderMaterialTextures(framework::Material* material);
+        void RenderMaterialTextures(framework::Material *material);
     };
 }

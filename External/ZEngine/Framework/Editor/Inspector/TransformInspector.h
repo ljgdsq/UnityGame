@@ -11,6 +11,12 @@ namespace editor
         // Inspect方法用于检查和渲染Transform组件的属性
         void Inspect(framework::GameObject *node) override;
 
+        // 新增：组件信息相关方法
+        std::string GetComponentDisplayName() const override;
+        bool IsComponentEnabled(framework::GameObject *obj) const override;
+        void SetComponentEnabled(framework::GameObject *obj, bool enabled) override;
+        bool RemoveComponent(framework::GameObject *obj) override;
+
     private:
         // 渲染位置、旋转和缩放属性
         void RenderPosition(framework::GameObject *node);
