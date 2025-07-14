@@ -1,6 +1,9 @@
 # ZEngine 开发任务清单
 
 ## 🚀 优先任务
+
+- [ ] 场景序列化
+- [ ] Editor 添加创建对象，添加组件
 - [ ] GameObject生命周期管理
 - [ ] asset load system
 - [ ] Scene渲染流程完善
