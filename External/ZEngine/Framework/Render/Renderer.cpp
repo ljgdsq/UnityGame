@@ -1,6 +1,6 @@
 #include "Framework/Render/Renderer.h"
 #include "glad/glad.h"
-#include "glfw/glfw3.h"
+#include "GLFW/glfw3.h"
 #include "Framework/Log/Logger.h"
 namespace framework {
 

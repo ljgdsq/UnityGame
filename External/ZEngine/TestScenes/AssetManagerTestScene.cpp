@@ -5,7 +5,7 @@
 #include "Framework/Core/ResLoader.h"
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
-#include "glfw/glfw3.h"
+#include "GLFW/glfw3.h"
 #include "Framework/Render/MeshRenderer.h"
 #include "Framework/Render/Mesh.h"
 #include "Framework/Render/Material.h"

@@ -9,6 +9,7 @@
 #include <queue>
 #include <condition_variable>
 #include "Framework/Asset/Asset.h"
+#include "Framework/Log/Logger.h"
 #include "Framework/Asset/AssetRegistry.h"
 
 namespace framework
@@ -90,6 +91,9 @@ namespace framework
         std::shared_ptr<TextureAsset> CreateTextureAsset(const std::string &name);
         std::shared_ptr<MeshAsset> CreateMeshAsset(const std::string &name);
         std::shared_ptr<Asset> CreateAsset(const std::string &name, AssetType type);
+
+        // 手动注册已创建的资源
+        void RegisterAsset(std::shared_ptr<Asset> asset);
 
         // 统计信息
         long GetTotalAssetsSize() const;

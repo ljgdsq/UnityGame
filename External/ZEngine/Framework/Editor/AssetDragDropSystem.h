@@ -1,6 +1,8 @@
 #pragma once
 #include "imgui.h"
 #include "Framework/Asset/AssetManager.h"
+#include "Framework/Asset/AssetReference.h"
+#include "Framework/Log/Logger.h"
 #include <string>
 #include <memory>
 #include <functional>
@@ -164,12 +166,34 @@ namespace editor
         DragDropPayload payload;
         if (AssetDragDropSystem::AcceptDragDrop(DragDropType::Asset, payload))
         {
+            Logger::Debug("AcceptAssetDrop: payload.dataId = {}", payload.dataId);
+
             if (payload.IsAssetType())
             {
-                // 直接使用 AssetManager 的 GetInstance 方法
+                // 使用 AssetManager 的 GetAssetById 方法来获取已加载的资源
                 auto &assetManager = framework::AssetManager::GetInstance();
-                asset = assetManager.LoadAsset<AssetType>(payload.dataId);
-                return asset != nullptr;
+                auto genericAsset = assetManager.GetAssetById(payload.dataId);
+                if (genericAsset)
+                {
+                    Logger::Debug("AcceptAssetDrop: Found asset by ID: {}", genericAsset->GetName());
+                    asset = std::dynamic_pointer_cast<AssetType>(genericAsset);
+                    return asset != nullptr;
+                }
+                else
+                {
+                    Logger::Debug("AcceptAssetDrop: Asset not found by ID, trying to load as path: {}", payload.dataId);
+                    // 如果没有找到，尝试通过路径加载
+                    asset = assetManager.LoadAsset<AssetType>(payload.dataId);
+                    if (asset)
+                    {
+                        Logger::Debug("AcceptAssetDrop: Successfully loaded asset by path: {}", asset->GetName());
+                    }
+                    else
+                    {
+                        Logger::Debug("AcceptAssetDrop: Failed to load asset by path: {}", payload.dataId);
+                    }
+                    return asset != nullptr;
+                }
             }
         }
         return false;

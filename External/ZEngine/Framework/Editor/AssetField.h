@@ -2,10 +2,12 @@
 #include "Framework/Editor/AssetDragDropSystem.h"
 #include "Framework/Asset/AssetReference.h"
 #include "Framework/Asset/AssetManager.h"
+#include "Framework/Log/Logger.h"
 #include "imgui.h"
 #include <memory>
 #include <string>
 #include <vector>
+#include <cstring>
 
 namespace editor
 {
@@ -45,7 +47,7 @@ namespace editor
                                    const AssetFieldConfig &config = AssetFieldConfig());
 
         // 渲染资源预览
-        static void RenderPreview(std::shared_ptr<AssetType> asset,
+        static bool RenderPreview(std::shared_ptr<AssetType> &asset,
                                   const ImVec2 &size = ImVec2(64, 64));
 
         // 渲染资源信息
@@ -91,10 +93,7 @@ namespace editor
         {
             // 预览区域
             ImVec2 previewPos = ImGui::GetCursorPos();
-            RenderPreview(asset, config.previewSize);
-
-            // 拖拽目标
-            if (RenderDropTarget(asset, config.previewSize))
+            if (RenderPreview(asset, config.previewSize))
             {
                 changed = true;
             }
@@ -174,7 +173,9 @@ namespace editor
 
         if (config.showPreview)
         {
-            RenderPreview(asset, config.previewSize);
+            // 对于只读模式，我们需要创建一个临时的可修改版本
+            auto tempAsset = asset;
+            RenderPreview(tempAsset, config.previewSize);
             ImGui::SameLine();
         }
 
@@ -191,9 +192,11 @@ namespace editor
     }
 
     template <typename AssetType>
-    void AssetField<AssetType>::RenderPreview(std::shared_ptr<AssetType> asset,
+    bool AssetField<AssetType>::RenderPreview(std::shared_ptr<AssetType> &asset,
                                               const ImVec2 &size)
     {
+        bool changed = false;
+
         if (asset && asset->HasThumbnail())
         {
             void *thumbnailId = asset->GetThumbnailTextureId();
@@ -204,6 +207,33 @@ namespace editor
             // 渲染默认预览
             ImGui::Button("?", size);
         }
+
+        // 在渲染的元素上立即检查拖拽目标
+        // 这必须在 UI 元素渲染后立即调用
+        if (ImGui::BeginDragDropTarget())
+        {
+            if (const ImGuiPayload *payload = ImGui::AcceptDragDropPayload("DND_ASSET"))
+            {
+                // 处理拖拽载荷
+                editor::DragDropPayload dragPayload;
+                memcpy(&dragPayload, payload->Data, sizeof(DragDropPayload));
+
+                // 通过 AssetManager 获取资源
+                auto &assetManager = framework::AssetManager::GetInstance();
+                auto draggedAsset = assetManager.GetAssetById(dragPayload.dataId);
+
+                if (draggedAsset && draggedAsset->GetType() == GetAssetType())
+                {
+                    // 类型匹配，可以接受拖拽
+                    asset = std::static_pointer_cast<AssetType>(draggedAsset);
+                    changed = true;
+                    Logger::Debug("Asset drag-drop successful: {} -> {}", dragPayload.dataId, asset->GetName());
+                }
+            }
+            ImGui::EndDragDropTarget();
+        }
+
+        return changed;
     }
 
     template <typename AssetType>
@@ -275,11 +305,11 @@ namespace editor
         return selected;
     }
 
-    // 特化方法需要在 cpp 文件中实现
-    template <typename AssetType>
-    std::string AssetField<AssetType>::GetAssetTypeName();
+    // // 特化方法需要在 cpp 文件中实现
+    // template <typename AssetType>
+    // std::string AssetField<AssetType>::GetAssetTypeName();
 
-    template <typename AssetType>
-    framework::AssetType AssetField<AssetType>::GetAssetType();
+    // template <typename AssetType>
+    // framework::AssetType AssetField<AssetType>::GetAssetType();
 
 } // namespace editor

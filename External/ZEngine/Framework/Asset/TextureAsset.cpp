@@ -310,16 +310,31 @@ namespace framework
         return m_thumbnailTextureId;
     }
 
+    bool TextureAsset::HasThumbnail() const
+    {
+        return m_thumbnailTextureId != nullptr;
+    }
+
     void TextureAsset::GenerateThumbnailFromTexture()
     {
         if (!m_texture)
         {
+            Logger::Debug("TextureAsset::GenerateThumbnailFromTexture - No texture available for {}", GetName());
+            return;
+        }
+
+        unsigned int textureID = m_texture->GetTextureID();
+        if (textureID == 0)
+        {
+            Logger::Debug("TextureAsset::GenerateThumbnailFromTexture - Invalid texture ID for {}", GetName());
             return;
         }
 
         // 简单实现：直接使用原纹理作为缩略图
         // 在实际项目中，应该生成缩小的版本
-        m_thumbnailTextureId = (void *)(intptr_t)m_texture->GetTextureID();
+        m_thumbnailTextureId = (void *)(intptr_t)textureID;
+
+        Logger::Debug("TextureAsset::GenerateThumbnailFromTexture - Generated thumbnail for {} (ID: {})", GetName(), textureID);
 
         // TODO: 实现真正的缩略图生成逻辑
         // 1. 创建帧缓冲区

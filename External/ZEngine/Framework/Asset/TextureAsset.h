@@ -21,10 +21,6 @@ namespace framework
         rapidjson::Value Serialize(rapidjson::Document::AllocatorType &allocator) const override;
         void Deserialize(const rapidjson::Value &json) override;
 
-        // 缩略图
-        void *GetThumbnailTextureId() const override;
-        void GenerateThumbnail() override;
-
         // TextureAsset特有方法
         std::shared_ptr<Texture> GetTexture() const { return m_texture; }
         void SetTexture(std::shared_ptr<Texture> texture);
@@ -62,6 +58,11 @@ namespace framework
         // 压缩支持
         bool IsCompressed() const { return m_isCompressed; }
         void SetCompressed(bool compressed) { m_isCompressed = compressed; }
+
+        // 重写基类的缩略图方法
+        void *GetThumbnailTextureId() const override;
+        void GenerateThumbnail() override;
+        bool HasThumbnail() const override;
 
     private:
         std::shared_ptr<Texture> m_texture;

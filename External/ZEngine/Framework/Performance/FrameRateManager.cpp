@@ -1,7 +1,7 @@
 #include "Framework/Performance/FrameRateManager.h"
 #include "Framework/Performance/FrameRateMonitor.h"
 #include "Framework/Log/Logger.h"
-#include "glfw/glfw3.h"
+#include "GLFW/glfw3.h"
 #include <memory>
 #include <algorithm>
 
@@ -34,10 +34,10 @@ namespace framework
     {
         // 初始化帧率监控器
         FrameRateMonitor::GetInstance().Initialize();
-        
+
         // 应用初始策略
         ApplyStrategy();
-        
+
         Logger::Log("Frame Rate Manager initialized with strategy: {}", GetStrategyDescription());
     }
 
@@ -45,18 +45,18 @@ namespace framework
     {
         // 更新帧率监控
         FrameRateMonitor::GetInstance().Update(deltaTime);
-        
+
         // 如果使用自适应帧率，根据性能调整帧率
         if (m_strategy == FrameRateStrategy::AdaptiveFrameRate)
         {
             float currentFPS = FrameRateMonitor::GetInstance().GetCurrentFPS();
-            
+
             // 如果当前帧率低于目标的90%，降低目标帧率
             if (currentFPS < m_currentAdaptiveTarget * 0.9f && m_currentAdaptiveTarget > m_minAdaptiveFrameRate)
             {
-                m_currentAdaptiveTarget = std::max(m_minAdaptiveFrameRate, 
+                m_currentAdaptiveTarget = std::max(m_minAdaptiveFrameRate,
                     m_currentAdaptiveTarget - static_cast<int>(m_adaptationSpeed * m_currentAdaptiveTarget));
-                
+
                 SetTargetFrameRate(m_currentAdaptiveTarget);
                 Logger::Log("Adaptive frame rate decreased to: {}", m_currentAdaptiveTarget);
             }
@@ -65,7 +65,7 @@ namespace framework
             {
                 m_currentAdaptiveTarget = std::min(m_maxAdaptiveFrameRate,
                     m_currentAdaptiveTarget + static_cast<int>(m_adaptationSpeed * m_currentAdaptiveTarget));
-                
+
                 SetTargetFrameRate(m_currentAdaptiveTarget);
                 Logger::Log("Adaptive frame rate increased to: {}", m_currentAdaptiveTarget);
             }
@@ -91,13 +91,13 @@ namespace framework
     {
         // 确保帧率为正数或零（零表示不限制）
         m_targetFrameRate = frameRate > 0 ? frameRate : 0;
-        
+
         // 如果当前策略是固定帧率，应用新设置
         if (m_strategy == FrameRateStrategy::FixedTarget)
         {
             ApplyStrategy();
         }
-        
+
         Logger::Log("Target frame rate set to: {}", m_targetFrameRate);
     }
 
@@ -111,7 +111,7 @@ namespace framework
         if (m_vsyncEnabled != enabled)
         {
             m_vsyncEnabled = enabled;
-            
+
             // 应用垂直同步设置
             GLFWwindow* window = glfwGetCurrentContext();
             if (window)
@@ -119,7 +119,7 @@ namespace framework
                 glfwSwapInterval(m_vsyncEnabled ? 1 : 0);
                 Logger::Log("VSync {}", m_vsyncEnabled ? "enabled" : "disabled");
             }
-            
+
             // 如果当前策略是垂直同步，确保策略正确应用
             if (m_strategy == FrameRateStrategy::VSync)
             {
@@ -137,13 +137,13 @@ namespace framework
     {
         // 省电模式帧率至少为15，最高不超过60
         m_powerSaveFrameRate = std::min(60, std::max(15, frameRate));
-        
+
         // 如果当前策略是省电模式，应用新设置
         if (m_strategy == FrameRateStrategy::PowerSave)
         {
             ApplyStrategy();
         }
-        
+
         Logger::Log("Power save frame rate set to: {}", m_powerSaveFrameRate);
     }
 
@@ -163,7 +163,7 @@ namespace framework
         case FrameRateStrategy::VSync:
             return "VSync";
         case FrameRateStrategy::AdaptiveFrameRate:
-            return "Adaptive (" + std::to_string(m_minAdaptiveFrameRate) + "-" + 
+            return "Adaptive (" + std::to_string(m_minAdaptiveFrameRate) + "-" +
                    std::to_string(m_maxAdaptiveFrameRate) + " FPS)";
         case FrameRateStrategy::PowerSave:
             return "Power Save (" + std::to_string(m_powerSaveFrameRate) + " FPS)";
@@ -180,7 +180,7 @@ namespace framework
             Logger::Warn("Cannot apply frame rate strategy: No active GLFW window");
             return;
         }
-        
+
         // 根据策略应用相应设置
         switch (m_strategy)
         {
@@ -189,33 +189,33 @@ namespace framework
             glfwSwapInterval(0);
             m_vsyncEnabled = false;
             break;
-            
+
         case FrameRateStrategy::FixedTarget:
             // 关闭垂直同步，使用目标帧率
             glfwSwapInterval(0);
             m_vsyncEnabled = false;
             break;
-            
+
         case FrameRateStrategy::VSync:
             // 启用垂直同步
             glfwSwapInterval(1);
             m_vsyncEnabled = true;
             break;
-            
+
         case FrameRateStrategy::AdaptiveFrameRate:
             // 关闭垂直同步，使用自适应帧率
             glfwSwapInterval(0);
             m_vsyncEnabled = false;
             m_currentAdaptiveTarget = m_targetFrameRate;
             break;
-            
+
         case FrameRateStrategy::PowerSave:
             // 关闭垂直同步，使用省电模式帧率
             glfwSwapInterval(0);
             m_vsyncEnabled = false;
             break;
         }
-        
+
         Logger::Log("Applied frame rate strategy: {}", GetStrategyDescription());
     }
 }

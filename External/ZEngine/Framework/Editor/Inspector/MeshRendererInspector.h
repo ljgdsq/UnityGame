@@ -9,6 +9,9 @@ namespace editor
     class MeshRendererInspector : public TypedComponentInspector<framework::MeshRenderer>
     {
     public:
+        MeshRendererInspector():TypedComponentInspector<framework::MeshRenderer>() {}
+        ~MeshRendererInspector() override = default;
+
         void Inspect(framework::GameObject *node) override;
 
         // 组件显示名称

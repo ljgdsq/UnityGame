@@ -151,7 +151,8 @@ namespace framework
         // check asset
         {
             std::lock_guard<std::mutex> lock(m_assetMutex);
-            m_assets[assetName] = asset; // 存储已加载的资源
+            m_assets[assetName] = asset;               // 存储已加载的资源
+            m_assetsById[asset->GetAssetId()] = asset; // 同时按 ID 存储
         }
         Logger::Log("Successfully loaded asset: {}", assetName);
         return asset;
@@ -408,12 +409,32 @@ namespace framework
 
     std::shared_ptr<TextureAsset> AssetManager::CreateTextureAsset(const std::string &name)
     {
-        return std::make_shared<TextureAsset>(name);
+        auto textureAsset = std::make_shared<TextureAsset>(name);
+
+        // 注册到AssetManager的内部存储
+        {
+            std::lock_guard<std::mutex> lock(m_assetMutex);
+            m_assets[name] = textureAsset;
+            m_assetsById[textureAsset->GetAssetId()] = textureAsset;
+        }
+
+        Logger::Debug("Created and registered TextureAsset: {} (ID: {})", name, textureAsset->GetAssetId());
+        return textureAsset;
     }
 
     std::shared_ptr<MeshAsset> AssetManager::CreateMeshAsset(const std::string &name)
     {
-        return std::make_shared<MeshAsset>(name);
+        auto meshAsset = std::make_shared<MeshAsset>(name);
+
+        // 注册到AssetManager的内部存储
+        {
+            std::lock_guard<std::mutex> lock(m_assetMutex);
+            m_assets[name] = meshAsset;
+            m_assetsById[meshAsset->GetAssetId()] = meshAsset;
+        }
+
+        Logger::Debug("Created and registered MeshAsset: {} (ID: {})", name, meshAsset->GetAssetId());
+        return meshAsset;
     }
 
     std::shared_ptr<Asset> AssetManager::CreateAsset(const std::string &name, AssetType type)
@@ -429,6 +450,21 @@ namespace framework
             Logger::Error("Unsupported asset type for creation: {}", static_cast<int>(type));
             return nullptr;
         }
+    }
+
+    void AssetManager::RegisterAsset(std::shared_ptr<Asset> asset)
+    {
+        if (!asset)
+        {
+            Logger::Error("Cannot register null asset");
+            return;
+        }
+
+        std::lock_guard<std::mutex> lock(m_assetMutex);
+        m_assets[asset->GetName()] = asset;
+        m_assetsById[asset->GetAssetId()] = asset;
+
+        Logger::Debug("Registered asset: {} (ID: {})", asset->GetName(), asset->GetAssetId());
     }
 
     void AssetManager::InitializeDefaultAssets()

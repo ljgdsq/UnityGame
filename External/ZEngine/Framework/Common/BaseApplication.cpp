@@ -1,6 +1,6 @@
 #include "BaseApplication.h"
 #include "glad/glad.h"
-#include "glfw/glfw3.h"
+#include "GLFW/glfw3.h"
 #include "Framework/Log/Logger.h"
 #include "Framework/Core/SceneManager.h"
 #include "Framework/Core/Input.h"
@@ -27,7 +27,7 @@ namespace framework
         renderer->Initialize();
         renderer->SetViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
         Input::GetInstance().Initialize(glfwGetCurrentContext());
-        
+
         // 初始化帧率管理器
         FrameRateManager::GetInstance().Initialize();
         // 默认设置为固定帧率策略
@@ -68,7 +68,7 @@ namespace framework
             Logger::Error("No active GLFW window context found!");
             return;
         }
-        
+
         // Set up variables for delta time calculation
         float lastFrameTime = 0.0f;
         float currentFrameTime = 0.0f;
@@ -80,7 +80,7 @@ namespace framework
         {
             // 记录这一帧开始的时间
             double frameStartTime = glfwGetTime();
-            
+
             // Calculate delta time
             currentFrameTime = static_cast<float>(frameStartTime);
             deltaTime = currentFrameTime - lastFrameTime;
@@ -94,7 +94,7 @@ namespace framework
 
             // Update game logic
             Update(deltaTime);
-            
+
             // 更新帧率管理器
             FrameRateManager::GetInstance().Update(deltaTime);
 
@@ -108,30 +108,30 @@ namespace framework
             EndFrame();
             // Swap buffers and poll IO events
             renderer->SwapBuffers();
-            
+
             // 根据当前帧率策略等待必要的时间
             if (FrameRateManager::GetInstance().GetFrameRateStrategy() == FrameRateStrategy::FixedTarget ||
                 FrameRateManager::GetInstance().GetFrameRateStrategy() == FrameRateStrategy::PowerSave)
             {
                 // 获取目标帧率
-                int targetFPS = (FrameRateManager::GetInstance().GetFrameRateStrategy() == FrameRateStrategy::PowerSave) 
+                int targetFPS = (FrameRateManager::GetInstance().GetFrameRateStrategy() == FrameRateStrategy::PowerSave)
                     ? FrameRateManager::GetInstance().GetPowerSaveFrameRate()
                     : FrameRateManager::GetInstance().GetTargetFrameRate();
-                
+
                 if (targetFPS > 0)
                 {
                     // 计算这一帧应该花费的时间
                     double targetFrameTime = 1.0 / targetFPS;
-                    
+
                     // 计算已经过去的时间
                     double frameEndTime = glfwGetTime();
                     double elapsedTime = frameEndTime - frameStartTime;
-                    
+
                     // 如果还有时间，等待剩余时间
                     if (elapsedTime < targetFrameTime)
                     {
                         double sleepTime = targetFrameTime - elapsedTime;
-                        
+
                         // 使用glfwWaitEventsTimeout进行睡眠
                         // 这比Sleep函数更精确，并且允许处理事件
                         glfwWaitEventsTimeout(sleepTime);
@@ -184,12 +184,12 @@ namespace framework
     {
         return FrameRateManager::GetInstance().IsVSyncEnabled();
     }
-    
+
     void BaseApplication::SetFrameRateStrategy(FrameRateStrategy strategy)
     {
         FrameRateManager::GetInstance().SetFrameRateStrategy(strategy);
     }
-    
+
     float BaseApplication::GetCurrentFPS() const
     {
         return FrameRateMonitor::GetInstance().GetCurrentFPS();

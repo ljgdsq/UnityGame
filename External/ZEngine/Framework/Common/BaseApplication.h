@@ -25,7 +25,7 @@ namespace framework
         void Update(float deltaTime) override;
 
         // Get the name of the application
-        const char *GetName() const;
+        const char *GetName() const override;
 
         // Check if the application should exit
         bool ShouldExit() override;
@@ -52,7 +52,7 @@ namespace framework
 
         // 检查垂直同步是否启用
         bool IsVSyncEnabled() const;
-        
+
         // 设置帧率策略
         void SetFrameRateStrategy(FrameRateStrategy strategy);
 

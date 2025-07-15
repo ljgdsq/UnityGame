@@ -32,6 +32,25 @@ namespace framework
     class Material
     {
     public:
+        // 统一的纹理绑定结构 - 用于Inspector显示
+        struct UnifiedTextureBinding
+        {
+            std::string name;
+            int slot = 0;
+            TextureType type = TextureType::DIFFUSE;
+
+            // 纹理获取方法
+            std::shared_ptr<Texture> texture;
+            std::shared_ptr<TextureAsset> textureAsset;
+
+            UnifiedTextureBinding() = default;
+
+            // 从AssetTextureBinding构造
+            UnifiedTextureBinding(const AssetTextureBinding &binding)
+                : name(binding.name), slot(binding.slot), type(binding.type), texture(binding.GetTexture()), textureAsset(binding.GetTextureAsset()) {}
+        };
+
+    public:
         Material(const std::string &name) : m_name(name) {}
         Material() : m_name("DefaultMaterial") {} // 默认构造函数，设置默认名称
         virtual ~Material() = default;
@@ -56,12 +75,14 @@ namespace framework
         std::shared_ptr<TextureAsset> GetTextureAsset(const std::string &name) const;
         std::shared_ptr<Texture> GetTextureSharedPtr(const std::string &name) const; // 新方法，返回shared_ptr
         Texture *GetTexture(const std::string &name) const;                          // 兼容性方法，返回原始指针
+                                                                                     // 纹理绑定管理
 
-        // 纹理绑定管理
-        const std::vector<AssetTextureBinding> &GetAllTextureBindings() const;
         std::vector<AssetTextureBinding> GetTexturesByType(TextureType type) const;
         bool HasTexture(const std::string &name) const;
         void RemoveTexture(const std::string &name);
+
+        // 统一的纹理绑定接口 - 包含所有类型的纹理
+        std::vector<UnifiedTextureBinding> GetAllTextureBindings() const;
 
         // 检查器特定的辅助方法
         size_t GetTextureCount() const;
@@ -86,9 +107,6 @@ namespace framework
         rapidjson::Value Serialize(rapidjson::Document::AllocatorType &allocator) const;
         void Deserialize(const rapidjson::Value &json);
 
-        // 兼容性方法 - 为了保持向后兼容性
-        const std::vector<AssetTextureBinding> &GetAllTextures() const { return GetAllTextureBindings(); }
-
     private:
         class Shader *m_shader = nullptr; // 使用指针避免循环依赖
         std::string m_name;               // 材质名称
@@ -99,25 +117,11 @@ namespace framework
         // Light-related members
         std::vector<class Light *> m_lights; // 当前材质使用的光源列表
 
-        // 兼容性：直接设置的纹理对象
-        struct DirectTextureBinding
-        {
-            std::string name;
-            Texture *texture = nullptr;
-            int slot = 0;
-            TextureType type = TextureType::DIFFUSE;
-        };
-        std::vector<DirectTextureBinding> m_directTextureBindings;
-
         // 辅助方法
         void ApplyTextures() const; // 应用所有纹理到着色器
         void UpdateTextureNameToIndexMapping();
         AssetTextureBinding *FindTextureBinding(const std::string &name);
         const AssetTextureBinding *FindTextureBinding(const std::string &name) const;
-
-        // 兼容性方法
-        DirectTextureBinding *FindDirectTextureBinding(const std::string &name);
-        const DirectTextureBinding *FindDirectTextureBinding(const std::string &name) const;
     };
 
 } // namespace framework

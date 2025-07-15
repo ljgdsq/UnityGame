@@ -3,7 +3,9 @@
 #include "Framework/Core/Texture.h"
 #include "Framework/Editor/AssetField.h"
 #include "Framework/Asset/TextureAsset.h"
+#include <string>
 using namespace framework;
+
 namespace editor
 {
     void MeshRendererInspector::Inspect(GameObject *node)
@@ -38,52 +40,84 @@ namespace editor
 
     void MeshRendererInspector::RenderMaterialTextures(framework::Material *material)
     {
-        auto textures = material->GetAllTextures();
+        if (!material)
+        {
+            ImGui::Text("No material available");
+            return;
+        }
+
+        auto textures = material->GetAllTextureBindings();
 
         ImGui::Text("Material Textures:");
         ImGui::Separator();
 
-        for (const auto &texture : textures)
+        for (size_t i = 0; i < textures.size(); ++i)
         {
-            ImGui::PushID(texture.slot);
+            ImGui::PushID(static_cast<int>(i));
 
-            // 使用新的 AssetField 系统
-            auto textureAsset = texture.GetTextureAsset();
-            std::shared_ptr<TextureAsset> mutableTextureAsset =
-                std::const_pointer_cast<TextureAsset>(textureAsset);
-
-            AssetFieldConfig config;
-            config.previewSize = ImVec2(128, 128);
-            config.showPreview = true;
-            config.allowNull = true;
-
-            // 渲染纹理资源字段
-            if (AssetField<TextureAsset>::Render(texture.name, mutableTextureAsset, config))
+            try
             {
-                // 纹理资源发生变化，更新材质
-                if (mutableTextureAsset)
-                {
-                    material->SetTexture(texture.name, mutableTextureAsset, texture.slot, texture.type);
-                    Logger::Debug("Texture asset updated: {} -> {}", texture.name, mutableTextureAsset->GetName());
-                }
-                else
-                {
-                    // 清空纹理
-                    material->RemoveTexture(texture.name);
-                    Logger::Debug("Texture removed: {}", texture.name);
-                }
-            }
+                const auto &texture = textures[i];
 
-            // 显示纹理类型信息
-            const char *textureTypeNames[] = {"Diffuse", "Specular", "Normal", "Height", "Ambient"};
-            int typeIndex = static_cast<int>(texture.type);
-            if (typeIndex >= 0 && typeIndex < IM_ARRAYSIZE(textureTypeNames))
+                // 直接从材质获取纹理绑定的引用，而不是副本
+                AssetTextureBinding *binding = material->GetTextureAtIndex(i);
+                if (!binding)
+                {
+                    ImGui::Text("Texture: %s (No Binding)", texture.name.c_str());
+                    ImGui::Text("Slot: %d", texture.slot);
+                    ImGui::Separator();
+                    ImGui::PopID();
+                    continue;
+                }
+
+                // 获取当前的纹理资源
+                auto currentTextureAsset = binding->textureAsset.Get();
+                std::shared_ptr<TextureAsset> mutableTextureAsset = currentTextureAsset;
+
+                // 确保缩略图已生成
+                if (currentTextureAsset && currentTextureAsset->IsLoaded() && !currentTextureAsset->HasThumbnail())
+                {
+                    currentTextureAsset->GenerateThumbnail();
+                }
+
+                AssetFieldConfig config;
+                config.previewSize = ImVec2(128, 128);
+                config.showPreview = true;
+                config.allowNull = true;
+
+                // 渲染纹理资源字段
+                if (AssetField<TextureAsset>::Render(binding->name, mutableTextureAsset, config))
+                {
+                    // 纹理资源发生变化，更新材质
+                    if (mutableTextureAsset && mutableTextureAsset->IsLoaded())
+                    {
+                        material->SetTexture(binding->name, mutableTextureAsset, binding->slot, binding->type);
+                        Logger::Debug("Texture asset updated: {} -> {}", binding->name, mutableTextureAsset->GetName());
+                    }
+                    else
+                    {
+                        // 清空纹理
+                        material->RemoveTexture(binding->name);
+                        Logger::Debug("Texture removed: {}", binding->name);
+                    }
+                }
+
+                // 显示纹理类型信息
+                const char *textureTypeNames[] = {"Diffuse", "Specular", "Normal", "Height", "Ambient"};
+                int typeIndex = static_cast<int>(binding->type);
+                if (typeIndex >= 0 && typeIndex < IM_ARRAYSIZE(textureTypeNames))
+                {
+                    ImGui::Text("Type: %s", textureTypeNames[typeIndex]);
+                }
+
+                // 显示纹理槽位
+                ImGui::Text("Slot: %d", binding->slot);
+            }
+            catch (const std::exception &e)
             {
-                ImGui::Text("Type: %s", textureTypeNames[typeIndex]);
+                Logger::Error("Error in texture rendering: {}", e.what());
+                ImGui::Text("Error rendering texture at index %zu", i);
             }
-
-            // 显示纹理槽位
-            ImGui::Text("Slot: %d", texture.slot);
 
             ImGui::Separator();
             ImGui::PopID();

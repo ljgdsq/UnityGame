@@ -92,28 +92,46 @@ namespace framework
 
     void Material::SetTexture(const std::string &name, Texture *texture, int slot, TextureType type)
     {
-        // 兼容性方法 - 直接设置纹理对象
-        DirectTextureBinding *binding = FindDirectTextureBinding(name);
-
-        if (binding)
+        if (!texture)
         {
-            binding->texture = texture;
-            binding->slot = slot;
-            binding->type = type;
-        }
-        else
-        {
-            DirectTextureBinding newBinding;
-            newBinding.name = name;
-            newBinding.texture = texture;
-            newBinding.slot = slot;
-            newBinding.type = type;
-
-            m_directTextureBindings.push_back(newBinding);
+            RemoveTexture(name);
+            return;
         }
 
-        Logger::Debug("Material: Set texture directly for slot '{}' (slot {}, type {})",
-                      name, slot, static_cast<int>(type));
+        // 生成一个唯一的asset ID
+        std::string assetId = "Texture_" + name + "_" + std::to_string(reinterpret_cast<uintptr_t>(texture));
+
+        // 检查是否已经存在这个纹理的asset
+        auto existingAsset = AssetManager::GetInstance().GetAssetById(assetId);
+        if (existingAsset)
+        {
+            // 如果已经存在，直接使用
+            auto textureAsset = std::dynamic_pointer_cast<TextureAsset>(existingAsset);
+            if (textureAsset)
+            {
+                AssetReference<TextureAsset> textureAssetRef(textureAsset);
+                SetTexture(name, textureAssetRef, slot, type);
+                return;
+            }
+        }
+
+        // 创建一个新的TextureAsset来包装原始Texture，使用指定的assetId
+        auto textureAsset = std::make_shared<TextureAsset>(name + "_wrapped", assetId);
+        textureAsset->SetTexture(std::shared_ptr<Texture>(texture, [](Texture *)
+                                                          {
+                                                              // 不删除，因为这是外部管理的指针
+                                                          }));
+        textureAsset->SetLoadState(LoadState::Loaded);
+
+        // 手动注册到AssetManager
+        AssetManager::GetInstance().RegisterAsset(textureAsset);
+
+        // 使用AssetReference设置纹理
+        AssetReference<TextureAsset> textureAssetRef(textureAsset);
+        SetTexture(name, textureAssetRef, slot, type);
+
+        Logger::Debug("Material: Converted direct texture to asset reference for slot '{}' (assetId: {}, slot {}, type {})",
+                      name, assetId, slot, static_cast<int>(type));
     }
 
     AssetReference<TextureAsset> Material::GetTextureAssetReference(const std::string &name) const
@@ -130,7 +148,7 @@ namespace framework
 
     std::shared_ptr<Texture> Material::GetTextureSharedPtr(const std::string &name) const
     {
-        // 优先查找AssetReference中的纹理
+        // 查找AssetReference中的纹理
         const AssetTextureBinding *binding = FindTextureBinding(name);
         if (binding)
         {
@@ -141,22 +159,12 @@ namespace framework
             }
         }
 
-        // 查找直接设置的纹理（兼容性）
-        const DirectTextureBinding *directBinding = FindDirectTextureBinding(name);
-        if (directBinding && directBinding->texture)
-        {
-            return std::shared_ptr<Texture>(directBinding->texture, [](Texture *)
-                                            {
-                                                // 不删除，因为这是外部管理的指针
-                                            });
-        }
-
         return nullptr;
     }
 
     Texture *Material::GetTexture(const std::string &name) const
     {
-        // 优先查找AssetReference中的纹理
+        // 查找AssetReference中的纹理
         const AssetTextureBinding *binding = FindTextureBinding(name);
         if (binding)
         {
@@ -168,19 +176,20 @@ namespace framework
             }
         }
 
-        // 查找直接设置的纹理（兼容性）
-        const DirectTextureBinding *directBinding = FindDirectTextureBinding(name);
-        if (directBinding && directBinding->texture)
-        {
-            return directBinding->texture;
-        }
-
         return nullptr;
     }
 
-    const std::vector<AssetTextureBinding> &Material::GetAllTextureBindings() const
+    std::vector<Material::UnifiedTextureBinding> Material::GetAllTextureBindings() const
     {
-        return m_textureBindings;
+        std::vector<UnifiedTextureBinding> result;
+
+        // 添加AssetReference纹理绑定
+        for (const auto &binding : m_textureBindings)
+        {
+            result.emplace_back(binding);
+        }
+
+        return result;
     }
 
     std::vector<AssetTextureBinding> Material::GetTexturesByType(TextureType type) const
@@ -200,7 +209,7 @@ namespace framework
 
     bool Material::HasTexture(const std::string &name) const
     {
-        return FindTextureBinding(name) != nullptr || FindDirectTextureBinding(name) != nullptr;
+        return FindTextureBinding(name) != nullptr;
     }
 
     void Material::RemoveTexture(const std::string &name)
@@ -218,24 +227,11 @@ namespace framework
             UpdateTextureNameToIndexMapping();
             Logger::Debug("Material: Removed texture asset binding: {}", name);
         }
-
-        // 从直接绑定中移除
-        auto directIt = std::find_if(m_directTextureBindings.begin(), m_directTextureBindings.end(),
-                                     [&name](const DirectTextureBinding &binding)
-                                     {
-                                         return binding.name == name;
-                                     });
-
-        if (directIt != m_directTextureBindings.end())
-        {
-            m_directTextureBindings.erase(directIt);
-            Logger::Debug("Material: Removed direct texture binding: {}", name);
-        }
     }
 
     size_t Material::GetTextureCount() const
     {
-        return m_textureBindings.size() + m_directTextureBindings.size();
+        return m_textureBindings.size();
     }
 
     AssetTextureBinding *Material::GetTextureAtIndex(size_t index)
@@ -509,16 +505,6 @@ namespace framework
                 }
             }
         }
-
-        // 应用直接设置的纹理（兼容性）
-        for (const auto &binding : m_directTextureBindings)
-        {
-            if (binding.texture)
-            {
-                binding.texture->Bind(binding.slot);
-                m_shader->SetInt(binding.name.c_str(), binding.slot);
-            }
-        }
     }
 
     void Material::UpdateTextureNameToIndexMapping()
@@ -551,28 +537,6 @@ namespace framework
                                });
 
         return it != m_textureBindings.end() ? &(*it) : nullptr;
-    }
-
-    Material::DirectTextureBinding *Material::FindDirectTextureBinding(const std::string &name)
-    {
-        auto it = std::find_if(m_directTextureBindings.begin(), m_directTextureBindings.end(),
-                               [&name](const DirectTextureBinding &binding)
-                               {
-                                   return binding.name == name;
-                               });
-
-        return it != m_directTextureBindings.end() ? &(*it) : nullptr;
-    }
-
-    const Material::DirectTextureBinding *Material::FindDirectTextureBinding(const std::string &name) const
-    {
-        auto it = std::find_if(m_directTextureBindings.begin(), m_directTextureBindings.end(),
-                               [&name](const DirectTextureBinding &binding)
-                               {
-                                   return binding.name == name;
-                               });
-
-        return it != m_directTextureBindings.end() ? &(*it) : nullptr;
     }
 
 } // namespace framework
