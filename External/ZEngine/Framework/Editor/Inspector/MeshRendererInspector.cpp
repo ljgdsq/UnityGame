@@ -1,6 +1,8 @@
 #include "Framework/Editor/Inspector/MeshRendererInspector.h"
 #include "Framework/Render/Material.h"
 #include "Framework/Core/Texture.h"
+#include "Framework/Editor/AssetField.h"
+#include "Framework/Asset/TextureAsset.h"
 using namespace framework;
 namespace editor
 {
@@ -37,61 +39,62 @@ namespace editor
     void MeshRendererInspector::RenderMaterialTextures(framework::Material *material)
     {
         auto textures = material->GetAllTextures();
+
+        ImGui::Text("Material Textures:");
+        ImGui::Separator();
+
         for (const auto &texture : textures)
         {
-            // 使用新的AssetTextureBinding结构
+            ImGui::PushID(texture.slot);
+
+            // 使用新的 AssetField 系统
             auto textureAsset = texture.GetTextureAsset();
-            if (textureAsset && textureAsset->IsLoaded())
+            std::shared_ptr<TextureAsset> mutableTextureAsset =
+                std::const_pointer_cast<TextureAsset>(textureAsset);
+
+            AssetFieldConfig config;
+            config.previewSize = ImVec2(128, 128);
+            config.showPreview = true;
+            config.allowNull = true;
+
+            // 渲染纹理资源字段
+            if (AssetField<TextureAsset>::Render(texture.name, mutableTextureAsset, config))
             {
-                auto texturePtr = textureAsset->GetTexture();
-                if (texturePtr && texturePtr->GetId() > 0)
+                // 纹理资源发生变化，更新材质
+                if (mutableTextureAsset)
                 {
-                    ImGui::Text("Texture:");
-                    ImGui::Text("width :%d", texturePtr->GetWidth());
-                    ImGui::SameLine();
-                    ImGui::Text("height:%d", texturePtr->GetHeight());
-
-                    // 创建一个明确的拖拽目标区域
-                    ImGui::PushID(texture.slot); // 为每个纹理创建唯一ID
-
-                    // 绘制纹理图像
-                    ImGui::Image((void *)texturePtr->GetId(), ImVec2(128, 128));
-
-                    // 在图像上设置拖拽目标
-                    if (ImGui::BeginDragDropTarget())
-                    {
-                        if (const ImGuiPayload *payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_FILE"))
-                        {
-                            // 确保payload数据正确终止
-                            std::string filePath;
-                            if (payload->DataSize > 0)
-                            {
-                                filePath = (const char *)payload->Data;
-                            }
-
-                            Logger::Debug("Drag texture received: {}", filePath.c_str());
-
-                            Texture *newTexture = Texture::LoadTexture(filePath);
-                            if (newTexture)
-                            {
-                                material->SetTexture(texture.name, newTexture, texture.slot);
-                                Logger::Debug("Texture set: {}", texture.name.c_str());
-                            }
-                            else
-                            {
-                                Logger::Error("Failed to load texture from file: {}", filePath.c_str());
-                            }
-                        }
-                        ImGui::EndDragDropTarget();
-                    }
-
-                    ImGui::Text("Shader Param Name: %s", texture.name.c_str());
-                    ImGui::Text("Slot :%d", texture.slot);
-                    ImGui::Separator();
-
-                    ImGui::PopID();
+                    material->SetTexture(texture.name, mutableTextureAsset, texture.slot, texture.type);
+                    Logger::Debug("Texture asset updated: {} -> {}", texture.name, mutableTextureAsset->GetName());
+                }
+                else
+                {
+                    // 清空纹理
+                    material->RemoveTexture(texture.name);
+                    Logger::Debug("Texture removed: {}", texture.name);
                 }
             }
+
+            // 显示纹理类型信息
+            const char *textureTypeNames[] = {"Diffuse", "Specular", "Normal", "Height", "Ambient"};
+            int typeIndex = static_cast<int>(texture.type);
+            if (typeIndex >= 0 && typeIndex < IM_ARRAYSIZE(textureTypeNames))
+            {
+                ImGui::Text("Type: %s", textureTypeNames[typeIndex]);
+            }
+
+            // 显示纹理槽位
+            ImGui::Text("Slot: %d", texture.slot);
+
+            ImGui::Separator();
+            ImGui::PopID();
+        }
+
+        // 添加新纹理绑定按钮
+        if (ImGui::Button("Add Texture Binding"))
+        {
+            // 简化实现：添加一个新的 diffuse 纹理绑定
+            std::string newTextureName = "texture_" + std::to_string(textures.size());
+            material->SetTexture(newTextureName, nullptr, textures.size(), TextureType::DIFFUSE);
         }
     }
 

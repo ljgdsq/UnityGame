@@ -3,8 +3,10 @@
 #include <vector>
 #include <string>
 
-namespace editor{
-    class ContentBrowser : public EditorWidget {
+namespace editor
+{
+    class ContentBrowser : public EditorWidget
+    {
     public:
         ContentBrowser();
         virtual ~ContentBrowser();
@@ -16,9 +18,10 @@ namespace editor{
 
     private:
         void RenderFileSystem();
-        void RenderAsset(const std::string& assetPath);
+        void RenderAsset(const std::string &assetPath);
+        void RenderAssetDragSource(const std::string &filePath, const std::string &filename, const std::string &extension);
+
         std::string rootPath;
         std::vector<std::string> currentPath;
     };
 }
-

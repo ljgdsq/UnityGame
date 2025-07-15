@@ -616,4 +616,8 @@ namespace framework
         return assetIds;
     }
 
+    // 显式模板实例化
+    template std::shared_ptr<TextureAsset> AssetManager::LoadAsset<TextureAsset>(const std::string &assetId);
+    template std::shared_ptr<MeshAsset> AssetManager::LoadAsset<MeshAsset>(const std::string &assetId);
+
 } // namespace framework
