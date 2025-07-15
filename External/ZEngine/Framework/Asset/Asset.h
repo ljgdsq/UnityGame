@@ -2,6 +2,7 @@
 #include <string>
 #include <vector>
 #include <memory>
+#include <ctime>
 #include "rapidjson/document.h"
 #include "rapidjson/writer.h"
 

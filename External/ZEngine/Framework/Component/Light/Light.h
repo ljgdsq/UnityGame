@@ -1,6 +1,7 @@
 #pragma once
 #include "Framework/Component/Component.h"
 #include "Framework/Core/GameObject.h"
+#include "Framework/Component/Transform.h"
 namespace framework
 {
 
@@ -15,29 +16,29 @@ namespace framework
     struct LightData {
     // 光源类型
     LightType type;     // 光源类型 (方向光、点光源、聚光灯)
-    
+
     // 位置信息
     glm::vec3 position;    // 点光源/聚光灯的世界位置
     glm::vec3 direction;   // 方向光/聚光灯的方向向量
-    
+
     // 光照属性
     glm::vec3 color;       // 光源颜色 (RGB)
     float intensity;       // 光强
-    
+
     // 衰减参数
     float range;           // 影响范围 (点光源/聚光灯)
     float constant;        // 常数衰减
     float linear;          // 线性衰减
     float quadratic;       // 二次衰减
-    
+
     // 聚光灯特有参数
     float spotInnerAngle;  // 内锥角 (cos值)
     float spotOuterAngle;  // 外锥角 (cos值)
-    
+
     // 阴影相关 (未来扩展)
     int castShadows;       // 是否投射阴影
     float shadowBias;      // 阴影偏移
-    
+
     // 构造函数
     // LightData();
     // static LightData FromLight(const Light* light);
