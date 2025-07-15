@@ -10,7 +10,7 @@ namespace framework
         FileUtil() = default;
 
     public:
-        /// @brief 提取文件名 
+        /// @brief 提取文件名
         /// @param filePath 文件路径
         /// @return 文件名
         static std::string ExtractFileName(const std::string &filePath)
@@ -34,7 +34,7 @@ namespace framework
 
             return filePath.substr(lastSlash, lastDot - lastSlash);
         }
-    
+
         static bool HasExtension(const std::string &filePath, const std::string &extension)
         {
             if (filePath.empty() || extension.empty())
@@ -46,10 +46,20 @@ namespace framework
             std::string lowerExtension = extension;
             std::transform(lowerFilePath.begin(), lowerFilePath.end(), lowerFilePath.begin(), ::tolower);
             std::transform(lowerExtension.begin(), lowerExtension.end(), lowerExtension.begin(), ::tolower);
-            
+
             return lowerFilePath.size() >= lowerExtension.size() &&
                    lowerFilePath.compare(lowerFilePath.size() - lowerExtension.size(), lowerExtension.size(), lowerExtension) == 0;
 
+        }
+
+        static std::string GetFileExtension(const std::string &filePath)
+        {
+            size_t lastDot = filePath.find_last_of(".");
+            if (lastDot == std::string::npos || lastDot == filePath.size() - 1)
+            {
+                return ""; // 没有扩展名
+            }
+            return filePath.substr(lastDot + 1); // 返回扩展名，不包括点
         }
     };
 }

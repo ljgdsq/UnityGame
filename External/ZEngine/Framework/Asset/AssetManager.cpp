@@ -1,6 +1,8 @@
 #include "Framework/Asset/AssetManager.h"
 #include "Framework/Asset/TextureAsset.h"
 #include "Framework/Asset/MeshAsset.h"
+#include "Framework/Asset/ObjMeshLoader.h"
+#include "Framework/Asset/TextureLoader.h"
 #include "Framework/Log/Logger.h"
 #include "Framework/Asset/AssetLoader.h"
 #include "Framework/Core/ResLoader.h"
@@ -90,7 +92,7 @@ namespace framework
                 if (asset)
                 {
                     asset->AddRef(); // 增加引用计数
-                    Logger::Log("Asset '{}' already loaded, returning existing instance", assetName);
+                    // Logger::Log("Asset '{}' already loaded, returning existing instance", assetName);
                     return asset;
                 }
                 else
@@ -101,8 +103,8 @@ namespace framework
             }
         }
 
-        // 加载新资源
-        auto asset = LoadAsset<Asset>(assetPath);
+        // 加载新资源 - 调用带类型参数的版本,让它自动检测类型
+        auto asset = LoadAsset(assetPath, AssetType::Unknown);
         if (asset)
         {
             return std::dynamic_pointer_cast<T>(asset);
@@ -270,6 +272,10 @@ namespace framework
     void AssetManager::Initialize()
     {
         Logger::Debug("Initializing AssetManager...");
+
+        // 注册默认资源加载器
+        RegisterLoader(std::make_shared<ObjMeshLoader>());
+        RegisterLoader(std::make_shared<TextureLoader>());
 
         // 初始化AssetRegistry
         AssetRegistry::GetInstance().ScanResourceDirectories();
