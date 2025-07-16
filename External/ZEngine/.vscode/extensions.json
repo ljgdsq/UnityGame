@@ -2,28 +2,27 @@
     "recommendations": [
         // IntelliJ IDEA 键位绑定
         "k--kato.intellij-idea-keybindings",
-        
+
         // C++ 开发必备
         "ms-vscode.cpptools",
         "ms-vscode.cpptools-extension-pack",
         "ms-vscode.cmake-tools",
-        
+
         // 代码导航和搜索
         "alefragnani.bookmarks",
         "eamodio.gitlens",
         "ms-vscode.vscode-json",
-        
+
         // 代码格式化和重构
         "xaver.clang-format",
         "ms-vscode.vscode-clangd",
-        
+
         // 文件和项目管理
-        "file-icons.file-icons",
         "vscode-icons-team.vscode-icons",
-        
+
         // 调试和测试
         "ms-vscode.test-adapter-converter",
-        
+
         // 实用工具
         "formulahendry.auto-rename-tag",
         "streetsidesoftware.code-spell-checker",
