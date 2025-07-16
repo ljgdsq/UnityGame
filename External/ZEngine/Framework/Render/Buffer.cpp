@@ -1,5 +1,4 @@
 #include "Framework/Render/Buffer.h"
-#include "Buffer.h"
 Buffer::Buffer(BufferType type)
 {
     this->type = type;
