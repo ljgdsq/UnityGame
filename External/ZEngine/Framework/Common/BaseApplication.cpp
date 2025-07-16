@@ -23,7 +23,7 @@ namespace framework
 
         // Renderer: initialize and configure
         // ------------------------------
-        renderer = new Renderer();
+        auto renderer =& Renderer::GetInstance();
         renderer->Initialize();
         renderer->SetViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
         Input::GetInstance().Initialize(glfwGetCurrentContext());

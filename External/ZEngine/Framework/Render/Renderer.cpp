@@ -4,9 +4,6 @@
 #include "Framework/Log/Logger.h"
 namespace framework {
 
-    Renderer::Renderer()
-    {
-    }
 
     static void framebuffer_size_callback(GLFWwindow* window, int width, int height)
     {

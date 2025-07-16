@@ -1,7 +1,6 @@
 #pragma once
-
-struct GLFWwindow; // Forward declaration to avoid including GLFW header
-
+#include "Framework/Common/Define.h"
+#include "Framework/Window/IWindow.h"
 enum class PolygonMode
 {
     Fill = 0x1B02,      // GL_FILL
@@ -11,20 +10,18 @@ enum class PolygonMode
 namespace framework {
     class Renderer
     {
+        SINGLETON_CLASS(Renderer);
     public:
-        Renderer();
-        virtual ~Renderer() = default;
-        virtual void Initialize();
+
+        void Initialize();
         void Clear();
         void SwapBuffers();
-
         void SetPolygonMode(PolygonMode mode);
         void EnableDepthTest(bool enable = true);
         void EnableBlending(bool enable = true);
         void SetViewport(int x, int y, int width, int height);
 
     protected:
-        GLFWwindow* window = nullptr;
+        IWindow* window = nullptr;
     };
-
 }
