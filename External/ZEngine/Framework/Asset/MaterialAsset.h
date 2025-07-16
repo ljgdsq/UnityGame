@@ -1,6 +1,6 @@
 #pragma once
 #include "Framework/Asset/Asset.h"
-#include "Framework/Render/Material.h"
+#include "Framework/Graphic/Material.h"
 #include "Framework/Asset/AssetReference.h"
 #include "Framework/Asset/TextureAsset.h"
 #include <memory>

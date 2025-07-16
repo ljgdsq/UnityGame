@@ -9,7 +9,7 @@
 
 ### 2. 实现了 Material 类的统一重构
 
-- **策略**: 使用 `#include "Framework/Render/MaterialNew.h"` 替换旧的 `Material.h` 内容
+- **策略**: 使用 `#include "Framework/Graphic/MaterialNew.h"` 替换旧的 `Material.h` 内容
 - **好处**: 保持了向后兼容性，同时引入了新的 Asset 系统功能
 - **删除**: 移除了旧的 `Framework/Render/Material.cpp` 文件，避免重复符号错误
 

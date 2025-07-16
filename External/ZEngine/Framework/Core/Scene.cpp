@@ -1,6 +1,6 @@
 #include "Framework/Core/Scene.h"
 #include "Framework/Core/GameObject.h"
-#include "Framework/Render/RenderComponent.h"
+#include "Framework/Graphic/RenderComponent.h"
 #include <algorithm>
 #include "Scene.h"
 namespace framework

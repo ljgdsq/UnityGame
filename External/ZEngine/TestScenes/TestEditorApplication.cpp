@@ -8,7 +8,7 @@
 #include "Framework/Core/SceneManager.h"
 #include "TestEditorApplication.h"
 #include "TestScenes/MeshTestScene.h"
-#include "Framework/Render/Buffer.h"
+#include "Framework/Graphic/Buffer.h"
 #include "Framework/Editor/ComponentRegistration.h"
 
 framework::TestEditorApplication::TestEditorApplication()
@@ -73,7 +73,6 @@ void framework::TestEditorApplication::HandleInput()
         Logger::Log("Escape key pressed, exiting application.");
         glfwSetWindowShouldClose(glfwGetCurrentContext(), true);
     }
-
 }
 
 void framework::TestEditorApplication::BegineFrame()

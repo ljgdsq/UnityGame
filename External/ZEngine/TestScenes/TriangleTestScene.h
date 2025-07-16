@@ -1,27 +1,29 @@
 #pragma once
 
 #include "Framework/Core/Scene.h"
-#include "Framework/Render/Shader.h"
+#include "Framework/Graphic/Shader.h"
 #include <glad/glad.h>
-#include "Framework/Render/Buffer.h"
-namespace framework {
+#include "Framework/Graphic/Buffer.h"
+namespace framework
+{
 
-class TriangleTestScene : public Scene {
-private:
-    Shader* m_shader = nullptr;
-    VertexArray* VertexArrayObject = nullptr;
-    Buffer* VertexBufferObject = nullptr;
+    class TriangleTestScene : public Scene
+    {
+    private:
+        Shader *m_shader = nullptr;
+        VertexArray *VertexArrayObject = nullptr;
+        Buffer *VertexBufferObject = nullptr;
 
-public:
-    TriangleTestScene() = default;
-    ~TriangleTestScene() override = default;
+    public:
+        TriangleTestScene() = default;
+        ~TriangleTestScene() override = default;
 
-    void Initialize() override;
-    void Update(float deltaTime) override;
-    void Render(Renderer*) override;
-    void Shutdown() override;
+        void Initialize() override;
+        void Update(float deltaTime) override;
+        void Render(Renderer *) override;
+        void Shutdown() override;
 
-    const char* GetName() const override { return "TriangleTestScene"; }
-};
+        const char *GetName() const override { return "TriangleTestScene"; }
+    };
 
 } // namespace framework

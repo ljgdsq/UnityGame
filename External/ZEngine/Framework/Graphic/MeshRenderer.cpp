@@ -1,8 +1,8 @@
 #include "Framework/Core/GameObject.h"
-#include "Framework/Render/MeshRenderer.h"
-#include "Framework/Render/MeshFilter.h"
-#include "Framework/Render/Renderer.h"
-#include "Framework/Render/Material.h"
+#include "Framework/Graphic/MeshRenderer.h"
+#include "Framework/Graphic/MeshFilter.h"
+#include "Framework/Graphic/Renderer.h"
+#include "Framework/Graphic/Material.h"
 #include "Framework/Component/Transform.h"
 #include "Framework/Manager/LightManager.h"
 #include "glad/glad.h"
@@ -39,10 +39,10 @@ namespace framework
         {
             // 应用光照到材质
             LightManager::ApplyLights(m_material);
-            
+
             m_material->Use();
             m_material->SetMatrix("model", modelMatrix);
-            m_material ->SetMatrix("view", camera->GetViewMatrix());
+            m_material->SetMatrix("view", camera->GetViewMatrix());
             m_material->SetMatrix("projection", camera->GetProjectionMatrix());
         }
         mesh->Use();
@@ -55,7 +55,6 @@ namespace framework
     {
         m_meshFilter = GetMeshFilter();
     }
-
 
     MeshFilter *MeshRenderer::GetMeshFilter()
     {

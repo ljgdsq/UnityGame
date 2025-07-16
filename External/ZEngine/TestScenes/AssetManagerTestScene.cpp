@@ -1,22 +1,22 @@
 #include "TestScenes/AssetManagerTestScene.h"
 #include "Framework/Core/Input.h"
 #include "Framework/Log/Logger.h"
-#include "Framework/Render/Buffer.h"
+#include "Framework/Graphic/Buffer.h"
 #include "Framework/Core/ResLoader.h"
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include "GLFW/glfw3.h"
-#include "Framework/Render/MeshRenderer.h"
-#include "Framework/Render/Mesh.h"
-#include "Framework/Render/Material.h"
-#include "Framework/Render/MeshFilter.h"
-#include "Framework/Render/Shader.h"
+#include "Framework/Graphic/MeshRenderer.h"
+#include "Framework/Graphic/Mesh.h"
+#include "Framework/Graphic/Material.h"
+#include "Framework/Graphic/MeshFilter.h"
+#include "Framework/Graphic/Shader.h"
 #include "Framework/Component/Camera.h"
 #include "Framework/Manager/CameraManager.h"
 #include "Framework/Asset/AssetManager.h"
 #include "Framework/Asset/ObjMeshLoader.h"
 #include "Framework/Asset/TextureLoader.h"
-#include "Framework/Render/Renderer.h"
+#include "Framework/Graphic/Renderer.h"
 
 namespace framework
 {

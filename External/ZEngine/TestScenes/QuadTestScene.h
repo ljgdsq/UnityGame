@@ -1,27 +1,30 @@
 #pragma once
 
 #include "Framework/Core/Scene.h"
-#include "Framework/Render/Shader.h"
+#include "Framework/Graphic/Shader.h"
 #include <glad/glad.h>
-#include "Framework/Render/Buffer.h"
-namespace framework {
+#include "Framework/Graphic/Buffer.h"
+namespace framework
+{
 
-class QuadTestScene : public Scene {
-private:
-    Shader* m_shader = nullptr;
-    VertexArray* VertexArrayObject = nullptr; 
-    Buffer* VertexBufferObject = nullptr;
-    Buffer* IndexBufferObject = nullptr;
-public:
-    QuadTestScene() = default;
-    ~QuadTestScene() override = default;
+    class QuadTestScene : public Scene
+    {
+    private:
+        Shader *m_shader = nullptr;
+        VertexArray *VertexArrayObject = nullptr;
+        Buffer *VertexBufferObject = nullptr;
+        Buffer *IndexBufferObject = nullptr;
 
-    void Initialize() override;
-    void Update(float deltaTime) override;
-    void Render(Renderer*) override;
-    void Shutdown() override;
+    public:
+        QuadTestScene() = default;
+        ~QuadTestScene() override = default;
 
-    const char* GetName() const override { return "QuadTestScene"; }
-};
+        void Initialize() override;
+        void Update(float deltaTime) override;
+        void Render(Renderer *) override;
+        void Shutdown() override;
+
+        const char *GetName() const override { return "QuadTestScene"; }
+    };
 
 } // namespace framework

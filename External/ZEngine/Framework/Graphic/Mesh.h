@@ -1,6 +1,6 @@
 #pragma once
 #include <vector>
-#include "Framework/Render/Buffer.h"
+#include "Framework/Graphic/Buffer.h"
 namespace framework
 {
     class GameObject;
@@ -27,7 +27,8 @@ namespace framework
 
         // 获取索引数据
         const std::vector<unsigned int> &GetIndices() const { return indices; }
-        public:
+
+    public:
         // 使用网格数据
         void Use();
 

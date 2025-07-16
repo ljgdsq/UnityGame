@@ -3,8 +3,8 @@
 // 组件头文件
 #include "Framework/Component/Transform.h"
 #include "Framework/Component/Camera.h"
-#include "Framework/Render/MeshRenderer.h"
-#include "Framework/Render/MeshFilter.h"
+#include "Framework/Graphic/MeshRenderer.h"
+#include "Framework/Graphic/MeshFilter.h"
 #include "Framework/Component/Light/Light.h"
 
 namespace framework
