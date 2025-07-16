@@ -45,7 +45,7 @@ namespace editor
             texturePosition.x += (windowSize.x - displayWidth) * 0.5f;
             texturePosition.y += (windowSize.y - displayHeight) * 0.5f;
             ImGui::SetCursorScreenPos(texturePosition);
-            ImGui::Image(ImTextureID(m_gameFrameBuffer->GetColorBuffer()), ImVec2(displayWidth, displayHeight));
+            ImGui::Image(ImTextureID(static_cast<size_t>(m_gameFrameBuffer->GetColorBuffer())), ImVec2(displayWidth, displayHeight));
         }
 
         ImGui::End();

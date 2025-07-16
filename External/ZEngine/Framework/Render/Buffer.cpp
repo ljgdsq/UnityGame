@@ -201,6 +201,6 @@ void VertexArray::EnableAttributes(int startIndex)
     {
         glEnableVertexAttribArray(startIndex);
         const auto &layout = layouts[startIndex];
-        glVertexAttribPointer(layout.index, layout.nComp, layout.type, layout.normalize ? GL_TRUE : GL_FALSE, layout.stride, reinterpret_cast<const void *>(layout.offset));
+        glVertexAttribPointer(layout.index, layout.nComp, layout.type, layout.normalize ? GL_TRUE : GL_FALSE, layout.stride, reinterpret_cast<const void *>(static_cast<size_t>(layout.offset)));
     }
 }
