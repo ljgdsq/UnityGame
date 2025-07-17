@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include "Framework/Interface/IApplication.hpp"
+#include "Framework/Window/IWindow.h"
 #include "Framework/Graphic/Renderer.h"
 #include "Framework/Core/Input.h"
 #include "Framework/Performance/FrameRateManager.h"
@@ -10,6 +11,7 @@ namespace framework
     class BaseApplication : public interface::IApplication
     {
     public:
+        BaseApplication();
         virtual ~BaseApplication() = default;
 
         // Initialize the application
@@ -64,6 +66,7 @@ namespace framework
         virtual void EndFrame() {};
 
     protected:
-        Renderer *renderer = nullptr;
+        Renderer *m_renderer = nullptr; // 渲染器实例
+        IWindow *m_window = nullptr;     // 窗口实例
     };
 } // namespace framework

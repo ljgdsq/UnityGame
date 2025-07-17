@@ -1,47 +1,31 @@
 #include "Framework/Graphic/Renderer.h"
 #include "glad/glad.h"
+#include "GLFW/glfw3.h"
 #include "Framework/Log/Logger.h"
 namespace framework
 {
 
-    static void framebuffer_size_callback(GLFWwindow *window, int width, int height)
+    static void framebuffer_size_callback(int width, int height)
     {
         glViewport(0, 0, width, height);
     }
 
-    void Renderer::Initialize()
+    void Renderer::Initialize(IWindow *window, void *renderAPILoaderProc)
     {
-
-        glfwInit();
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-        glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-
-#ifdef __APPLE__
-        Logger::Log("Renderer: Using OpenGL On macOS");
-        glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-#endif
-
-        // --------------------
-        GLFWwindow *window = glfwCreateWindow(800, 600, "ZEngine", NULL, NULL);
-        if (window == NULL)
-        {
-            Logger::Error("Failed to create GLFW window");
-            glfwTerminate();
-            return;
-        }
-        glfwMakeContextCurrent(window);
-        glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
-
+        m_window = window;
         // glad: load all OpenGL function pointers
-        // ---------------------------------------
-        if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
+        if (!gladLoadGLLoader((GLADloadproc)renderAPILoaderProc))
         {
-            Logger::Error("Failed to initialize GLAD");
-            return;
+            m_window->Destroy();
+            throw std::runtime_error("Failed to initialize GLAD");
         }
+        glViewport(0, 0, m_window->GetWidth(), m_window->GetHeight());
 
         glEnable(GL_DEPTH_TEST); // 启用深度测试
+        glEnable(GL_BLEND);      // 启用混合
+
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); // 设置混合函数
+        m_window->SetFramebufferSizeCallback(framebuffer_size_callback);
     }
 
     void Renderer::Clear()
@@ -53,9 +37,12 @@ namespace framework
 
     void Renderer::SwapBuffers()
     {
-        static GLFWwindow *window = glfwGetCurrentContext();
-        glfwSwapBuffers(window);
-        glfwPollEvents();
+        if (!m_window)
+        {
+            LOG_ERROR("Renderer: No window set for swapping buffers.");
+            return;
+        }
+        m_window->SwapBuffers();
     }
 
     void Renderer::SetPolygonMode(PolygonMode mode)

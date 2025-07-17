@@ -1,37 +1,26 @@
 #include "Framework/Performance/FrameRateManager.h"
 #include "Framework/Performance/FrameRateMonitor.h"
 #include "Framework/Log/Logger.h"
-#include "GLFW/glfw3.h"
+#include "Framework/Core/Timer.h"
 #include <memory>
 #include <algorithm>
 
 namespace framework
 {
-    std::unique_ptr<FrameRateManager> FrameRateManager::s_instance = nullptr;
 
-    FrameRateManager& FrameRateManager::GetInstance()
+    void FrameRateManager::Initialize(IWindow *window)
     {
-        if (!s_instance)
-        {
-            s_instance = std::unique_ptr<FrameRateManager>(new FrameRateManager());
-        }
-        return *s_instance;
-    }
 
-    FrameRateManager::FrameRateManager()
-        : m_strategy(FrameRateStrategy::FixedTarget),
-          m_targetFrameRate(60),
-          m_vsyncEnabled(false),
-          m_powerSaveFrameRate(30),
-          m_minAdaptiveFrameRate(30),
-          m_maxAdaptiveFrameRate(144),
-          m_adaptationSpeed(0.1f),
-          m_currentAdaptiveTarget(60)
-    {
-    }
+        m_strategy = FrameRateStrategy::FixedTarget;
+        m_targetFrameRate = 60;
+        m_vsyncEnabled = false;
+        m_powerSaveFrameRate = 30;
+        m_minAdaptiveFrameRate = 30;
+        m_maxAdaptiveFrameRate = 144;
+        m_adaptationSpeed = 0.1f;
+        m_currentAdaptiveTarget = 60;
 
-    void FrameRateManager::Initialize()
-    {
+        m_window = window;
         // 初始化帧率监控器
         FrameRateMonitor::GetInstance().Initialize();
 
@@ -55,7 +44,7 @@ namespace framework
             if (currentFPS < m_currentAdaptiveTarget * 0.9f && m_currentAdaptiveTarget > m_minAdaptiveFrameRate)
             {
                 m_currentAdaptiveTarget = std::max(m_minAdaptiveFrameRate,
-                    m_currentAdaptiveTarget - static_cast<int>(m_adaptationSpeed * m_currentAdaptiveTarget));
+                                                   m_currentAdaptiveTarget - static_cast<int>(m_adaptationSpeed * m_currentAdaptiveTarget));
 
                 SetTargetFrameRate(m_currentAdaptiveTarget);
                 Logger::Log("Adaptive frame rate decreased to: {}", m_currentAdaptiveTarget);
@@ -64,7 +53,7 @@ namespace framework
             else if (currentFPS > m_currentAdaptiveTarget * 0.95f && m_currentAdaptiveTarget < m_maxAdaptiveFrameRate)
             {
                 m_currentAdaptiveTarget = std::min(m_maxAdaptiveFrameRate,
-                    m_currentAdaptiveTarget + static_cast<int>(m_adaptationSpeed * m_currentAdaptiveTarget));
+                                                   m_currentAdaptiveTarget + static_cast<int>(m_adaptationSpeed * m_currentAdaptiveTarget));
 
                 SetTargetFrameRate(m_currentAdaptiveTarget);
                 Logger::Log("Adaptive frame rate increased to: {}", m_currentAdaptiveTarget);
@@ -106,17 +95,37 @@ namespace framework
         return m_targetFrameRate;
     }
 
+    void FrameRateManager::SleepToNextFrame(float frameStartTime)
+    {
+        if (m_strategy == FrameRateStrategy::Unlimited || m_targetFrameRate <= 0)
+        {
+            return; // 不需要睡眠
+        }
+
+        // 计算这一帧应该花费的时间
+        double targetFrameTime = 1.0 / m_targetFrameRate;
+
+        // 计算已经过去的时间
+        double frameEndTime = Timer::GetInstance().GetElapsedTime();
+        double elapsedTime = frameEndTime - frameStartTime;
+
+        // 如果还有时间，等待剩余时间
+        if (elapsedTime < targetFrameTime)
+        {
+            double sleepTime = targetFrameTime - elapsedTime;
+            m_window->WaitForSleep(sleepTime);
+        }
+    }
+
     void FrameRateManager::SetVSyncEnabled(bool enabled)
     {
         if (m_vsyncEnabled != enabled)
         {
             m_vsyncEnabled = enabled;
 
-            // 应用垂直同步设置
-            GLFWwindow* window = glfwGetCurrentContext();
-            if (window)
+            if (m_window)
             {
-                glfwSwapInterval(m_vsyncEnabled ? 1 : 0);
+                m_window->SetVSync(enabled);
                 Logger::Log("VSync {}", m_vsyncEnabled ? "enabled" : "disabled");
             }
 
@@ -174,44 +183,38 @@ namespace framework
 
     void FrameRateManager::ApplyStrategy()
     {
-        GLFWwindow* window = glfwGetCurrentContext();
-        if (!window)
-        {
-            Logger::Warn("Cannot apply frame rate strategy: No active GLFW window");
-            return;
-        }
 
         // 根据策略应用相应设置
         switch (m_strategy)
         {
         case FrameRateStrategy::Unlimited:
             // 关闭垂直同步，不限制帧率
-            glfwSwapInterval(0);
+            m_window->SetVSync(false);
             m_vsyncEnabled = false;
             break;
 
         case FrameRateStrategy::FixedTarget:
             // 关闭垂直同步，使用目标帧率
-            glfwSwapInterval(0);
+            m_window->SetVSync(false);
             m_vsyncEnabled = false;
             break;
 
         case FrameRateStrategy::VSync:
             // 启用垂直同步
-            glfwSwapInterval(1);
+            m_window->SetVSync(true);
             m_vsyncEnabled = true;
             break;
 
         case FrameRateStrategy::AdaptiveFrameRate:
             // 关闭垂直同步，使用自适应帧率
-            glfwSwapInterval(0);
+            m_window->SetVSync(false);
             m_vsyncEnabled = false;
             m_currentAdaptiveTarget = m_targetFrameRate;
             break;
 
         case FrameRateStrategy::PowerSave:
             // 关闭垂直同步，使用省电模式帧率
-            glfwSwapInterval(0);
+            m_window->SetVSync(false);
             m_vsyncEnabled = false;
             break;
         }

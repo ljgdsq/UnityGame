@@ -1,5 +1,5 @@
 #include "Framework/Window/Platform/GLFWWindow.h"
-
+#include <stdexcept>
 namespace framework
 {
 
@@ -45,14 +45,6 @@ namespace framework
                 self->m_framebufferSizeCallback(width, height);
             } });
 
-        // glad: load all OpenGL function pointers
-        if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
-        {
-            glfwDestroyWindow(m_window);
-            glfwTerminate();
-            throw std::runtime_error("Failed to initialize GLAD");
-        }
-        glViewport(0, 0, config.width, config.height);
     }
 
     void GLFWWindow::SetTitle(const std::string &title)
@@ -100,6 +92,11 @@ namespace framework
     void GLFWWindow::PollEvents()
     {
         glfwPollEvents();
+    }
+
+    void GLFWWindow::WaitForSleep(double seconds)
+    {
+        glfwWaitEventsTimeout(seconds);
     }
 
     void *GLFWWindow::GetNativeWindowHandle() const
@@ -191,6 +188,11 @@ namespace framework
             {
                 self->m_framebufferSizeCallback(width, height);
             } });
+    }
+
+    void GLFWWindow::SetShouldClose(bool shouldClose)
+    {
+        glfwSetWindowShouldClose(m_window, shouldClose);
     }
 
     void GLFWWindow::SetWindowCloseCallback(WindowCloseCallback callback)
@@ -287,6 +289,28 @@ namespace framework
             {
                 self->m_windowSizeCallback(width, height);
             } });
+    }
+
+    void GLFWWindow::SwapBuffers()
+    {
+        if (m_window)
+        {
+            glfwSwapBuffers(m_window);
+        }
+        else
+        {
+            throw std::runtime_error("GLFWWindow: No window to swap buffers.");
+        }
+    }
+
+    void GLFWWindow::Destroy()
+    {
+        if (m_window)
+        {
+            glfwDestroyWindow(m_window);
+            m_window = nullptr;
+        }
+        glfwTerminate();
     }
 
 } // namespace framework

@@ -1,6 +1,8 @@
 #pragma once
 #include <string>
 #include <memory>
+#include "Framework/Common/Define.h"
+#include "Framework/Window/IWindow.h"
 
 namespace framework
 {
@@ -9,11 +11,11 @@ namespace framework
      */
     enum class FrameRateStrategy
     {
-        Unlimited,          // 不限制帧率
-        FixedTarget,        // 固定帧率目标
-        VSync,              // 使用垂直同步
-        AdaptiveFrameRate,  // 自适应帧率（根据性能动态调整）
-        PowerSave           // 省电模式（低帧率）
+        Unlimited,         // 不限制帧率
+        FixedTarget,       // 固定帧率目标
+        VSync,             // 使用垂直同步
+        AdaptiveFrameRate, // 自适应帧率（根据性能动态调整）
+        PowerSave          // 省电模式（低帧率）
     };
 
     /**
@@ -21,11 +23,11 @@ namespace framework
      */
     class FrameRateManager
     {
-    public:
-        static FrameRateManager& GetInstance();
+        SINGLETON_CLASS(FrameRateManager);
 
+    public:
         // 初始化帧率管理器
-        void Initialize();
+        void Initialize(IWindow *window);
 
         // 更新帧率管理（每帧调用）
         void Update(float deltaTime);
@@ -57,27 +59,20 @@ namespace framework
         // 获取当前策略的描述
         std::string GetStrategyDescription() const;
 
-    private:
-        FrameRateManager();
-        FrameRateManager(const FrameRateManager&) = delete;
-        FrameRateManager& operator=(const FrameRateManager&) = delete;
-
-    public:
-        // 析构函数必须是公有的，这样std::unique_ptr才能正确删除对象
-        ~FrameRateManager() = default;
+        void SleepToNextFrame(float frameStartTime);
 
     private:
         // 应用当前帧率策略
         void ApplyStrategy();
 
     private:
-        static std::unique_ptr<FrameRateManager> s_instance;
+        IWindow *m_window = nullptr; // 窗口指针，用于获取上下文
 
         FrameRateStrategy m_strategy = FrameRateStrategy::FixedTarget;
-        int m_targetFrameRate = 60;       // 默认目标帧率60fps
-        bool m_vsyncEnabled = false;      // 默认不启用垂直同步
-        int m_powerSaveFrameRate = 30;    // 省电模式默认30fps
-        
+        int m_targetFrameRate = 60;    // 默认目标帧率60fps
+        bool m_vsyncEnabled = false;   // 默认不启用垂直同步
+        int m_powerSaveFrameRate = 30; // 省电模式默认30fps
+
         // 自适应帧率相关
         int m_minAdaptiveFrameRate = 30;  // 自适应最低帧率
         int m_maxAdaptiveFrameRate = 144; // 自适应最高帧率

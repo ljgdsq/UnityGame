@@ -5,7 +5,7 @@
 #include <array>
 #include <functional>
 #include <memory>
-struct GLFWwindow;
+#include "Framework/Window/IWindow.h"
 
 namespace framework
 {
@@ -50,6 +50,7 @@ namespace framework
         // 私有构造函数（单例模式）
         Input();
 
+        // todo : split implementation into a separate file
         // Pimpl模式隐藏实现细节
         class InputImpl;
         std::unique_ptr<InputImpl> m_impl;
@@ -68,7 +69,7 @@ namespace framework
         static Input &GetInstance();
 
         // 初始化和更新
-        void Initialize(GLFWwindow *window);
+        void Initialize(IWindow *window);
         void Update();
 
         // 键盘输入
@@ -100,7 +101,7 @@ namespace framework
         // 触摸输入（如果需要）
         static bool GetTouch(int touchIndex, float &x, float &y);
         static int GetTouchCount();
-        
+
         // 内部方法 - 供回调函数使用
         void SetScrollDelta(double delta);
     };

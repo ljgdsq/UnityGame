@@ -9,11 +9,23 @@
 #include "Framework/Performance/FrameRateMonitor.h"
 #include "Framework/Graphic/RenderComponent.h"
 #include "Framework/Graphic/Renderer.h"
+#include "Framework/Core/Timer.h"
+// platform specific includes
+#include "Framework/Window/GLFWWindow.h"
 
 namespace framework
 {
     static const unsigned int SCR_WIDTH = 800;
     static const unsigned int SCR_HEIGHT = 600;
+
+    BaseApplication::BaseApplication()
+        : m_renderer(nullptr), m_window(nullptr)
+    {
+        // Constructor implementation
+        Logger::Log("BaseApplication constructed");
+        Timer::GetInstance().Initialize();
+    }
+
     void BaseApplication::Initialize()
     {
 
@@ -21,15 +33,21 @@ namespace framework
         Logger::Init();
         ResLoader::GetInstance().Initialize("Res/");
 
-        // Renderer: initialize and configure
-        // ------------------------------
-        auto renderer = &Renderer::GetInstance();
-        renderer->Initialize();
-        renderer->SetViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
-        Input::GetInstance().Initialize(glfwGetCurrentContext());
+        // Initialize the window
+        m_window = new GLFWWindow();
+        WindowConfig config;
+        config.title = "My Game";
+        config.width = SCR_WIDTH;
+        config.height = SCR_HEIGHT;
+        m_window->Initialize(config);
 
+        // Initialize the renderer
+        m_renderer = new Renderer();
+        m_renderer->Initialize(m_window, glad_glGetProcAddress);
+
+        Input::GetInstance().Initialize(m_window);
         // 初始化帧率管理器
-        FrameRateManager::GetInstance().Initialize();
+        FrameRateManager::GetInstance().Initialize(m_window);
         // 默认设置为固定帧率策略
         FrameRateManager::GetInstance().SetFrameRateStrategy(FrameRateStrategy::FixedTarget);
         FrameRateManager::GetInstance().SetTargetFrameRate(60);
@@ -37,10 +55,9 @@ namespace framework
 
     void BaseApplication::HandleInput()
     {
-        static GLFWwindow *window = glfwGetCurrentContext();
         if (Input::GetInstance().GetKeyDown(GLFW_KEY_ESCAPE))
         {
-            glfwSetWindowShouldClose(window, true);
+            m_window->SetShouldClose(true);
         }
     }
 
@@ -62,31 +79,25 @@ namespace framework
     void BaseApplication::Run()
     {
         // Get the GLFW window pointer from Initialize method
-        GLFWwindow *window = glfwGetCurrentContext();
-        if (!window)
+
+        if (!m_window || !m_window->GetNativeWindowHandle())
         {
-            Logger::Error("No active GLFW window context found!");
+            Logger::Error("Window not initialized or no native window handle found!");
             return;
         }
 
-        // Set up variables for delta time calculation
-        float lastFrameTime = 0.0f;
-        float currentFrameTime = 0.0f;
-        float deltaTime = 0.0f;
+
         InitScenes();
 
         // Main game loop
         while (!ShouldExit())
         {
-            // 记录这一帧开始的时间
-            double frameStartTime = glfwGetTime();
+            m_window->PollEvents();
+            Timer::GetInstance().Update();
 
-            // Calculate delta time
-            currentFrameTime = static_cast<float>(frameStartTime);
-            deltaTime = currentFrameTime - lastFrameTime;
-            lastFrameTime = currentFrameTime;
+            float deltaTime = Timer::GetInstance().GetDeltaTime();
+            float frameStartTime = Timer::GetInstance().GetElapsedTime();
 
-            // Process input
             Input::GetInstance().Update();
 
             // 处理子类的输入
@@ -106,38 +117,11 @@ namespace framework
             // 渲染当前场景
             SceneManager::GetInstance().RenderActiveScene(renderer);
             EndFrame();
-            // Swap buffers and poll IO events
+            // Swap buffers
             renderer->SwapBuffers();
 
-            // 根据当前帧率策略等待必要的时间
-            if (FrameRateManager::GetInstance().GetFrameRateStrategy() == FrameRateStrategy::FixedTarget ||
-                FrameRateManager::GetInstance().GetFrameRateStrategy() == FrameRateStrategy::PowerSave)
-            {
-                // 获取目标帧率
-                int targetFPS = (FrameRateManager::GetInstance().GetFrameRateStrategy() == FrameRateStrategy::PowerSave)
-                                    ? FrameRateManager::GetInstance().GetPowerSaveFrameRate()
-                                    : FrameRateManager::GetInstance().GetTargetFrameRate();
+            FrameRateManager::GetInstance().SleepToNextFrame(frameStartTime);
 
-                if (targetFPS > 0)
-                {
-                    // 计算这一帧应该花费的时间
-                    double targetFrameTime = 1.0 / targetFPS;
-
-                    // 计算已经过去的时间
-                    double frameEndTime = glfwGetTime();
-                    double elapsedTime = frameEndTime - frameStartTime;
-
-                    // 如果还有时间，等待剩余时间
-                    if (elapsedTime < targetFrameTime)
-                    {
-                        double sleepTime = targetFrameTime - elapsedTime;
-
-                        // 使用glfwWaitEventsTimeout进行睡眠
-                        // 这比Sleep函数更精确，并且允许处理事件
-                        glfwWaitEventsTimeout(sleepTime);
-                    }
-                }
-            }
         }
 
         // 关闭当前场景
@@ -161,8 +145,7 @@ namespace framework
 
     bool BaseApplication::ShouldExit()
     {
-        static GLFWwindow *window = glfwGetCurrentContext();
-        return glfwWindowShouldClose(window);
+        return m_window && m_window->ShouldClose();
     }
 
     void BaseApplication::SetTargetFrameRate(int frameRate)

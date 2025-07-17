@@ -3,17 +3,18 @@
 #include "Framework/Window/IWindow.h"
 enum class PolygonMode
 {
-    Fill = 0x1B02,      // GL_FILL
-    Line = 0x1B01,      // GL_LINE
-    Point = 0x1B00      // GL_POINT
+    Fill, // FILL
+    Line, // LINE
+    Point // POINT
 };
-namespace framework {
+namespace framework
+{
     class Renderer
     {
-        SINGLETON_CLASS(Renderer);
-    public:
+        // SINGLETON_CLASS(Renderer);
 
-        void Initialize();
+    public:
+        void Initialize(IWindow *window, void *renderAPILoaderProc = nullptr);
         void Clear();
         void SwapBuffers();
         void SetPolygonMode(PolygonMode mode);
@@ -22,6 +23,6 @@ namespace framework {
         void SetViewport(int x, int y, int width, int height);
 
     protected:
-        IWindow* window = nullptr;
+        IWindow *m_window = nullptr;
     };
 }

@@ -192,11 +192,10 @@ namespace framework
      * @brief 初始化输入系统
      * @param window GLFW窗口指针
      */
-    void Input::Initialize(GLFWwindow *window)
+    void Input::Initialize(IWindow *window)
     {
-        m_impl->window = window;
-
-        glfwSetScrollCallback(window, ScrollCallback);
+        m_impl->window = static_cast<GLFWwindow*>(window->GetNativeWindowHandle());
+        glfwSetScrollCallback(m_impl->window, ScrollCallback);
         Logger::Log("Input system initialized");
     }
 
