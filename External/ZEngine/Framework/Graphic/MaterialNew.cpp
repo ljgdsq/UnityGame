@@ -1,7 +1,7 @@
-#include "Framework/Render/MaterialNew.h"
+#include "Framework/Graphic/MaterialNew.h"
 #include "Framework/Asset/AssetManager.h"
 #include "Framework/Log/Logger.h"
-#include "Framework/Render/Shader.h"
+#include "Framework/Graphic/Shader.h"
 #include <algorithm>
 
 // todo: remove CameraManager

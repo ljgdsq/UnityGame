@@ -7,8 +7,8 @@
 #include "Framework/Core/ResLoader.h"
 #include "Framework/Performance/FrameRateManager.h"
 #include "Framework/Performance/FrameRateMonitor.h"
-#include "Framework/Render/RenderComponent.h"
-#include "Framework/Render/Renderer.h"
+#include "Framework/Graphic/RenderComponent.h"
+#include "Framework/Graphic/Renderer.h"
 
 namespace framework
 {
@@ -23,7 +23,7 @@ namespace framework
 
         // Renderer: initialize and configure
         // ------------------------------
-        renderer = new Renderer();
+        auto renderer = &Renderer::GetInstance();
         renderer->Initialize();
         renderer->SetViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
         Input::GetInstance().Initialize(glfwGetCurrentContext());
@@ -115,8 +115,8 @@ namespace framework
             {
                 // 获取目标帧率
                 int targetFPS = (FrameRateManager::GetInstance().GetFrameRateStrategy() == FrameRateStrategy::PowerSave)
-                    ? FrameRateManager::GetInstance().GetPowerSaveFrameRate()
-                    : FrameRateManager::GetInstance().GetTargetFrameRate();
+                                    ? FrameRateManager::GetInstance().GetPowerSaveFrameRate()
+                                    : FrameRateManager::GetInstance().GetTargetFrameRate();
 
                 if (targetFPS > 0)
                 {

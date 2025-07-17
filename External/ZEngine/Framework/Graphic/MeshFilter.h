@@ -1,6 +1,6 @@
 #pragma once
 #include "Framework/Component/Component.h"
-#include "Framework/Render/Mesh.h"
+#include "Framework/Graphic/Mesh.h"
 #include "Framework/Asset/AssetReference.h"
 #include "Framework/Asset/MeshAsset.h"
 #include <memory>

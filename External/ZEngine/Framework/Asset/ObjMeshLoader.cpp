@@ -2,7 +2,7 @@
 #include "Framework/Log/Logger.h"
 #include "Framework/Asset/MeshAsset.h"
 #include "Framework/Asset/AssetLoader.h"
-#include "Framework/Render/Mesh.h"
+#include "Framework/Graphic/Mesh.h"
 #include "Framework/Core/ResLoader.h"
 #include "Framework/Util/FileUtil.hpp"
 #include <sstream>
@@ -138,7 +138,7 @@ namespace framework
                     Logger::Error("Failed to parse face at line {}: {}", lineNumber, line);
                     return false;
                 }
-             }
+            }
         }
         // 如果没有法线数据，生成默认法线
         if (normals.empty() && !vertices.empty())
@@ -149,7 +149,7 @@ namespace framework
 
         Logger::Debug("OBJ parsing complete:");
         Logger::Debug("  - Input positions: {}", positions.size());
-        Logger::Debug("  - Input texCoords: {}", texCoords.size());  
+        Logger::Debug("  - Input texCoords: {}", texCoords.size());
         Logger::Debug("  - Input normals: {}", normals.size());
         Logger::Debug("  - Output vertices: {}", vertices.size());
         Logger::Debug("  - Output indices: {}", indices.size());
@@ -312,13 +312,16 @@ namespace framework
                 unsigned int i0 = faceIndices[0];
                 unsigned int i1 = faceIndices[i];
                 unsigned int i2 = faceIndices[i + 1];
-                
+
                 // 验证索引有效性
-                if (i0 < vertices.size() && i1 < vertices.size() && i2 < vertices.size()) {
+                if (i0 < vertices.size() && i1 < vertices.size() && i2 < vertices.size())
+                {
                     indices.push_back(i0);
-                    indices.push_back(i1);  
+                    indices.push_back(i1);
                     indices.push_back(i2);
-                } else {
+                }
+                else
+                {
                     Logger::Error("Invalid face indices: {}, {}, {} (vertex count: {})", i0, i1, i2, vertices.size());
                     return false;
                 }
@@ -327,9 +330,7 @@ namespace framework
 
         return true;
     }
-   
-   
-   
+
     void ObjMeshLoader::GenerateNormals(std::vector<ObjVertex> &vertices,
                                         const std::vector<unsigned int> &indices)
     {

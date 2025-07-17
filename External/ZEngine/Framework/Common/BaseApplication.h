@@ -1,7 +1,7 @@
 #pragma once
 #include <string>
 #include "Framework/Interface/IApplication.hpp"
-#include "Framework/Render/Renderer.h"
+#include "Framework/Graphic/Renderer.h"
 #include "Framework/Core/Input.h"
 #include "Framework/Performance/FrameRateManager.h"
 
@@ -60,10 +60,10 @@ namespace framework
         float GetCurrentFPS() const;
 
     protected:
-        virtual void BegineFrame(){};
-        virtual void EndFrame(){};
-    protected:
-        Renderer * renderer = nullptr;
+        virtual void BegineFrame() {};
+        virtual void EndFrame() {};
 
+    protected:
+        Renderer *renderer = nullptr;
     };
 } // namespace framework

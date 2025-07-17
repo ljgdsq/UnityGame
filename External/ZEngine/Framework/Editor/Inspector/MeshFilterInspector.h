@@ -1,6 +1,6 @@
 #pragma once
 #include "Framework/Editor/Inspector/ComponentInspector.h"
-#include "Framework/Render/MeshFilter.h"
+#include "Framework/Graphic/MeshFilter.h"
 #include "Framework/Core/GameObject.h"
 
 namespace editor

@@ -1,15 +1,15 @@
 #pragma once
 #include "Framework/Editor/Inspector/ComponentInspector.h"
-#include "Framework/Render/MeshRenderer.h"
+#include "Framework/Graphic/MeshRenderer.h"
 #include "Framework/Core/GameObject.h"
-#include "Framework/Render/Material.h"
+#include "Framework/Graphic/Material.h"
 
 namespace editor
 {
     class MeshRendererInspector : public TypedComponentInspector<framework::MeshRenderer>
     {
     public:
-        MeshRendererInspector():TypedComponentInspector<framework::MeshRenderer>() {}
+        MeshRendererInspector() : TypedComponentInspector<framework::MeshRenderer>() {}
         ~MeshRendererInspector() override = default;
 
         void Inspect(framework::GameObject *node) override;

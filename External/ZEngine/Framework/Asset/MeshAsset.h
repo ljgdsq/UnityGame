@@ -1,7 +1,7 @@
 #pragma once
 #include "Framework/Asset/Asset.h"
-#include "Framework/Render/Buffer.h"
-#include "Framework/Render/Mesh.h"
+#include "Framework/Graphic/Buffer.h"
+#include "Framework/Graphic/Mesh.h"
 #include "Framework/Log/Logger.h"
 #include <memory>
 #include <string>

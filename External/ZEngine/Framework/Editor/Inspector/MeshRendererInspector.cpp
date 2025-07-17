@@ -1,5 +1,5 @@
 #include "Framework/Editor/Inspector/MeshRendererInspector.h"
-#include "Framework/Render/Material.h"
+#include "Framework/Graphic/Material.h"
 #include "Framework/Core/Texture.h"
 #include "Framework/Editor/AssetField.h"
 #include "Framework/Asset/TextureAsset.h"

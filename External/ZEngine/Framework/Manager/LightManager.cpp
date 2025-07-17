@@ -1,8 +1,8 @@
 #include "Framework/Manager/LightManager.h"
-#include "Framework/Render/Material.h"
+#include "Framework/Graphic/Material.h"
 namespace framework
 {
-    std::vector<Light*> LightManager::s_lights;
+    std::vector<Light *> LightManager::s_lights;
 
     void LightManager::RegisterLight(Light *light)
     {
@@ -43,7 +43,5 @@ namespace framework
     {
         return static_cast<int>(s_lights.size());
     }
-
-
 
 }

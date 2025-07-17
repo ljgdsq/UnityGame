@@ -1,14 +1,10 @@
-#include "Framework/Render/Renderer.h"
+#include "Framework/Graphic/Renderer.h"
 #include "glad/glad.h"
-#include "GLFW/glfw3.h"
 #include "Framework/Log/Logger.h"
-namespace framework {
+namespace framework
+{
 
-    Renderer::Renderer()
-    {
-    }
-
-    static void framebuffer_size_callback(GLFWwindow* window, int width, int height)
+    static void framebuffer_size_callback(GLFWwindow *window, int width, int height)
     {
         glViewport(0, 0, width, height);
     }
@@ -27,7 +23,7 @@ namespace framework {
 #endif
 
         // --------------------
-        GLFWwindow* window = glfwCreateWindow(800, 600, "ZEngine", NULL, NULL);
+        GLFWwindow *window = glfwCreateWindow(800, 600, "ZEngine", NULL, NULL);
         if (window == NULL)
         {
             Logger::Error("Failed to create GLFW window");
@@ -57,7 +53,7 @@ namespace framework {
 
     void Renderer::SwapBuffers()
     {
-        static GLFWwindow* window = glfwGetCurrentContext();
+        static GLFWwindow *window = glfwGetCurrentContext();
         glfwSwapBuffers(window);
         glfwPollEvents();
     }

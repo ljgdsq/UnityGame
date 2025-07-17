@@ -1,8 +1,8 @@
 #pragma once
 
 #include "Framework/Core/Scene.h"
-#include "Framework/Render/Shader.h"
-#include "Framework/Render/Buffer.h"
+#include "Framework/Graphic/Shader.h"
+#include "Framework/Graphic/Buffer.h"
 #include "Framework/Core/Texture.h"
 using namespace framework;
 class TextureScene : public framework::Scene
@@ -13,14 +13,14 @@ public:
 
     void Initialize() override;
     void Update(float deltaTime) override;
-    void Render(Renderer*) override;
+    void Render(Renderer *) override;
     void Shutdown() override;
 
     const char *GetName() const override { return "TextureScene"; }
 
 private:
     Shader *shader = nullptr;
-     Texture *texture = nullptr;
+    Texture *texture = nullptr;
     VertexArray *vertexArrayObject = nullptr;
     Buffer *vertexBufferObject = nullptr;
     Buffer *indexBufferObject = nullptr;
