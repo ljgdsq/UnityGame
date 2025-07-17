@@ -127,8 +127,8 @@ namespace framework
         // 关闭当前场景
         SceneManager::GetInstance().ShutdownActiveScene();
 
-        // Clean up GLFW resources
-        glfwTerminate();
+        m_window->Destroy();
+        m_window = nullptr;
     }
 
     void BaseApplication::Update(float deltaTime)
