@@ -117,14 +117,14 @@ namespace framework
         if (Input::GetKeyDown(GLFW_KEY_F1))
         {
             Logger::Log("Switched to wireframe rendering mode");
-            renderer->SetPolygonMode(PolygonMode::Line);
+            m_renderer->SetPolygonMode(PolygonMode::Line);
         }
 
         // 按F2键切换到填充渲染模式
         if (Input::GetKeyDown(GLFW_KEY_F2))
         {
             Logger::Log("Switched to filled rendering mode");
-            renderer->SetPolygonMode(PolygonMode::Fill);
+            m_renderer->SetPolygonMode(PolygonMode::Fill);
         }
 
         // 可以在这里添加更多测试按键处理

@@ -9,7 +9,6 @@ namespace framework
         SINGLETON_CLASS(Timer);
 
     public:
-        Timer() : m_start(std::chrono::steady_clock::now()), m_last(m_start) {}
 
         void Update()
         {

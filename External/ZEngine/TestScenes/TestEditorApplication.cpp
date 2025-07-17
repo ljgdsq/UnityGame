@@ -83,7 +83,7 @@ void framework::TestEditorApplication::BegineFrame()
 void framework::TestEditorApplication::EndFrame()
 {
     gameFrameBuffer->UnbindBuffer();
-    renderer->Clear();
+    m_renderer->Clear();
 
     // 开始ImGui渲染
     ImGui_ImplOpenGL3_NewFrame();

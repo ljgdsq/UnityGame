@@ -44,7 +44,6 @@ namespace framework
             if (self->m_framebufferSizeCallback){
                 self->m_framebufferSizeCallback(width, height);
             } });
-
     }
 
     void GLFWWindow::SetTitle(const std::string &title)
@@ -193,6 +192,11 @@ namespace framework
     void GLFWWindow::SetShouldClose(bool shouldClose)
     {
         glfwSetWindowShouldClose(m_window, shouldClose);
+    }
+
+    bool GLFWWindow::ShouldClose() const
+    {
+        return glfwWindowShouldClose(m_window);
     }
 
     void GLFWWindow::SetWindowCloseCallback(WindowCloseCallback callback)

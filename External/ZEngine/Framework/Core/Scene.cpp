@@ -2,7 +2,6 @@
 #include "Framework/Core/GameObject.h"
 #include "Framework/Graphic/RenderComponent.h"
 #include <algorithm>
-#include "Scene.h"
 namespace framework
 {
     void Scene::CollectRenderComponents(std::vector<RenderComponent *> &renderComponents)
@@ -56,12 +55,22 @@ namespace framework
 
     void Scene::AddGameObject(GameObject *gameObject)
     {
+        if (!gameObject)
+        {
+            Logger::Error("Attempted to add a null GameObject to the scene.");
+            return;
+        }
+
+        if (std::find(m_gameObjects.begin(), m_gameObjects.end(), gameObject) != m_gameObjects.end())
+        {
+            Logger::Warn("GameObject already exists in the scene.");
+            return; // 如果游戏对象已经存在，直接返回
+        }
+
         if (gameObject)
         {
             m_gameObjects.push_back(gameObject);
-            gameObject->SetActive(true); // 确保新添加的游戏对象是激活状态
-            gameObject->OnCreate();      // 调用创建时的回调
-            gameObject->OnInitialize();  // 调用初始化时的回调
+            gameObject->OnCreate(); // 调用创建时的回调
         }
         else
         {
@@ -87,6 +96,17 @@ namespace framework
         else
         {
             Logger::Error("Attempted to remove a null GameObject from the scene.");
+        }
+    }
+
+    void Scene::Update(float deltaTime)
+    {
+        // 遍历所有游戏对象并更新它们
+        for (auto &gameObject : m_gameObjects)
+        {
+            if (!gameObject)
+                continue; // 如果游戏对象为空，跳过
+            gameObject->Update(deltaTime);
         }
     }
 

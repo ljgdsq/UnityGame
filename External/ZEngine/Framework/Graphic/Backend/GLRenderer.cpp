@@ -10,7 +10,7 @@ namespace framework
         glViewport(0, 0, width, height);
     }
 
-    void Renderer::Initialize(IWindow *window, void *renderAPILoaderProc)
+    void Renderer::Initialize(IWindow *window, LoaderFunc renderAPILoaderProc)
     {
         m_window = window;
         // glad: load all OpenGL function pointers

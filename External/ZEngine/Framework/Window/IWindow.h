@@ -48,6 +48,7 @@ namespace framework
         virtual void PollEvents() = 0;
         virtual void WaitForSleep(double seconds) = 0; // 等待指定时间，通常用于帧率控制
         virtual void SetShouldClose(bool shouldClose) = 0; // 设置窗口是否应该关闭
+        virtual bool ShouldClose() const = 0;             // 检查窗口是否应该关闭
         virtual void *GetNativeWindowHandle() const = 0;       // 返回原生窗口
         virtual void *GetNativeDisplayHandle() const = 0;      // 返回原生显示
         virtual void SetIcon(const std::string &iconPath) = 0; // 设置窗口图标

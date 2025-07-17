@@ -19,9 +19,6 @@ namespace framework
     public:
         explicit Transform(GameObject *gameObject) : ComponentBase(gameObject) {}
 
-        // Returns the name of the component
-        const char *GetName() const override { return "Transform"; }
-
         // Serializes the component to a JSON value
         rapidjson::Value Serialize() const override;
         void Deserialize(const rapidjson::Value &jsonValue) override;

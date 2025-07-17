@@ -21,6 +21,7 @@ namespace framework
         virtual void PollEvents() override;
         virtual void WaitForSleep(double seconds) override; // 等待指定时间，通常用于帧率控制
         virtual void SetShouldClose(bool shouldClose) override; // 设置窗口是否应该关闭
+        virtual bool ShouldClose() const override;             // 检查窗口是否应该关闭
         virtual void *GetNativeWindowHandle() const override;       // 返回原生窗口
         virtual void *GetNativeDisplayHandle() const override;      // 返回原生显示
         virtual void SetIcon(const std::string &iconPath) override; // 设置窗口图标
