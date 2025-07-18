@@ -16,7 +16,7 @@ namespace framework
         virtual ~Scene() = default;
 
         virtual void Initialize() = 0;
-        virtual void Update(float deltaTime) = 0;
+        virtual void Update(float deltaTime);
         virtual void Render(Renderer *renderer);
         virtual void Shutdown() = 0;
 

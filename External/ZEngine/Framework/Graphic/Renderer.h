@@ -11,10 +11,13 @@ namespace framework
 {
     class Renderer
     {
+    public:
         // SINGLETON_CLASS(Renderer);
+        using ReturnType = void (*)();
+        using LoaderFunc = ReturnType (*)(const char *);
 
     public:
-        void Initialize(IWindow *window, void *renderAPILoaderProc = nullptr);
+        void Initialize(IWindow *window, LoaderFunc renderAPILoaderProc = nullptr);
         void Clear();
         void SwapBuffers();
         void SetPolygonMode(PolygonMode mode);

@@ -49,7 +49,6 @@ namespace framework
 
             return lowerFilePath.size() >= lowerExtension.size() &&
                    lowerFilePath.compare(lowerFilePath.size() - lowerExtension.size(), lowerExtension.size(), lowerExtension) == 0;
-
         }
 
         static std::string GetFileExtension(const std::string &filePath)

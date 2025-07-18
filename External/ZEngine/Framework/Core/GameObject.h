@@ -10,15 +10,36 @@ namespace framework
     class Transform;
     class GameObject
     {
+    protected:
+        enum class State{
+            None,     // 未初始化
+            Created,  // 已创建但未启用
+            Enabled,  // 已启用
+            Started,  // 已开始
+            Updating, // 正在更新
+            Disabled, // 已禁用
+            Destroyed // 已销毁
+        };
+        State state = State::None; // 当前状态
+
     public:
         GameObject();
         GameObject(std::string name);
         virtual ~GameObject() = default;
-
-        // Initialize the GameObject
+        void Update(float deltaTime);
+        private:
+#pragma region "GameObject Lifecycle"
         void OnCreate();
-        void OnInitialize();
+        void OnStart();
+        void OnEnable();
+        void OnDisable();
         void OnDestroy();
+#pragma endregion
+
+        public:
+
+
+
 
         // Get the name of the GameObject
         const std::string &GetName() const { return name; }

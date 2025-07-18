@@ -6,6 +6,8 @@
 
 namespace framework
 {
+    std::vector<std::filesystem::path> EngineFileIO::searchPaths{std::filesystem::current_path() / "Res"};
+
     std::string EngineFileIO::LoadText(const std::string &path)
     {
         auto fullPath = FindResourcePath(path);
@@ -67,11 +69,17 @@ namespace framework
         searchPaths.clear();
     }
 
-    static std::optional<std::filesystem::path> FindResourcePath(const std::string &path)
+     std::optional<std::filesystem::path> EngineFileIO::FindResourcePath(const std::string &path)
     {
-        for (const auto &searchPath : searchPaths)
+        auto fullPath = std::filesystem::path(path);
+        if (fullPath.is_absolute() && std::filesystem::exists(fullPath))
         {
-            auto fullPath = searchPath / path;
+            return fullPath;
+        }
+
+        for (const auto& searchPath : EngineFileIO::searchPaths)
+        {
+            auto fullPath = std::filesystem::path(searchPath) / path;
             if (std::filesystem::exists(fullPath))
             {
                 return fullPath;

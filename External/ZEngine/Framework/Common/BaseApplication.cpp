@@ -11,7 +11,7 @@
 #include "Framework/Graphic/Renderer.h"
 #include "Framework/Core/Timer.h"
 // platform specific includes
-#include "Framework/Window/GLFWWindow.h"
+#include "Framework/Window/Platform/GLFWWindow.h"
 
 namespace framework
 {
@@ -43,7 +43,7 @@ namespace framework
 
         // Initialize the renderer
         m_renderer = new Renderer();
-        m_renderer->Initialize(m_window, glad_glGetProcAddress);
+        m_renderer->Initialize(m_window,glfwGetProcAddress);
 
         Input::GetInstance().Initialize(m_window);
         // 初始化帧率管理器
@@ -112,13 +112,13 @@ namespace framework
             BegineFrame();
             // Render
             // Clear the screen
-            renderer->Clear();
+            m_renderer->Clear();
 
             // 渲染当前场景
-            SceneManager::GetInstance().RenderActiveScene(renderer);
+            SceneManager::GetInstance().RenderActiveScene(m_renderer);
             EndFrame();
             // Swap buffers
-            renderer->SwapBuffers();
+            m_renderer->SwapBuffers();
 
             FrameRateManager::GetInstance().SleepToNextFrame(frameStartTime);
 
