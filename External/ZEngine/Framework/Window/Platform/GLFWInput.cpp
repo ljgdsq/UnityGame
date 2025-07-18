@@ -4,6 +4,21 @@
 
 namespace framework
 {
+    namespace
+    {
+        static int KeyCodeToGLFWKey(KeyCode key)
+        {
+            switch (key)
+            {
+            case KeyCode::Escape:
+                return GLFW_KEY_ESCAPE;
+                break;
+            default:
+                Logger::Error("Unsupported KeyCode: {}", static_cast<int>(key));
+                return -1; // 未知按键
+            }
+        }
+    }
 
     /**
      * @brief 输入系统的实现类，使用Pimpl模式隐藏实现细节
@@ -194,7 +209,7 @@ namespace framework
      */
     void Input::Initialize(IWindow *window)
     {
-        m_impl->window = static_cast<GLFWwindow*>(window->GetNativeWindowHandle());
+        m_impl->window = static_cast<GLFWwindow *>(window->GetNativeWindowHandle());
         glfwSetScrollCallback(m_impl->window, ScrollCallback);
         Logger::Log("Input system initialized");
     }
@@ -215,6 +230,26 @@ namespace framework
         m_impl->UpdateAxisValues();
     }
 
+    /***
+     * @brief 检查按键是否被按下或持续按下
+     * @param code KeyCode 枚举值
+     * @return bool 如果按键处于Down或Held状态返回true
+     */
+    bool Input::GetKey(KeyCode code)
+    {
+        auto &instance = GetInstance();
+        if (!instance.m_impl->window)
+            return false;
+        int keyCode = KeyCodeToGLFWKey(code);
+        if (keyCode < 0 || keyCode >= static_cast<int>(instance.m_impl->keyStates.size()))
+        {
+            Logger::Error("Invalid KeyCode: {}", static_cast<int>(code));
+            return false;
+        }
+        return instance.m_impl->keyStates[keyCode] == KeyState::Down ||
+               instance.m_impl->keyStates[keyCode] == KeyState::Held;
+    }
+
     /**
      * @brief 检查按键是否被按下或持续按下
      * @param keyCode GLFW键码
@@ -232,6 +267,26 @@ namespace framework
 
     /**
      * @brief 检查按键是否刚刚被按下
+     * @param key 按键枚举
+     * @return bool 如果按键处于Down状态返回true
+     */
+    bool Input::GetKeyDown(KeyCode key)
+    {
+        auto &instance = GetInstance();
+        if (!instance.m_impl->window)
+            return false;
+
+        int keyCode = KeyCodeToGLFWKey(key);
+        if (keyCode < 0 || keyCode >= static_cast<int>(instance.m_impl->keyStates.size()))
+        {
+            Logger::Error("Invalid KeyCode: {}", static_cast<int>(key));
+            return false;
+        }
+        return instance.m_impl->keyStates[keyCode] == KeyState::Down;
+    }
+
+    /**
+     * @brief 检查按键是否刚刚被按下
      * @param keyCode GLFW键码
      * @return bool 如果按键处于Down状态返回true
      */
@@ -242,6 +297,26 @@ namespace framework
             return false;
 
         return instance.m_impl->keyStates[keyCode] == KeyState::Down;
+    }
+
+    /**
+     * @brief 检查按键是否刚刚被释放
+     * @param key 按键枚举
+     * @return bool 如果按键处于Up状态返回true
+     */
+    bool Input::GetKeyUp(KeyCode key)
+    {
+        auto &instance = GetInstance();
+        if (!instance.m_impl->window)
+            return false;
+
+        int keyCode = KeyCodeToGLFWKey(key);
+        if (keyCode < 0 || keyCode >= static_cast<int>(instance.m_impl->keyStates.size()))
+        {
+            Logger::Error("Invalid KeyCode: {}", static_cast<int>(key));
+            return false;
+        }
+        return instance.m_impl->keyStates[keyCode] == KeyState::Up;
     }
 
     /**

@@ -6,7 +6,7 @@
 #include <functional>
 #include <memory>
 #include "Framework/Window/IWindow.h"
-
+#include "Framework/Core/KeyCode.h"
 namespace framework
 {
 
@@ -72,10 +72,15 @@ namespace framework
         void Initialize(IWindow *window);
         void Update();
 
+        
         // 键盘输入
         static bool GetKey(int keyCode);     // 是否按下（持续）
         static bool GetKeyDown(int keyCode); // 是否刚按下（当前帧）
         static bool GetKeyUp(int keyCode);   // 是否刚释放（当前帧）
+
+        static bool GetKey(KeyCode key);     // 是否按下（持续）
+        static bool GetKeyDown(KeyCode key); // 是否刚按下（当前帧）
+        static bool GetKeyUp(KeyCode key);   // 是否刚释放（当前帧
 
         // 鼠标输入
         static bool GetMouseButton(MouseButton button);     // 是否按下（持续）
