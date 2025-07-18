@@ -6,7 +6,7 @@ namespace editor
     bool ComponentInspector::IsComponentEnabled(framework::GameObject *obj) const
     {
         framework::Component *component = GetComponent(obj);
-        return component && component->IsEnabled();
+        return component && component->IsActive();
     }
 
     void ComponentInspector::SetComponentEnabled(framework::GameObject *obj, bool enabled)

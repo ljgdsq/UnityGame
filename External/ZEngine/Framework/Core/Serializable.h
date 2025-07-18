@@ -1,6 +1,6 @@
 #pragma once
 #include "rapidjson/document.h"
-
+#include "Framework/Common/Define.h"
 class Serializable
 {
 public:

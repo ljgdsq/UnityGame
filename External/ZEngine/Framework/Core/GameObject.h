@@ -8,47 +8,45 @@
 namespace framework
 {
     class Transform;
-    class GameObject
+    class GameObject final
     {
-    protected:
-        enum class State{
+    private:
+        enum class State
+        {
             None,     // 未初始化
             Created,  // 已创建但未启用
-            Enabled,  // 已启用
             Started,  // 已开始
-            Updating, // 正在更新
-            Disabled, // 已禁用
             Destroyed // 已销毁
         };
         State state = State::None; // 当前状态
-
+        bool isActive = true;      // 是否激活
+        bool isStarted = false;    // 是否已开始
     public:
         GameObject();
         GameObject(std::string name);
         virtual ~GameObject() = default;
         void Update(float deltaTime);
-        private:
+
+    public:
+        void Start();
+        // Check if the GameObject is active
+        bool IsActive() const;
+        // Set the active state of the GameObject
+        void SetActive(bool active);
+
+    private:
 #pragma region "GameObject Lifecycle"
-        void OnCreate();
-        void OnStart();
         void OnEnable();
         void OnDisable();
         void OnDestroy();
+
 #pragma endregion
 
-        public:
-
-
-
-
+    public:
         // Get the name of the GameObject
         const std::string &GetName() const { return name; }
         // Set the name of the GameObject
         void SetName(const std::string &name) { this->name = name; }
-        // Check if the GameObject is active
-        bool IsActive() const { return isActive; }
-        // Set the active state of the GameObject
-        void SetActive(bool active);
 
 #pragma region "Component Management"
 
@@ -103,10 +101,12 @@ namespace framework
 
     private:
         std::string name;
-        bool isActive = true;
         Transform *transform = nullptr; // Pointer to the Transform component
 
         std::unordered_map<std::type_index, std::vector<Component *>> components; // Map of components by type
+        std::vector<Component *> m_pendingStartComponents;                        // Components waiting for Start call
+        // ready to remove components
+        std::vector<Component *> componentsToRemove;
 
         std::vector<GameObject *> children; // List of child GameObjects
         GameObject *parent = nullptr;       // Pointer to the parent GameObject
@@ -122,7 +122,6 @@ namespace framework
         return components.find(typeIndex) != components.end() && !components.at(typeIndex).empty();
     }
 
-
     template <typename T>
     T *GameObject::AddComponent()
     {
@@ -134,8 +133,18 @@ namespace framework
         }
         T *component = new T(this);
         components[typeIndex].push_back(component);
+
+        // 立即调用OnCreate
         component->OnCreate();
-        component->OnEnable();
+
+        // 根据GameObject状态决定后续调用
+        if (isStarted)
+        {
+            // GameObject已经Started，将Component加入等待列表，下一帧调用OnStart
+            m_pendingStartComponents.push_back(component);
+        }
+        // 如果GameObject还未Started，等GameObject.Start()时统一调用所有Component的OnStart
+
         return component;
     }
 
@@ -205,13 +214,22 @@ namespace framework
             {
                 if (component)
                 {
-                    component->OnDisable();
+                    If(component->state == State::Enabled || component->state == State::Updating)
+                    {
+                        component->OnDisable();
+                    }
                     component->OnDestroy();
                     delete component;
                 }
             }
             components.erase(it);
         }
+
+        m_pendingStartComponents.erase(
+            std::remove_if(m_pendingStartComponents.begin(), m_pendingStartComponents.end(),
+                           [typeIndex](Component *comp) { return typeid(*comp) == typeIndex; }),
+            m_pendingStartComponents.end());
+
     }
 
     template <typename T>

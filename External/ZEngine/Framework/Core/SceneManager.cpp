@@ -4,25 +4,13 @@
 namespace framework
 {
 
-    // 初始化静态成员
-    std::unique_ptr<SceneManager> SceneManager::s_instance = nullptr;
-
-    SceneManager &SceneManager::GetInstance()
-    {
-        if (!s_instance)
-        {
-            s_instance = std::make_unique<SceneManager>();
-        }
-        return *s_instance;
-    }
-
-    void SceneManager::AddScene(const std::string &name, ScenePtr scene)
+    void SceneManager::AddScene(const std::string &name, Scene *scene)
     {
         m_scenes[name] = scene;
         Logger::Log("Scene '{}' added to SceneManager", name);
     }
 
-    ScenePtr SceneManager::GetScene(const std::string &name)
+    Scene *SceneManager::GetScene(const std::string &name)
     {
         auto it = m_scenes.find(name);
         if (it != m_scenes.end())
@@ -54,7 +42,7 @@ namespace framework
         return false;
     }
 
-    ScenePtr SceneManager::GetActiveScene() const
+    Scene *SceneManager::GetActiveScene() const
     {
         return m_activeScene;
     }

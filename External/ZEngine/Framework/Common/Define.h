@@ -27,4 +27,20 @@ private:                                    \
     name(const name &) = delete;            \
     name &operator=(const name &) = delete; \
     name(name &&) = delete;                 \
-    name &operator=(name &&) = delete;\
+    name &operator=(name &&) = delete;
+
+#ifdef _DEBUG
+
+#define Engine_Assert(condition, message)            \
+    if (!(condition))                                \
+    {                                                \
+        Logger::Error("Assertion failed: " message); \
+        std::terminate();                            \
+    }
+
+#else
+
+#define Engine_Assert(condition, message) \
+    () // 在非调试模式下，断言不会执行任何操作
+
+#endif // _DEBUG

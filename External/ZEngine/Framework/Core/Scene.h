@@ -22,6 +22,8 @@ namespace framework
 
         virtual const char *GetName() const = 0;
 
+        void Scene::AddGameObject(GameObject *gameObject);
+
     public:
         // 获取场景中的所有游戏对象
         std::vector<GameObject *> GetAllGameObjects() const
@@ -33,7 +35,7 @@ namespace framework
         void AddGameObjectFromEditor(GameObject *gameObject) { AddGameObject(gameObject); }
         void RemoveGameObjectFromEditor(GameObject *gameObject) { RemoveGameObject(gameObject); }
 
-    protected:
+    public:
         virtual void AddGameObject(GameObject *gameObject);
         virtual void RemoveGameObject(GameObject *gameObject);
 
@@ -41,13 +43,10 @@ namespace framework
         // 禁止拷贝和赋值
         Scene(const Scene &) = delete;
         Scene &operator=(const Scene &) = delete;
-        std::vector<GameObject *> m_gameObjects; // 存储场景中的游戏对象
-
+        std::vector<GameObject *> m_gameObjects;    // 存储场景中的游戏对象
+        std::vector<GameObject *> m_newGameObjects; // 存储新添加的游戏对象
         void CollectRenderComponents(std::vector<RenderComponent *> &renderComponents);
 
         void SortRenderComponents(std::vector<RenderComponent *> &renderComponents);
     };
-
-    using ScenePtr = std::shared_ptr<Scene>;
-
 } // namespace framework

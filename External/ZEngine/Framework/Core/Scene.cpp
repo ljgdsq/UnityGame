@@ -70,7 +70,7 @@ namespace framework
         if (gameObject)
         {
             m_gameObjects.push_back(gameObject);
-            gameObject->OnCreate(); // 调用创建时的回调
+            m_newGameObjects.push_back(gameObject);
         }
         else
         {
@@ -92,6 +92,14 @@ namespace framework
             {
                 Logger::Warn("GameObject not found in the scene.");
             }
+
+            // 如果游戏对象在新添加列表中，也需要移除
+            auto newIt = std::find(m_newGameObjects.begin(), m_newGameObjects.end
+            (), gameObject);
+            if (newIt != m_newGameObjects.end())
+            {
+                m_newGameObjects.erase(newIt);
+            }
         }
         else
         {
@@ -101,6 +109,16 @@ namespace framework
 
     void Scene::Update(float deltaTime)
     {
+        // 遍历新添加的游戏对象并调用它们的 OnCreate 方法
+        for (auto &gameObject : m_newGameObjects)
+        {
+            if (gameObject)
+            {
+                gameObject->Start(); // 调用 Start 方法
+            }
+        }
+        m_newGameObjects.clear(); // 清空新添加的游戏对象列表
+
         // 遍历所有游戏对象并更新它们
         for (auto &gameObject : m_gameObjects)
         {

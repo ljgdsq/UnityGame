@@ -1,20 +1,19 @@
 #include "Framework/Core/GameObject.h"
 #include "Framework/Component/Transform.h"
-#include "GameObject.h"
-#include "Framework/Core/SceneManager.h
+#include "Framework/Core/SceneManager.h"
 namespace framework
 {
     GameObject::GameObject()
     {
         transform = AddComponent<Transform>();
-        SceneManager::GetInstance().AddGameObject(this);
+        SceneManager::GetInstance().GetActiveScene()->AddGameObject(this);
     }
 
     GameObject::GameObject(std::string name)
     {
         transform = AddComponent<Transform>();
         this->name = name;
-        SceneManager::GetInstance().AddGameObject(this);
+        SceneManager::GetInstance().GetActiveScene()->AddGameObject(this);
     }
 
     void GameObject::AddChild(GameObject *child)
@@ -39,73 +38,75 @@ namespace framework
         }
     }
 
-    void GameObject::OnCreate()
+    void GameObject::Start()
     {
-        if (state == State::None)
+        if (isStarted)
         {
-            state = State::Created;
+            Logger::Warn("GameObject has already started.");
+            return;
         }
-        else
-        {
-            Logger::Error("GameObject already created or in an invalid state.");
-        }
+        isStarted = true;
+        state = State::Started;
 
-    }
-
-    void GameObject::OnStart()
-    {
-        if (state == State::Created)
+        // 调用所有现有Component的OnStart
+        for (auto &pair : components)
         {
-            state = State::Started;
-            for (auto &pair : components)
+            for (auto *component : pair.second)
             {
-                for (auto *component : pair.second)
-                {
-                    component->OnStart();
-                }
+                component->OnStart();
             }
         }
+
+        if (isActive)
+        {
+            OnEnable();
+        }
         else
         {
-            Logger::Error("GameObject must be created before starting.");
+            OnDisable();
         }
     }
 
     void GameObject::OnEnable()
     {
-        if (state == State::Created || state == State::Disabled)
+        if (!isStarted)
         {
-            state = State::Enabled;
-            for (auto &pair : components)
+            Logger::Error("GameObject must be started before enabling.");
+            return;
+        }
+        if (!isActive)
+        {
+            Logger::Warn("GameObject is not active, cannot enable.");
+            return;
+        }
+        for (auto &pair : components)
+        {
+            for (auto *component : pair.second)
             {
-                for (auto *component : pair.second)
+                if (component->IsActive())
                 {
                     component->OnEnable();
                 }
             }
         }
-        else
-        {
-            Logger::Error("GameObject must be created or disabled before enabling.");
-        }
     }
 
     void GameObject::OnDisable()
     {
-        if (state == State::Enabled)
+        if (!isStarted)
         {
-            state = State::Disabled;
-            for (auto &pair : components)
+            Logger::Error("GameObject must be started before disabling.");
+            return;
+        }
+        for (auto &pair : components)
+        {
+            for (auto *component : pair.second)
             {
-                for (auto *component : pair.second)
+                if (component->IsActive())
                 {
                     component->OnDisable();
                 }
             }
-        }
-        else
-        {
-            Logger::Error("GameObject must be enabled before disabling.");
         }
     }
 
@@ -118,8 +119,13 @@ namespace framework
             {
                 for (auto *component : pair.second)
                 {
+                    if (component->IsActive())
+                    {
+                        component->OnDisable();
+                    }
                     component->OnDestroy();
-                    delete component; // Clean up memory
+
+                    componentsToRemove.push_back(component);
                 }
                 pair.second.clear();
             }
@@ -141,40 +147,74 @@ namespace framework
 
     void GameObject::Update(float deltaTime)
     {
-        if (state == State::Created)
+        if (!isActive)
+            return;
+
+        if (!componentsToRemove.empty())
         {
-            /* code */
-        }
-
-    }
-
-
-    void GameObject::OnDestroy()
-    {
-        // Destroy all components
-        for (auto &pair : components)
-        {
-            for (auto *component : pair.second)
+            for (auto *component : componentsToRemove)
             {
-                component->OnDestroy();
-                delete component; // Clean up memory
+                delete component;
             }
-            pair.second.clear();
+            componentsToRemove.clear();
         }
-        components.clear();
 
-        // Clear children
-        for (auto *child : children)
+        // 处理等待Start的组件
+        if (!m_pendingStartComponents.empty())
         {
-            child->SetParent(nullptr);
-            delete child; // Clean up memory
+            for (auto *component : m_pendingStartComponents)
+            {
+                component->OnStart();
+            }
+
+            for (auto *component : m_pendingStartComponents)
+            {
+                if (component->IsActive())
+                {
+                    component->OnEnable();
+                }
+                else
+                {
+                    component->OnDisable();
+                }
+            }
+
+            m_pendingStartComponents.clear();
         }
-        children.clear();
+
+        // 更新所有启用的组件
+        if (isStarted)
+        {
+            for (auto &pair : components)
+            {
+                for (auto *component : pair.second)
+                {
+                    if (component->CanUpdate())
+                    {
+                        component->OnUpdate(deltaTime);
+                    }
+                }
+            }
+        }
     }
+
     void GameObject::SetActive(bool active)
     {
+        //todo : process children
+        if (isActive == active)
+            return; // 如果状态没有变化，直接返回
         isActive = active;
+        if (!isStarted)
+            return; // 如果还未开始，直接返回
+
+        if (isActive)
+        {
+            OnEnable();
+        }
+        else
+        {
+            OnDisable();
+        }
     }
 
 } // namespace framework
-

@@ -27,7 +27,7 @@ namespace framework
         virtual const char *GetName() const { return GetTypeName(); }
 
         // Serializes the component to a JSON value
-        virtual rapidjson::Value Serialize() const override = 0;
+        virtual rapidjson::Value Serialize(rapidjson::Document::AllocatorType &allocator ) const override = 0;
         // Deserializes the component from a JSON value
         virtual void Deserialize(const rapidjson::Value &jsonValue) override = 0;
 
@@ -36,16 +36,16 @@ namespace framework
         virtual const std::type_info &GetTypeInfo() const = 0;
 
     protected:
-        virtual void OnCreate() {};
-        virtual void OnEnable() {};
-        virtual void OnStart() {};
-        virtual void OnUpdate(float deltaTime) {};
-        virtual void OnDisable() {};
-        virtual void OnDestroy() {};
+        virtual void OnCreate() ;
+        virtual void OnEnable() ;
+        virtual void OnStart() ;
+        virtual void OnUpdate(float deltaTime);
+        virtual void OnDisable();
+        virtual void OnDestroy();
 
     private:
         GameObject *gameObject; // Pointer to the GameObject this component is attached to
-        bool isEnabled = true;  // Whether the component is enabled
+        bool isActive = true;   // Whether the component is enabled
 
     protected:
         enum class State
@@ -60,9 +60,9 @@ namespace framework
         };
         State state = State::None; // 当前状态
     public:
-        bool IsEnabled() const { return isEnabled; }
+        bool IsActive() const { return isActive; }
         void SetEnabled(bool enabled);
-
+        bool CanUpdate() const { return isActive && (state == State::Enabled || state == State::Updating); }
         void Destroy();
     };
 
@@ -75,7 +75,7 @@ namespace framework
 
         // serialization
         virtual ~ComponentBase() = default;
-        virtual rapidjson::Value Serialize() const override = 0;
+        virtual rapidjson::Value Serialize(rapidjson::Document::AllocatorType &allocator) const override = 0;
         virtual void Deserialize(const rapidjson::Value &jsonValue) override = 0;
 
         // Returns the name of the component
