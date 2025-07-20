@@ -1,6 +1,6 @@
 #include "Framework/Asset/MaterialAsset.h"
 #include "Framework/Log/Logger.h"
-#include "Framework/Core/ResLoader.h"
+#include "Framework/Core/EngineFileIO.h"
 #include "Framework/Asset/AssetManager.h"
 #include "rapidjson/prettywriter.h"
 #include "rapidjson/stringbuffer.h"
@@ -377,43 +377,20 @@ namespace framework
 
     bool MaterialAsset::LoadFromFile(const std::string &filePath)
     {
-        // 初始化ResLoader
-        ResLoader::GetInstance().Initialize("Res/");
 
-        // 解析文件路径
-        std::string resolvedPath;
-        if (std::filesystem::exists(filePath))
+        auto jsonContent = EngineFileIO::LoadText(filePath);
+        if (jsonContent.empty())
         {
-            resolvedPath = filePath;
-        }
-        else
-        {
-            resolvedPath = ResLoader::GetInstance().GetResourcePath(filePath);
-        }
-
-        if (resolvedPath.empty() || !std::filesystem::exists(resolvedPath))
-        {
-            Logger::Error("Could not resolve material path: {}", filePath);
+            Logger::Error("Failed to load material file: {}", filePath);
             return false;
         }
-
-        // 读取JSON文件
-        std::ifstream file(resolvedPath);
-        if (!file.is_open())
-        {
-            Logger::Error("Failed to open material file: {}", resolvedPath);
-            return false;
-        }
-
-        std::string jsonContent((std::istreambuf_iterator<char>(file)),
-                                std::istreambuf_iterator<char>());
 
         rapidjson::Document doc;
         doc.Parse(jsonContent.c_str());
 
         if (doc.HasParseError())
         {
-            Logger::Error("Failed to parse material JSON: {}", resolvedPath);
+            Logger::Error("Failed to parse material JSON: {}", filePath);
             return false;
         }
 
@@ -426,7 +403,7 @@ namespace framework
         // 应用属性到材质
         UpdateMaterialFromProperties();
 
-        Logger::Debug("Loaded material from file: {}", resolvedPath);
+        Logger::Debug("Loaded material from file: {}", filePath);
         return true;
     }
 

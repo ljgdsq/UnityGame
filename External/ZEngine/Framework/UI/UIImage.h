@@ -10,14 +10,14 @@ namespace framework
 
         const char *GetName() const override { return "UIImage"; }
 
-        rapidjson::Value Serialize() const override;
+        rapidjson::Value Serialize(rapidjson::Document::AllocatorType &allocator) const override;
 
         void Deserialize(const rapidjson::Value &jsonValue) override;
 
         void OnRender(Renderer *renderer) override;
 
     private:
-        Texture* texture; // 纹理资源
-        glm::vec2 size = {100, 100};       // 图片尺寸
+        Texture *texture;            // 纹理资源
+        glm::vec2 size = {100, 100}; // 图片尺寸
     };
 } // namespace framework

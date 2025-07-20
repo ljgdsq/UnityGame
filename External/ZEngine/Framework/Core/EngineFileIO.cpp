@@ -3,6 +3,7 @@
 #include "Framework/Core/EngineFileIO.h"
 #include "Framework/Log/Logger.h"
 #include "Framework/Util/FileUtil.hpp"
+#include "EngineFileIO.h"
 
 namespace framework
 {
@@ -54,6 +55,10 @@ namespace framework
         return fullPath.has_value() && std::filesystem::exists(fullPath.value());
     }
 
+    std::optional<std::filesystem::path> EngineFileIO::ResolveFilePath(const std::string &path)
+    {
+        return FindResourcePath(path);
+    }
     void EngineFileIO::AddSearchPath(const std::string &path)
     {
         searchPaths.emplace_back(path);

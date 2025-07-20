@@ -1,14 +1,14 @@
 #include "glad/gl.h"
 #include "Framework/Graphic/Shader.h"
 #include "Framework/Log/Logger.h"
-#include "Framework/Core/ResLoader.h"
+#include "Framework/Core/EngineFileIO.h"
 namespace framework
 {
     Shader::Shader(const char *vPath, const char *fPath)
     {
         // Load shader source code from files
-        std::string vertexCode = ResLoader::GetInstance().LoadText(vPath);
-        std::string fragmentCode = ResLoader::GetInstance().LoadText(fPath);
+        std::string vertexCode = EngineFileIO::LoadText(vPath);
+        std::string fragmentCode = EngineFileIO::LoadText(fPath);
         if (vertexCode.empty() || fragmentCode.empty())
         {
             Logger::Error("Failed to load shader source code from {} or {}", vPath, fPath);

@@ -51,7 +51,7 @@ namespace framework
         glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(mesh->GetIndices().size()), GL_UNSIGNED_INT, 0);
     }
 
-    void MeshRenderer::OnInitialize()
+    void MeshRenderer::OnCreate()
     {
         m_meshFilter = GetMeshFilter();
     }

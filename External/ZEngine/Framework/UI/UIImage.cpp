@@ -3,8 +3,12 @@
 namespace framework {
 
 }
-rapidjson::Value framework::UIImage::Serialize() const
+rapidjson::Value framework::UIImage::Serialize(rapidjson::Document::AllocatorType &allocator) const
 {
+    // rapidjson::Value jsonValue(rapidjson::kObjectType);
+    // jsonValue.AddMember("imagePath", rapidjson::Value(texture->, allocator), allocator);
+    // return jsonValue;
+
     return rapidjson::Value();
 }
 

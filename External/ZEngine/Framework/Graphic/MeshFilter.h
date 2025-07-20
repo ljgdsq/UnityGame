@@ -41,7 +41,7 @@ namespace framework
 
         // 序列化支持
         virtual void Deserialize(const rapidjson::Value &jsonValue) override;
-        virtual rapidjson::Value Serialize() const override;
+        virtual rapidjson::Value Serialize(rapidjson::Document::AllocatorType &allocator) const override;
 
     private:
         AssetReference<MeshAsset> m_meshAssetRef; // 网格资源引用

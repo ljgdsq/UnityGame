@@ -1,5 +1,5 @@
 #include "Framework/Log/Logger.h"
-#include "Framework/Core/ResLoader.h"
+#include "Framework/Core/EngineFileIO.h"
 #include "Framework/Core/Texture.h"
 #include "glad/glad.h"
 
@@ -22,48 +22,21 @@ namespace framework
 
     bool Texture::LoadFromFile(const std::string &filepath)
     {
-        // 策略1: 直接检查传入的路径是否存在
-        std::filesystem::path directPath(filepath);
-        std::filesystem::path resolvedPath;
 
-        if (std::filesystem::exists(directPath))
-        {
-            resolvedPath = directPath;
-            Logger::Debug("Texture loaded directly from path: {}", filepath);
-        }
-        else
-        {
-            // 策略2: 使用ResLoader查找资源
-            auto resLoader = ResLoader::GetInstance();
-            resolvedPath = resLoader.FindResourcePath(filepath);
 
-            // 策略3: 尝试在Textures目录下查找
-            if (resolvedPath.empty())
-            {
-                resolvedPath = resLoader.FindResourcePath("Textures/" + filepath);
-                if (!resolvedPath.empty())
-                {
-                    Logger::Debug("Texture found in Textures/ directory: {}", filepath);
-                }
-            }
-        }
-
-        // 如果所有策略都失败，返回错误
-        if (resolvedPath.empty())
-        {
-            Logger::Error("Failed to find texture: {}. Tried direct path, resource path, and Textures/ directory", filepath);
+        m_filepath = EngineFileIO::ResolveFilePath(filepath).value_or(filepath);
+        if (m_filepath.empty()){
+            Logger::Error("Texture file path is empty or could not be resolved: {}", filepath);
             return false;
         }
 
-        m_filepath = resolvedPath.string();
-
         // Load image data
         stbi_set_flip_vertically_on_load(true);
-        unsigned char *data = stbi_load(resolvedPath.string().c_str(), &m_width, &m_height, &m_channels, 0);
+        unsigned char *data = stbi_load(m_filepath.c_str(), &m_width, &m_height, &m_channels, 0);
 
         if (!data)
         {
-            Logger::Error("Failed to load texture: {}", filepath);
+            Logger::Error("Failed to load texture: {}", m_filepath);
             return false;
         }
 
@@ -127,7 +100,7 @@ namespace framework
     {
         return m_textureID;
     }
-    
+
     Texture *Texture::LoadTexture(const std::string &filename)
     {
         auto texture = new Texture();

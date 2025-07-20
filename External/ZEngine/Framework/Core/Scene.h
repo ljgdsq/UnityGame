@@ -22,7 +22,6 @@ namespace framework
 
         virtual const char *GetName() const = 0;
 
-        void Scene::AddGameObject(GameObject *gameObject);
 
     public:
         // 获取场景中的所有游戏对象

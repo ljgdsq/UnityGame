@@ -41,6 +41,6 @@ private:                                    \
 #else
 
 #define Engine_Assert(condition, message) \
-    () // 在非调试模式下，断言不会执行任何操作
+    do{}while(0) // 在非调试模式下，断言不会执行任何操作
 
 #endif // _DEBUG

@@ -1,6 +1,5 @@
 #include "Framework/Asset/AssetRegistry.h"
 #include "Framework/Log/Logger.h"
-#include "Framework/Core/ResLoader.h"
 #include <algorithm>
 #include <fstream>
 #include <sstream>

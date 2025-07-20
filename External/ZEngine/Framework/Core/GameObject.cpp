@@ -110,6 +110,43 @@ namespace framework
         }
     }
 
+    bool GameObject::IsActive() const
+    {
+        return isActive;
+    }
+
+    void GameObject::Destroy()
+    {
+        if (state == State::Destroyed)
+        {
+            Logger::Error("GameObject already destroyed.");
+            return;
+        }
+        state = State::Destroyed;
+
+        // 调用销毁时的回调
+        OnDestroy();
+
+        // 清理组件
+        for (auto &pair : components)
+        {
+            for (auto *component : pair.second)
+            {
+                delete component; // 释放内存
+            }
+            pair.second.clear();
+        }
+        components.clear();
+
+        // 清理子对象
+        for (auto *child : children)
+        {
+            child->SetParent(nullptr);
+            delete child; // 释放内存
+        }
+        children.clear();
+    }
+
     void GameObject::OnDestroy()
     {
         if (state != State::Destroyed)

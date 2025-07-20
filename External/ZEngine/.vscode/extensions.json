@@ -14,11 +14,11 @@
         "ms-vscode.vscode-json",
 
         // 代码格式化和重构
-        "xaver.clang-format",
+        // "xaver.clang-format",
         "ms-vscode.vscode-clangd",
 
         // 文件和项目管理
-        "vscode-icons-team.vscode-icons",
+        // "vscode-icons-team.vscode-icons",
 
         // 调试和测试
         "ms-vscode.test-adapter-converter",

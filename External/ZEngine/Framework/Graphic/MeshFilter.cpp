@@ -121,11 +121,8 @@ namespace framework
         // }
     }
 
-    rapidjson::Value MeshFilter::Serialize() const
+    rapidjson::Value MeshFilter::Serialize(rapidjson::Document::AllocatorType &allocator) const
     {
-        rapidjson::Document doc;
-        doc.SetObject();
-        auto &allocator = doc.GetAllocator();
 
         rapidjson::Value jsonValue(rapidjson::kObjectType);
 

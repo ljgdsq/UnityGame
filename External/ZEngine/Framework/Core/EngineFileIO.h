@@ -25,6 +25,9 @@ namespace framework
         // 检查文件是否存在
         static bool FileExists(const std::string &path);
 
+        // 解析文件路径，返回实际的文件路径
+        static std::optional<std::filesystem::path> ResolveFilePath(const std::string &path);
+
         // 添加查找资源路径
         static void AddSearchPath(const std::string &path);
 

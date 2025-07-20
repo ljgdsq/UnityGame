@@ -21,27 +21,27 @@ namespace framework
     void TestApplication::InitScenes()
     {
         // 注册三角形测试场景
-        auto triangleScene = std::make_shared<TriangleTestScene>();
+        auto triangleScene = new TriangleTestScene();
         SceneManager::GetInstance().AddScene("TriangleTest", triangleScene);
 
         // 注册四边形测试场景
-        auto quadScene = std::make_shared<QuadTestScene>();
+        auto quadScene = new QuadTestScene();
         SceneManager::GetInstance().AddScene("QuadTest", quadScene);
 
         // 注册纹理测试场景
-        auto textureScene = std::make_shared<TextureScene>();
+        auto textureScene = new TextureScene();
         SceneManager::GetInstance().AddScene("TextureTest", textureScene);
 
         // 注册网格测试场景
-        auto meshTestScene = std::make_shared<MeshTestScene>();
+        auto meshTestScene = new MeshTestScene();
         SceneManager::GetInstance().AddScene("MeshTest", meshTestScene);
 
         // 注册AssetManager测试场景
-        auto assetManagerTestScene = std::make_shared<AssetManagerTestScene>();
+        auto assetManagerTestScene = new AssetManagerTestScene();
         SceneManager::GetInstance().AddScene("AssetManagerTest", assetManagerTestScene);
 
         // 注册相机管理器示例场景
-        auto cameraManagerScene = std::make_shared<CameraManagerExampleScene>();
+        auto cameraManagerScene = new CameraManagerExampleScene();
         SceneManager::GetInstance().AddScene("CameraManagerExample", cameraManagerScene);
 
         // 可以在这里添加更多测试场景

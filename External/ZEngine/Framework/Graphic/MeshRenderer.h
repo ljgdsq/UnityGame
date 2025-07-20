@@ -19,9 +19,9 @@ namespace framework
 
         // RenderComponent接口实现
         void Render(Renderer *renderer) override;
-        virtual void OnInitialize() override;
+        virtual void OnCreate() override;
 
-        virtual rapidjson::Value Serialize() const override
+        virtual rapidjson::Value Serialize(rapidjson::Document::AllocatorType &allocator) const override
         {
             // 序列化为JSON值
             // rapidjson::Value jsonValue(rapidjson::kObjectType);

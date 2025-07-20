@@ -9,11 +9,9 @@
 namespace framework
 {
 
-    rapidjson::Value Camera::Serialize() const
+    rapidjson::Value Camera::Serialize(rapidjson::Document::AllocatorType &allocator) const
     {
         rapidjson::Value obj(rapidjson::kObjectType);
-        rapidjson::Document doc;
-        auto &allocator = doc.GetAllocator();
 
         // 序列化基本属性
         obj.AddMember("isMainCamera", isMainCamera, allocator);
@@ -175,7 +173,7 @@ namespace framework
         farPlane = far;
         isProjectionDirty = true;
     }
-    
+
     void Camera::SetOrthographicProjection(float left, float right, float bottom, float top, float near, float far)
     {
         projectionType = ProjectionType::Orthographic;

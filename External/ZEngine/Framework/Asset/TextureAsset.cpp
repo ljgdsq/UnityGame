@@ -1,6 +1,6 @@
 #include "Framework/Asset/TextureAsset.h"
 #include "Framework/Log/Logger.h"
-#include "Framework/Core/ResLoader.h"
+#include "Framework/Core/EngineFileIO.h"
 #include "glad/glad.h"
 #include <algorithm>
 #include <filesystem>
@@ -191,30 +191,12 @@ namespace framework
 
     bool TextureAsset::LoadFromFile(const std::string &filePath)
     {
-        // 初始化ResLoader
-        ResLoader::GetInstance().Initialize("Res/");
 
         // 解析文件路径
-        std::string resolvedPath;
+        std::optional<std::filesystem::path> resolvedPath = EngineFileIO::ResolveFilePath(filePath);
 
-        // 尝试不同的路径解析方法
-        if (std::filesystem::exists(filePath))
-        {
-            // 如果是绝对路径且文件存在，直接使用
-            resolvedPath = filePath;
-        }
-        else
-        {
-            // 尝试通过ResLoader查找文件
-            resolvedPath = ResLoader::GetInstance().GetResourcePath(filePath);
-            if (resolvedPath.empty() || !std::filesystem::exists(resolvedPath))
-            {
-                // 尝试纹理专用路径
-                resolvedPath = ResLoader::GetInstance().GetTexturePath(filePath);
-            }
-        }
 
-        if (resolvedPath.empty() || !std::filesystem::exists(resolvedPath))
+        if (!resolvedPath)
         {
             Logger::Error("Could not resolve texture path: {}", filePath);
             return false;
@@ -222,9 +204,9 @@ namespace framework
 
         // 创建Texture对象
         m_texture = std::make_shared<Texture>();
-        if (!m_texture->LoadFromFile(resolvedPath))
+        if (!m_texture->LoadFromFile(*resolvedPath))
         {
-            Logger::Error("Failed to load texture from file: {}", resolvedPath);
+            Logger::Error("Failed to load texture from file: {}", resolvedPath.value().string());
             m_texture.reset();
             return false;
         }

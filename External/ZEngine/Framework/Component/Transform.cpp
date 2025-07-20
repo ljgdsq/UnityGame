@@ -7,19 +7,17 @@
 #include "glm/gtx/euler_angles.hpp"
 #include "Framework/Log/Logger.h"
 
-rapidjson::Value framework::Transform::Serialize() const
+rapidjson::Value framework::Transform::Serialize(rapidjson::Document::AllocatorType &allocator) const
 {
-    static rapidjson::Document doc;
-    auto& allocator = doc.GetAllocator();
     rapidjson::Value value(rapidjson::kObjectType);
-    
+
     // 创建position数组
     rapidjson::Value posArray(rapidjson::kArrayType);
     posArray.PushBack(position.x, allocator);
     posArray.PushBack(position.y, allocator);
     posArray.PushBack(position.z, allocator);
     value.AddMember("position", posArray, allocator);
-    
+
     // 创建rotation数组
     rapidjson::Value rotArray(rapidjson::kArrayType);
     rotArray.PushBack(rotation.x, allocator);
@@ -27,14 +25,14 @@ rapidjson::Value framework::Transform::Serialize() const
     rotArray.PushBack(rotation.z, allocator);
     rotArray.PushBack(rotation.w, allocator);
     value.AddMember("rotation", rotArray, allocator);
-    
+
     // 创建scale数组
     rapidjson::Value scaleArray(rapidjson::kArrayType);
     scaleArray.PushBack(scale.x, allocator);
     scaleArray.PushBack(scale.y, allocator);
     scaleArray.PushBack(scale.z, allocator);
     value.AddMember("scale", scaleArray, allocator);
-    
+
     return value;
 }
 
@@ -44,7 +42,7 @@ void framework::Transform::Deserialize(const rapidjson::Value& jsonValue)
         Logger::Error("Transform::Deserialize: Invalid JSON object");
         return;
     }
-    
+
     // 反序列化position
     if (jsonValue.HasMember("position") && jsonValue["position"].IsArray()) {
         const auto& posArray = jsonValue["position"];
@@ -54,7 +52,7 @@ void framework::Transform::Deserialize(const rapidjson::Value& jsonValue)
             position.z = static_cast<float>(posArray[2].GetDouble());
         }
     }
-    
+
     // 反序列化rotation
     if (jsonValue.HasMember("rotation") && jsonValue["rotation"].IsArray()) {
         const auto& rotArray = jsonValue["rotation"];
@@ -65,7 +63,7 @@ void framework::Transform::Deserialize(const rapidjson::Value& jsonValue)
             rotation.w = static_cast<float>(rotArray[3].GetDouble());
         }
     }
-    
+
     // 反序列化scale
     if (jsonValue.HasMember("scale") && jsonValue["scale"].IsArray()) {
         const auto& scaleArray = jsonValue["scale"];
@@ -88,10 +86,10 @@ void framework::Transform::Rotate(const glm::vec3 &axis, float angle)
 {
     // 创建旋转四元数
     glm::quat deltaRotation = glm::angleAxis(glm::radians(angle), glm::normalize(axis));
-    
+
     // 应用旋转
     rotation = deltaRotation * rotation;
-    
+
     // 确保四元数规范化
     rotation = glm::normalize(rotation);
 }
@@ -100,16 +98,16 @@ glm::mat4 framework::Transform::GetModelMatrix() const
 {
     // 创建变换矩阵
     glm::mat4 modelMatrix = glm::mat4(1.0f);
-    
+
     // 应用平移
     modelMatrix = glm::translate(modelMatrix, position);
-    
+
     // 应用旋转
     modelMatrix = modelMatrix * glm::toMat4(rotation);
-    
+
     // 应用缩放
     modelMatrix = glm::scale(modelMatrix, scale);
-    
+
     return modelMatrix;
 }
 

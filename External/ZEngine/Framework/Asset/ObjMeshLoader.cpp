@@ -3,7 +3,7 @@
 #include "Framework/Asset/MeshAsset.h"
 #include "Framework/Asset/AssetLoader.h"
 #include "Framework/Graphic/Mesh.h"
-#include "Framework/Core/ResLoader.h"
+#include "Framework/Core/EngineFileIO.h"
 #include "Framework/Util/FileUtil.hpp"
 #include <sstream>
 #include <unordered_map>
@@ -74,8 +74,8 @@ namespace framework
 
     bool ObjMeshLoader::ParseObjFile(const std::string &filePath, std::vector<ObjVertex> &vertices, std::vector<unsigned int> &indices)
     {
-        ResLoader &resLoader = ResLoader::GetInstance();
-        std::string content = resLoader.LoadText(filePath);
+
+        std::string content = EngineFileIO::LoadText(filePath);
         if (content.empty())
         {
             Logger::Error("Failed to load OBJ file content: {}", filePath);

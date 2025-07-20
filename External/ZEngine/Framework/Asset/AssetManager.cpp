@@ -5,7 +5,7 @@
 #include "Framework/Asset/TextureLoader.h"
 #include "Framework/Log/Logger.h"
 #include "Framework/Asset/AssetLoader.h"
-#include "Framework/Core/ResLoader.h"
+#include "Framework/Core/EngineFileIO.h"
 #include "Framework/Util/FileUtil.hpp"
 #include <algorithm>
 namespace framework
@@ -115,11 +115,6 @@ namespace framework
     std::shared_ptr<Asset> AssetManager::LoadAsset(const std::string &assetPath, AssetType type)
     {
         Logger::Debug("Loading asset from path: {}", assetPath);
-        if (!ResLoader::GetInstance().FileExists(assetPath))
-        {
-            Logger::Error("Asset file does not exist: {}", assetPath);
-            return nullptr;
-        }
 
         std::string assetName = FileUtil::ExtractFileName(assetPath);
         {
@@ -130,6 +125,13 @@ namespace framework
                 Logger::Log("Asset '{}' already loaded, returning existing instance", assetName);
                 return it->second; // 返回已加载的资源
             }
+        }
+
+        // 检查文件是否存在
+        if (!EngineFileIO::FileExists(assetPath))
+        {
+            Logger::Error("Asset file does not exist: {}", assetPath);
+            return nullptr;
         }
 
         // 查找合适的加载器

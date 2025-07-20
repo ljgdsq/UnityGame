@@ -1,6 +1,6 @@
 #include "Framework/Asset/MeshAsset.h"
 #include "Framework/Log/Logger.h"
-#include "Framework/Core/ResLoader.h"
+#include "Framework/Core/EngineFileIO.h"
 #include <filesystem>
 #include <fstream>
 #include <sstream>
@@ -159,49 +159,26 @@ namespace framework
 
     bool MeshAsset::LoadFromFile(const std::string &filePath)
     {
-        // 初始化ResLoader
-        ResLoader::GetInstance().Initialize("Res/");
 
-        // 解析文件路径
-        std::string resolvedPath;
-
-        // 尝试不同的路径解析方法
-        if (std::filesystem::exists(filePath))
+        auto resolvedPath = EngineFileIO::ResolveFilePath(filePath);
+        if (!resolvedPath)
         {
-            resolvedPath = filePath;
-        }
-        else
-        {
-            // 尝试通过ResLoader查找文件
-            resolvedPath = ResLoader::GetInstance().GetResourcePath(filePath);
-            if (resolvedPath.empty() || !std::filesystem::exists(resolvedPath))
-            {
-                // 尝试在Models目录查找
-                std::filesystem::path pathObj(filePath);
-                std::string filename = pathObj.filename().string();
-                resolvedPath = ResLoader::GetInstance().GetResourcePath("Models/" + filename);
-            }
-        }
-
-        if (resolvedPath.empty() || !std::filesystem::exists(resolvedPath))
-        {
-            Logger::Error("Could not resolve mesh path: {}", filePath);
+            Logger::Error("MeshAsset::LoadFromFile - File not found: {}", filePath);
             return false;
         }
-
         // 获取文件扩展名
-        std::filesystem::path pathObj(resolvedPath);
+        std::filesystem::path pathObj(*resolvedPath);
         std::string extension = pathObj.extension().string();
         std::transform(extension.begin(), extension.end(), extension.begin(), ::tolower);
 
         // 根据文件格式加载
         if (extension == ".obj")
         {
-            return LoadOBJ(resolvedPath);
+            return LoadOBJ(*resolvedPath);
         }
         else if (extension == ".mesh")
         {
-            return LoadZEngineMesh(resolvedPath);
+            return LoadZEngineMesh(*resolvedPath);
         }
         else
         {

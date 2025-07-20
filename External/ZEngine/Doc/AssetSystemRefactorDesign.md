@@ -135,7 +135,7 @@ namespace framework {
         virtual long GetSize() const = 0;
 
         // 序列化支持
-        virtual rapidjson::Value Serialize() const = 0;
+        virtual rapidjson::Value Serialize(rapidjson::Document::AllocatorType& allocator) const = 0;
         virtual void Deserialize(const rapidjson::Value& json) = 0;
 
         // 缩略图支持（用于Editor）
@@ -168,7 +168,7 @@ namespace framework {
         long GetSize() const override;
 
         // 序列化
-        rapidjson::Value Serialize() const override;
+        rapidjson::Value Serialize(rapidjson::Document::AllocatorType& allocator) const override;
         void Deserialize(const rapidjson::Value& json) override;
 
         // 缩略图
@@ -208,7 +208,7 @@ namespace framework {
         long GetSize() const override;
 
         // 序列化
-        rapidjson::Value Serialize() const override;
+        rapidjson::Value Serialize(rapidjson::Document::AllocatorType& allocator) const override;
         void Deserialize(const rapidjson::Value& json) override;
 
         // 缩略图
@@ -261,7 +261,7 @@ namespace framework {
         const std::string& GetAssetId() const { return m_assetId; }
 
         // 序列化
-        rapidjson::Value Serialize() const;
+        rapidjson::Value Serialize(rapidjson::Document::AllocatorType& allocator) const;
         void Deserialize(const rapidjson::Value& json);
 
     private:
@@ -295,7 +295,7 @@ namespace framework {
 
         // 序列化
         void Deserialize(const rapidjson::Value& json) override;
-        rapidjson::Value Serialize() const override;
+        rapidjson::Value Serialize(rapidjson::Document::AllocatorType& allocator) const override;
 
     private:
         AssetReference<MeshAsset> m_meshAsset;
@@ -320,7 +320,7 @@ namespace framework {
         std::vector<TextureBinding> GetAllTextureBindings() const;
 
         // 序列化支持
-        rapidjson::Value Serialize() const;
+        rapidjson::Value Serialize(rapidjson::Document::AllocatorType& allocator) const;
         void Deserialize(const rapidjson::Value& json);
 
     private:

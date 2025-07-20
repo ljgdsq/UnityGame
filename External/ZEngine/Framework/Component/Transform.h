@@ -5,7 +5,8 @@
 #include "glm/gtc/quaternion.hpp"
 #include "glm/gtc/matrix_transform.hpp"
 
-namespace editor {
+namespace editor
+{
     class TransformInspector;
 }
 
@@ -20,7 +21,7 @@ namespace framework
         explicit Transform(GameObject *gameObject) : ComponentBase(gameObject) {}
 
         // Serializes the component to a JSON value
-        rapidjson::Value Serialize() const override;
+        rapidjson::Value Serialize(rapidjson::Document::AllocatorType &allocator) const override;
         void Deserialize(const rapidjson::Value &jsonValue) override;
 
         // Getters and setters for position, rotation, scale

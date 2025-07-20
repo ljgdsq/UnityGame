@@ -14,26 +14,27 @@ namespace framework
         LightManager::UnregisterLight(this);
     }
 
-    rapidjson::Value Light::Serialize() const
+    rapidjson::Value Light::Serialize(rapidjson::Document::AllocatorType &allocator) const
     {
-        rapidjson::Document doc;
-        doc.SetObject();
-        rapidjson::Value typeValue;
-        typeValue.SetString(GetTypeName(), doc.GetAllocator());
-        doc.AddMember("type", typeValue, doc.GetAllocator());
 
-        doc.AddMember("lightType", static_cast<int>(type), doc.GetAllocator());
+        rapidjson::Value typeValue;
+        typeValue.SetString(GetTypeName(), allocator);
+        typeValue.AddMember("type", typeValue, allocator);
+
+        rapidjson::Value lightTypeValue;
+        lightTypeValue.SetInt(static_cast<int>(type));
+        typeValue.AddMember("lightType", lightTypeValue, allocator);
 
         // 正确地序列化颜色数组
         rapidjson::Value colorArray(rapidjson::kArrayType);
-        colorArray.PushBack(static_cast<double>(color.r), doc.GetAllocator());
-        colorArray.PushBack(static_cast<double>(color.g), doc.GetAllocator());
-        colorArray.PushBack(static_cast<double>(color.b), doc.GetAllocator());
-        doc.AddMember("color", colorArray, doc.GetAllocator());
+        colorArray.PushBack(static_cast<double>(color.r), allocator);
+        colorArray.PushBack(static_cast<double>(color.g), allocator);
+        colorArray.PushBack(static_cast<double>(color.b), allocator);
+        typeValue.AddMember("color", colorArray, allocator);
 
-        doc.AddMember("intensity", static_cast<double>(intensity), doc.GetAllocator());
+        typeValue.AddMember("intensity", static_cast<double>(intensity), allocator);
 
-        return doc;
+        return typeValue;
     }
 
     void Light::Deserialize(const rapidjson::Value &jsonValue)

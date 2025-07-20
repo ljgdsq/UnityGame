@@ -4,7 +4,7 @@
 #include "Framework/Log/Logger.h"
 #include "Framework/Core/SceneManager.h"
 #include "Framework/Core/Input.h"
-#include "Framework/Core/ResLoader.h"
+#include "Framework/Core/EngineFileIO.h"
 #include "Framework/Performance/FrameRateManager.h"
 #include "Framework/Performance/FrameRateMonitor.h"
 #include "Framework/Graphic/RenderComponent.h"
@@ -31,7 +31,6 @@ namespace framework
 
         // Initialize the logger
         Logger::Init();
-        ResLoader::GetInstance().Initialize("Res/");
 
         // Initialize the window
         m_window = new GLFWWindow();

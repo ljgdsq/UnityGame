@@ -85,7 +85,7 @@ namespace framework
             auto it = std::find(m_gameObjects.begin(), m_gameObjects.end(), gameObject);
             if (it != m_gameObjects.end())
             {
-                gameObject->OnDestroy(); // 调用销毁时的回调
+                gameObject->Destroy(); // 调用销毁时的回调
                 m_gameObjects.erase(it); // 从场景中移除游戏对象
             }
             else

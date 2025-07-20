@@ -2,7 +2,6 @@
 #include "Framework/Core/Input.h"
 #include "Framework/Log/Logger.h"
 #include "Framework/Graphic/Buffer.h"
-#include "Framework/Core/ResLoader.h"
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include "GLFW/glfw3.h"

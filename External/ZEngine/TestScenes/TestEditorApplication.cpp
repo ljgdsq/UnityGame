@@ -31,7 +31,7 @@ void framework::TestEditorApplication::InitScenes()
     gameView->Initialize();
     inspectorWidget->Initialize();
     contentBrowser->Initialize();
-    auto assetManagerTestScene = std::make_shared<MeshTestScene>();
+    auto assetManagerTestScene = new MeshTestScene();
     SceneManager::GetInstance().AddScene("MeshTestScene", assetManagerTestScene);
 
     SetInitialScene("MeshTestScene");
