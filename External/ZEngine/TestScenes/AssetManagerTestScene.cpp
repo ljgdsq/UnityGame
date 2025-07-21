@@ -21,10 +21,6 @@ namespace framework
 {
     void AssetManagerTestScene::Initialize()
     {
-        // 注册资源加载器
-        AssetManager::GetInstance().RegisterLoader(std::make_shared<ObjMeshLoader>());
-        AssetManager::GetInstance().RegisterLoader(std::make_shared<TextureLoader>());
-
         LOG_INFO("=== Initializing AssetManager Mesh Test Scene ===");
 
         // 1. 创建主相机

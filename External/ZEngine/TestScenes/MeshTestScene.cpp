@@ -21,8 +21,6 @@ namespace framework
 {
     void MeshTestScene::Initialize()
     {
-        AssetManager::GetInstance().RegisterLoader(std::make_shared<ObjMeshLoader>());
-        AssetManager::GetInstance().RegisterLoader(std::make_shared<TextureLoader>());
 
         Logger::Log("Initializing Mesh Test Scene");
 

@@ -49,7 +49,7 @@ find_package(OpenGL REQUIRED)
 
 # Create an interface library for RapidJSON (since it's header-only)
 add_library(rapidjson INTERFACE)
-target_include_directories(rapidjson INTERFACE 
+target_include_directories(rapidjson INTERFACE
     ${CMAKE_CURRENT_SOURCE_DIR}/External/rapidjson/include
 )
 
@@ -64,22 +64,22 @@ file(GLOB_RECURSE TEST_SOURCES
 )
 
 # Add executable with all source files
-add_executable(zengine 
+add_executable(zengine
     ${FRAMEWORK_SOURCES}
     ${TEST_SOURCES}
     main.cpp
 )
 
 # Link libraries and set include directories via target properties
-target_include_directories(zengine PRIVATE 
+target_include_directories(zengine PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
 # Link all required libraries
-target_link_libraries(zengine PRIVATE 
-    glfw 
-    glad 
-    glm 
+target_link_libraries(zengine PRIVATE
+    glfw
+    glad
+    glm
     imgui
     ${OPENGL_LIBRARIES}
     rapidjson
@@ -87,9 +87,15 @@ target_link_libraries(zengine PRIVATE
 )
 
 # Add stb include directory to target
-target_include_directories(zengine PRIVATE 
+target_include_directories(zengine PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/External/stb
 )
+
+target_compile_definitions(zengine PRIVATE
+    ZENGINE_EDITOR
+)
+
+
 
 # Copy resource directory to output directory
 add_custom_command(TARGET zengine POST_BUILD
