@@ -182,8 +182,10 @@ namespace editor
 
     bool Inspector::HasComponent(ComponentInspector *inspector, framework::GameObject *obj)
     {
-        // 简单检查：尝试调用 IsComponentEnabled，如果返回 false 且组件不存在则返回 false
-        // 这里可能需要根据具体的组件类型进行更精确的检查
+
+        // todo : ComponentInspector 可以直接检查是否能够视察组件
+        //  简单检查：尝试调用 IsComponentEnabled，如果返回 false 且组件不存在则返回 false
+        //  这里可能需要根据具体的组件类型进行更精确的检查
         std::string displayName = inspector->GetComponentDisplayName();
 
         if (displayName == "Transform")

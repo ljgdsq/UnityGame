@@ -8,9 +8,53 @@
 #include "Framework/Core/EngineFileIO.h"
 #include "Framework/Util/FileUtil.hpp"
 #include <algorithm>
+#include <fstream>
+#include <sstream>
+#include <chrono>
+
 namespace framework
 {
     AssetManager *AssetManager::s_instance = nullptr;
+
+    // 支持的文件扩展名映射（从AssetRegistry迁移）
+    const std::unordered_map<std::string, AssetType> AssetManager::s_supportedExtensions = {
+        // 纹理文件
+        {".png", AssetType::Texture},
+        {".jpg", AssetType::Texture},
+        {".jpeg", AssetType::Texture},
+        {".bmp", AssetType::Texture},
+        {".tga", AssetType::Texture},
+        {".dds", AssetType::Texture},
+
+        // 网格文件
+        {".obj", AssetType::Mesh},
+        {".fbx", AssetType::Mesh},
+        {".dae", AssetType::Mesh},
+        {".3ds", AssetType::Mesh},
+        {".blend", AssetType::Mesh},
+
+        // 着色器文件
+        {".vs", AssetType::Shader},
+        {".fs", AssetType::Shader},
+        {".gs", AssetType::Shader},
+        {".hlsl", AssetType::Shader},
+        {".glsl", AssetType::Shader},
+
+        // 音频文件
+        {".wav", AssetType::Audio},
+        {".mp3", AssetType::Audio},
+        {".ogg", AssetType::Audio},
+        {".m4a", AssetType::Audio},
+
+        // 字体文件
+        {".ttf", AssetType::Font},
+        {".otf", AssetType::Font},
+
+        // 材质文件
+        {".mat", AssetType::Material},
+
+        // 动画文件
+        {".anim", AssetType::Animation}};
 
     AssetManager &AssetManager::GetInstance()
     {
@@ -280,8 +324,8 @@ namespace framework
         RegisterLoader(std::make_shared<ObjMeshLoader>());
         RegisterLoader(std::make_shared<TextureLoader>());
 
-        // 初始化AssetRegistry
-        AssetRegistry::GetInstance().ScanResourceDirectories();
+        // 初始化资源扫描
+        ScanResourceDirectories();
 
         // 初始化默认资源
         InitializeDefaultAssets();
@@ -322,8 +366,8 @@ namespace framework
             }
         }
 
-        // 从AssetRegistry获取资源信息
-        const AssetInfo *info = AssetRegistry::GetInstance().GetAssetInfo(assetId);
+        // 从资源信息获取资源信息
+        const AssetInfo *info = GetAssetInfo(assetId);
         if (!info)
         {
             Logger::Error("Asset not found in registry: {}", assetId);
@@ -600,8 +644,8 @@ namespace framework
 
     std::shared_ptr<Asset> AssetManager::LoadAssetSync(const std::string &assetId)
     {
-        // 从AssetRegistry获取资源信息
-        const AssetInfo *info = AssetRegistry::GetInstance().GetAssetInfo(assetId);
+        // 从资源信息获取资源信息
+        const AssetInfo *info = GetAssetInfo(assetId);
         if (!info)
         {
             Logger::Error("Asset not found in registry: {}", assetId);
@@ -663,5 +707,460 @@ namespace framework
     // 显式模板实例化
     template std::shared_ptr<TextureAsset> AssetManager::LoadAsset<TextureAsset>(const std::string &assetId);
     template std::shared_ptr<MeshAsset> AssetManager::LoadAsset<MeshAsset>(const std::string &assetId);
+
+    // ===== 以下是从AssetRegistry合并的功能实现 =====
+
+    void AssetManager::RegisterAssetInfo(const AssetInfo &info)
+    {
+        std::lock_guard<std::mutex> lock(m_assetInfoMutex);
+        m_assetInfos[info.assetId] = info;
+        Logger::Debug("Registered asset info: {} (ID: {})", info.displayName, info.assetId);
+    }
+
+    void AssetManager::UnregisterAssetInfo(const std::string &assetId)
+    {
+        std::lock_guard<std::mutex> lock(m_assetInfoMutex);
+        auto it = m_assetInfos.find(assetId);
+        if (it != m_assetInfos.end())
+        {
+            Logger::Debug("Unregistered asset info: {} (ID: {})", it->second.displayName, assetId);
+            m_assetInfos.erase(it);
+        }
+    }
+
+    void AssetManager::UpdateAssetInfo(const AssetInfo &info)
+    {
+        std::lock_guard<std::mutex> lock(m_assetInfoMutex);
+        m_assetInfos[info.assetId] = info;
+        Logger::Debug("Updated asset info: {} (ID: {})", info.displayName, info.assetId);
+    }
+
+    const AssetInfo *AssetManager::GetAssetInfo(const std::string &assetId) const
+    {
+        std::lock_guard<std::mutex> lock(m_assetInfoMutex);
+        auto it = m_assetInfos.find(assetId);
+        return (it != m_assetInfos.end()) ? &it->second : nullptr;
+    }
+
+    std::vector<AssetInfo> AssetManager::GetAssetInfosByType(AssetType type) const
+    {
+        std::lock_guard<std::mutex> lock(m_assetInfoMutex);
+        std::vector<AssetInfo> result;
+
+        for (const auto &pair : m_assetInfos)
+        {
+            if (pair.second.type == type)
+            {
+                result.push_back(pair.second);
+            }
+        }
+
+        return result;
+    }
+
+    std::vector<AssetInfo> AssetManager::GetAssetInfosByDirectory(const std::string &directory) const
+    {
+        std::lock_guard<std::mutex> lock(m_assetInfoMutex);
+        std::vector<AssetInfo> result;
+
+        for (const auto &pair : m_assetInfos)
+        {
+            if (pair.second.GetDirectory() == directory)
+            {
+                result.push_back(pair.second);
+            }
+        }
+
+        return result;
+    }
+
+    std::vector<AssetInfo> AssetManager::GetAllAssetInfos() const
+    {
+        std::lock_guard<std::mutex> lock(m_assetInfoMutex);
+        std::vector<AssetInfo> result;
+
+        for (const auto &pair : m_assetInfos)
+        {
+            result.push_back(pair.second);
+        }
+
+        return result;
+    }
+
+    void AssetManager::ScanResourceDirectories()
+    {
+        Logger::Debug("Scanning resource directories...");
+
+        // 添加默认资源目录
+        if (m_resourceDirectories.empty())
+        {
+            AddResourceDirectory("Res");
+            AddResourceDirectory("Assets");
+        }
+
+        for (const auto &dir : m_resourceDirectories)
+        {
+            ScanDirectory(dir, true);
+        }
+
+        Logger::Debug("Resource scan completed. Found {} asset infos.", GetAssetInfoCount());
+    }
+
+    void AssetManager::ScanDirectory(const std::string &directory, bool recursive)
+    {
+        try
+        {
+            if (!std::filesystem::exists(directory))
+            {
+                Logger::Warn("Directory does not exist: {}", directory);
+                return;
+            }
+
+            if (recursive)
+            {
+                for (const auto &entry : std::filesystem::recursive_directory_iterator(directory))
+                {
+                    if (entry.is_regular_file())
+                    {
+                        ProcessFile(entry.path());
+                    }
+                }
+            }
+            else
+            {
+                for (const auto &entry : std::filesystem::directory_iterator(directory))
+                {
+                    if (entry.is_regular_file())
+                    {
+                        ProcessFile(entry.path());
+                    }
+                }
+            }
+        }
+        catch (const std::filesystem::filesystem_error &e)
+        {
+            Logger::Error("Filesystem error while scanning directory {}: {}", directory, e.what());
+        }
+    }
+
+    void AssetManager::AddResourceDirectory(const std::string &directory)
+    {
+        auto it = std::find(m_resourceDirectories.begin(), m_resourceDirectories.end(), directory);
+        if (it == m_resourceDirectories.end())
+        {
+            m_resourceDirectories.push_back(directory);
+            Logger::Debug("Added resource directory: {}", directory);
+        }
+    }
+
+    void AssetManager::RemoveResourceDirectory(const std::string &directory)
+    {
+        auto it = std::find(m_resourceDirectories.begin(), m_resourceDirectories.end(), directory);
+        if (it != m_resourceDirectories.end())
+        {
+            m_resourceDirectories.erase(it);
+            Logger::Debug("Removed resource directory: {}", directory);
+        }
+    }
+
+    std::vector<AssetInfo> AssetManager::SearchAssets(const std::string &query) const
+    {
+        std::lock_guard<std::mutex> lock(m_assetInfoMutex);
+        std::vector<AssetInfo> result;
+
+        std::string lowerQuery = query;
+        std::transform(lowerQuery.begin(), lowerQuery.end(), lowerQuery.begin(), ::tolower);
+
+        for (const auto &pair : m_assetInfos)
+        {
+            std::string lowerName = pair.second.displayName;
+            std::transform(lowerName.begin(), lowerName.end(), lowerName.begin(), ::tolower);
+
+            if (lowerName.find(lowerQuery) != std::string::npos)
+            {
+                result.push_back(pair.second);
+            }
+        }
+
+        return result;
+    }
+
+    std::vector<AssetInfo> AssetManager::FindAssetsByName(const std::string &name) const
+    {
+        std::lock_guard<std::mutex> lock(m_assetInfoMutex);
+        std::vector<AssetInfo> result;
+
+        for (const auto &pair : m_assetInfos)
+        {
+            if (pair.second.displayName == name)
+            {
+                result.push_back(pair.second);
+            }
+        }
+
+        return result;
+    }
+
+    std::vector<AssetInfo> AssetManager::FindAssetsByExtension(const std::string &extension) const
+    {
+        std::lock_guard<std::mutex> lock(m_assetInfoMutex);
+        std::vector<AssetInfo> result;
+
+        for (const auto &pair : m_assetInfos)
+        {
+            if (pair.second.GetFileExtension() == extension)
+            {
+                result.push_back(pair.second);
+            }
+        }
+
+        return result;
+    }
+
+    void AssetManager::AddDependency(const std::string &assetId, const std::string &dependencyId)
+    {
+        std::lock_guard<std::mutex> lock(m_assetInfoMutex);
+
+        auto it = m_assetInfos.find(assetId);
+        if (it != m_assetInfos.end())
+        {
+            auto &dependencies = it->second.dependencies;
+            if (std::find(dependencies.begin(), dependencies.end(), dependencyId) == dependencies.end())
+            {
+                dependencies.push_back(dependencyId);
+            }
+        }
+
+        // 更新反向依赖
+        auto depIt = m_assetInfos.find(dependencyId);
+        if (depIt != m_assetInfos.end())
+        {
+            auto &dependents = depIt->second.dependents;
+            if (std::find(dependents.begin(), dependents.end(), assetId) == dependents.end())
+            {
+                dependents.push_back(assetId);
+            }
+        }
+    }
+
+    void AssetManager::RemoveDependency(const std::string &assetId, const std::string &dependencyId)
+    {
+        std::lock_guard<std::mutex> lock(m_assetInfoMutex);
+
+        auto it = m_assetInfos.find(assetId);
+        if (it != m_assetInfos.end())
+        {
+            auto &dependencies = it->second.dependencies;
+            dependencies.erase(std::remove(dependencies.begin(), dependencies.end(), dependencyId), dependencies.end());
+        }
+
+        // 更新反向依赖
+        auto depIt = m_assetInfos.find(dependencyId);
+        if (depIt != m_assetInfos.end())
+        {
+            auto &dependents = depIt->second.dependents;
+            dependents.erase(std::remove(dependents.begin(), dependents.end(), assetId), dependents.end());
+        }
+    }
+
+    std::vector<std::string> AssetManager::GetDependencies(const std::string &assetId) const
+    {
+        std::lock_guard<std::mutex> lock(m_assetInfoMutex);
+
+        auto it = m_assetInfos.find(assetId);
+        if (it != m_assetInfos.end())
+        {
+            return it->second.dependencies;
+        }
+
+        return {};
+    }
+
+    std::vector<std::string> AssetManager::GetDependents(const std::string &assetId) const
+    {
+        std::lock_guard<std::mutex> lock(m_assetInfoMutex);
+
+        auto it = m_assetInfos.find(assetId);
+        if (it != m_assetInfos.end())
+        {
+            return it->second.dependents;
+        }
+
+        return {};
+    }
+
+    void AssetManager::SetFileWatcher(bool enable)
+    {
+        m_fileWatcherEnabled = enable;
+        Logger::Debug("File watcher {}", enable ? "enabled" : "disabled");
+    }
+
+    void AssetManager::SaveAssetDatabase(const std::string &filePath) const
+    {
+        // TODO: 实现资源数据库序列化
+        Logger::Debug("Saving asset database to: {}", filePath);
+    }
+
+    void AssetManager::LoadAssetDatabase(const std::string &filePath)
+    {
+        // TODO: 实现资源数据库反序列化
+        Logger::Debug("Loading asset database from: {}", filePath);
+    }
+
+    size_t AssetManager::GetAssetInfoCount() const
+    {
+        std::lock_guard<std::mutex> lock(m_assetInfoMutex);
+        return m_assetInfos.size();
+    }
+
+    size_t AssetManager::GetAssetInfoCountByType(AssetType type) const
+    {
+        std::lock_guard<std::mutex> lock(m_assetInfoMutex);
+        size_t count = 0;
+
+        for (const auto &pair : m_assetInfos)
+        {
+            if (pair.second.type == type)
+            {
+                count++;
+            }
+        }
+
+        return count;
+    }
+
+    size_t AssetManager::GetTotalFileSize() const
+    {
+        std::lock_guard<std::mutex> lock(m_assetInfoMutex);
+        size_t totalSize = 0;
+
+        for (const auto &pair : m_assetInfos)
+        {
+            totalSize += pair.second.fileSize;
+        }
+
+        return totalSize;
+    }
+
+    void AssetManager::ProcessFile(const std::filesystem::path &filePath)
+    {
+        if (!IsAssetFile(filePath.string()))
+        {
+            return;
+        }
+
+        try
+        {
+            AssetInfo info;
+            info.assetId = GenerateAssetId(filePath.string());
+            info.displayName = filePath.filename().string();
+            info.filePath = filePath.string();
+            info.type = DeduceAssetType(filePath.string());
+            info.fileSize = std::filesystem::file_size(filePath);
+
+            auto ftime = std::filesystem::last_write_time(filePath);
+            #if defined(__cpp_lib_chrono) && __cpp_lib_chrono >= 201907L
+            info.lastModified = std::chrono::system_clock::to_time_t(std::chrono::clock_cast<std::chrono::system_clock>(ftime));
+            #else
+            auto sctp = std::chrono::time_point_cast<std::chrono::system_clock::duration>(
+                ftime - std::filesystem::file_time_type::clock::now()
+                + std::chrono::system_clock::now());
+            info.lastModified = std::chrono::system_clock::to_time_t(sctp);
+            #endif
+
+            RegisterAssetInfo(info);
+        }
+        catch (const std::exception &e)
+        {
+            Logger::Error("Error processing file {}: {}", filePath.string(), e.what());
+        }
+    }
+
+    std::string AssetManager::GenerateAssetId(const std::string &filePath) const
+    {
+        // 使用文件路径的哈希值作为ID
+        std::hash<std::string> hasher;
+        size_t hash = hasher(filePath);
+
+        std::ostringstream oss;
+        oss << std::hex << hash;
+        return oss.str();
+    }
+
+    AssetType AssetManager::DeduceAssetType(const std::string &filePath) const
+    {
+        std::filesystem::path path(filePath);
+        std::string extension = path.extension().string();
+
+        // 转换为小写
+        std::transform(extension.begin(), extension.end(), extension.begin(), ::tolower);
+
+        auto it = s_supportedExtensions.find(extension);
+        return (it != s_supportedExtensions.end()) ? it->second : AssetType::Unknown;
+    }
+
+    bool AssetManager::IsAssetFile(const std::string &filePath) const
+    {
+        return DeduceAssetType(filePath) != AssetType::Unknown;
+    }
+
+    // AssetInfo 方法实现
+    std::string AssetInfo::GetFileExtension() const
+    {
+        std::filesystem::path path(filePath);
+        return path.extension().string();
+    }
+
+    std::string AssetInfo::GetFileName() const
+    {
+        std::filesystem::path path(filePath);
+        return path.filename().string();
+    }
+
+    std::string AssetInfo::GetDirectory() const
+    {
+        std::filesystem::path path(filePath);
+        return path.parent_path().string();
+    }
+
+    bool AssetInfo::IsNewer(const AssetInfo &other) const
+    {
+        return lastModified > other.lastModified;
+    }
+
+    rapidjson::Value AssetInfo::Serialize(rapidjson::Document::AllocatorType &allocator) const
+    {
+        rapidjson::Value obj(rapidjson::kObjectType);
+
+        obj.AddMember("assetId", rapidjson::StringRef(assetId.c_str()), allocator);
+        obj.AddMember("displayName", rapidjson::StringRef(displayName.c_str()), allocator);
+        obj.AddMember("filePath", rapidjson::StringRef(filePath.c_str()), allocator);
+        obj.AddMember("type", static_cast<int>(type), allocator);
+        obj.AddMember("fileSize", fileSize, allocator);
+        obj.AddMember("lastModified", static_cast<int64_t>(lastModified), allocator);
+
+        return obj;
+    }
+
+    void AssetInfo::Deserialize(const rapidjson::Value &json)
+    {
+        if (json.HasMember("assetId") && json["assetId"].IsString())
+            assetId = json["assetId"].GetString();
+
+        if (json.HasMember("displayName") && json["displayName"].IsString())
+            displayName = json["displayName"].GetString();
+
+        if (json.HasMember("filePath") && json["filePath"].IsString())
+            filePath = json["filePath"].GetString();
+
+        if (json.HasMember("type") && json["type"].IsInt())
+            type = static_cast<AssetType>(json["type"].GetInt());
+
+        if (json.HasMember("fileSize") && json["fileSize"].IsUint64())
+            fileSize = json["fileSize"].GetUint64();
+
+        if (json.HasMember("lastModified") && json["lastModified"].IsInt64())
+            lastModified = static_cast<std::time_t>(json["lastModified"].GetInt64());
+    }
 
 } // namespace framework

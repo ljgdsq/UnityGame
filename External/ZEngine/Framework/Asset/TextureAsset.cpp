@@ -13,71 +13,10 @@ namespace framework
         Logger::Debug("Created TextureAsset: {}", name);
     }
 
-    TextureAsset::TextureAsset(const std::string &name, const std::string &assetId)
-        : Asset(name, AssetType::Texture, assetId)
-    {
-        Logger::Debug("Created TextureAsset: {} (ID: {})", name, assetId);
-    }
-
     TextureAsset::~TextureAsset()
     {
-        Unload();
         ReleaseThumbnail();
         Logger::Debug("Destroyed TextureAsset: {}", GetName());
-    }
-
-    void TextureAsset::Load()
-    {
-        if (IsLoaded())
-        {
-            return;
-        }
-
-        SetLoadState(LoadState::Loading);
-
-        try
-        {
-            if (GetFilePath().empty())
-            {
-                Logger::Error("TextureAsset::Load - No file path set for asset: {}", GetName());
-                SetLoadState(LoadState::Failed);
-                return;
-            }
-
-            if (LoadFromFile(GetFilePath()))
-            {
-                SetLoadState(LoadState::Loaded);
-                Logger::Debug("Successfully loaded texture: {}", GetName());
-            }
-            else
-            {
-                SetLoadState(LoadState::Failed);
-                Logger::Error("Failed to load texture: {}", GetName());
-            }
-        }
-        catch (const std::exception &e)
-        {
-            SetLoadState(LoadState::Failed);
-            Logger::Error("Exception while loading texture {}: {}", GetName(), e.what());
-        }
-    }
-
-    void TextureAsset::Unload()
-    {
-        if (!IsLoaded())
-        {
-            return;
-        }
-
-        if (m_texture)
-        {
-            m_texture->Delete();
-            m_texture.reset();
-        }
-
-        ReleaseThumbnail();
-        SetLoadState(LoadState::NotLoaded);
-        Logger::Debug("Unloaded texture: {}", GetName());
     }
 
     long TextureAsset::GetSize() const
@@ -189,38 +128,6 @@ namespace framework
         return m_texture ? m_texture->GetChannels() : 0;
     }
 
-    bool TextureAsset::LoadFromFile(const std::string &filePath)
-    {
-
-        // 解析文件路径
-        std::optional<std::filesystem::path> resolvedPath = EngineFileIO::ResolveFilePath(filePath);
-
-
-        if (!resolvedPath)
-        {
-            Logger::Error("Could not resolve texture path: {}", filePath);
-            return false;
-        }
-
-        // 创建Texture对象
-        m_texture = std::make_shared<Texture>();
-        if (!m_texture->LoadFromFile(*resolvedPath))
-        {
-            Logger::Error("Failed to load texture from file: {}", resolvedPath.value().string());
-            m_texture.reset();
-            return false;
-        }
-
-        // 应用纹理设置
-        ApplyTextureSettings();
-
-        // 生成缩略图
-        GenerateThumbnailFromTexture();
-
-        Logger::Debug("Loaded texture: {} ({}x{}x{})", GetName(), GetWidth(), GetHeight(), GetChannels());
-        return true;
-    }
-
     void TextureAsset::CreateEmpty(int width, int height, int channels)
     {
         m_texture = std::make_shared<Texture>();
@@ -287,18 +194,10 @@ namespace framework
         }
     }
 
-    void *TextureAsset::GetThumbnailTextureId() const
-    {
-        return m_thumbnailTextureId;
-    }
-
-    bool TextureAsset::HasThumbnail() const
-    {
-        return m_thumbnailTextureId != nullptr;
-    }
 
     void TextureAsset::GenerateThumbnailFromTexture()
     {
+        ReleaseThumbnail();
         if (!m_texture)
         {
             Logger::Debug("TextureAsset::GenerateThumbnailFromTexture - No texture available for {}", GetName());
@@ -324,14 +223,5 @@ namespace framework
         // 3. 保存缩略图纹理ID
     }
 
-    void TextureAsset::ReleaseThumbnail()
-    {
-        if (m_thumbnailTextureId)
-        {
-            // 如果缩略图是独立的纹理，需要删除它
-            // 当前实现中，缩略图就是原纹理，所以不需要删除
-            m_thumbnailTextureId = nullptr;
-        }
-    }
 
 } // namespace framework

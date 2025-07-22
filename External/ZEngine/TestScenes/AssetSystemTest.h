@@ -1,7 +1,6 @@
 #include "Framework/Asset/AssetManager.h"
 #include "Framework/Asset/TextureAsset.h"
 #include "Framework/Asset/MeshAsset.h"
-#include "Framework/Asset/AssetRegistry.h"
 #include "Framework/Log/Logger.h"
 
 namespace framework
@@ -13,20 +12,20 @@ namespace framework
         {
             Logger::Log("Starting Asset System Tests...");
 
-            TestAssetRegistry();
+            TestAssetManager();
             TestTextureAsset();
             TestMeshAsset();
-            TestAssetManager();
+            TestAssetManagerAdvanced();
 
             Logger::Log("Asset System Tests Completed!");
         }
 
     private:
-        static void TestAssetRegistry()
+        static void TestAssetManager()
         {
-            Logger::Log("Testing AssetRegistry...");
+            Logger::Log("Testing AssetManager with integrated registry features...");
 
-            AssetRegistry &registry = AssetRegistry::GetInstance();
+            AssetManager &manager = AssetManager::GetInstance();
 
             // 测试资源注册
             AssetInfo textureInfo;
@@ -36,10 +35,10 @@ namespace framework
             textureInfo.filePath = "Textures/test.png";
             textureInfo.fileSize = 1024;
 
-            registry.RegisterAsset(textureInfo);
+            manager.RegisterAssetInfo(textureInfo);
 
             // 测试资源查找
-            auto foundAsset = registry.GetAssetInfo("test_texture_001");
+            auto foundAsset = manager.GetAssetInfo("test_texture_001");
             if (foundAsset)
             {
                 Logger::Log("Found asset: {} ({})", foundAsset->displayName, foundAsset->assetId);
@@ -50,7 +49,7 @@ namespace framework
             }
 
             // 测试按类型查找
-            auto textureAssets = registry.GetAssetsByType(AssetType::Texture);
+            auto textureAssets = manager.GetAssetInfosByType(AssetType::Texture);
             Logger::Log("Found {} texture assets", textureAssets.size());
         }
 
@@ -92,9 +91,9 @@ namespace framework
             Logger::Log("Serialized mesh asset");
         }
 
-        static void TestAssetManager()
+        static void TestAssetManagerAdvanced()
         {
-            Logger::Log("Testing AssetManager...");
+            Logger::Log("Testing AssetManager advanced features...");
 
             AssetManager &manager = AssetManager::GetInstance();
 

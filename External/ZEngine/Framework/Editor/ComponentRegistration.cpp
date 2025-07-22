@@ -12,6 +12,7 @@ namespace framework
 
     void RegisterAllComponents()
     {
+        // todo : 可以使用宏来自动注册所有组件
         auto &registry = ComponentRegistry::GetInstance();
 
         // 注册所有可用的组件

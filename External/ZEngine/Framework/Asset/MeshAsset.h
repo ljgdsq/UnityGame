@@ -25,9 +25,6 @@ namespace framework
         MeshAsset(const std::string &name, const std::string &assetId);
         virtual ~MeshAsset() override;
 
-        // Asset interface
-        void Load() override;
-        void Unload() override;
         long GetSize() const override;
 
         // Serialization
@@ -42,21 +39,7 @@ namespace framework
         long GetVertexCount() const;
         long GetTriangleCount() const;
 
-        // 文件加载
-        bool LoadFromFile(const std::string &filePath);
-
-        // 创建基本几何体
-        void CreatePrimitive(MeshPrimitive primitive);
-
     private:
-        // 文件格式加载器
-        bool LoadOBJ(const std::string &filePath);
-        bool LoadZEngineMesh(const std::string &filePath);
-
-        // 基本几何体生成
-        void CreateCube();
-        void CreateSphere();
-        void CreatePlane();
 
         // 辅助方法
         void UpdateMeshStatistics();

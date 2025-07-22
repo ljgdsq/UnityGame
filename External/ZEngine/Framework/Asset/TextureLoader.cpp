@@ -5,6 +5,9 @@
 #include <algorithm>
 #include <filesystem>
 
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb_image.h"
+
 namespace framework
 {
     std::shared_ptr<Asset> TextureLoader::LoadAsset(const std::string &assetPath)
@@ -12,7 +15,7 @@ namespace framework
         Logger::Debug("Loading texture asset from: {}", assetPath);
 
         // 检查文件是否存在
-        if (!std::filesystem::exists(assetPath))
+        if (!EngineFileIO::FileExists(assetPath))
         {
             Logger::Error("Texture file does not exist: {}", assetPath);
             return nullptr;
@@ -27,8 +30,11 @@ namespace framework
         // 设置文件路径
         textureAsset->SetFilePath(assetPath);
 
+
+        auto data=EngineFileIO::LoadBinary(assetPath);
+
         // 加载纹理数据
-        if (!textureAsset->LoadFromFile(assetPath))
+        if (!GenTexture(data,textureAsset))
         {
             Logger::Error("Failed to load texture from file: {}", assetPath);
             return nullptr;
@@ -55,7 +61,7 @@ namespace framework
     std::vector<std::string> TextureLoader::GetSupportedExtensions() const
     {
         return {
-            "png", "jpg", "jpeg", "bmp", "tga", "dds", "hdr", "pic", "pnm", "psd"};
+            "png", "jpg", "jpeg", "bmp"};
     }
 
     std::string TextureLoader::GetName() const
@@ -63,26 +69,20 @@ namespace framework
         return "TextureLoader";
     }
 
-    bool TextureLoader::LoadImageData(const std::string &filePath, unsigned char *&data, int &width, int &height, int &channels)
-    {
-        // 这个方法作为后备，实际加载逻辑已经在TextureAsset::LoadFromFile中实现
-        // 如果需要直接访问图像数据，可以在这里使用stb_image或其他图像库
-        Logger::Debug("LoadImageData called for: {}", filePath);
-
-        // 实际的图像加载逻辑应该在Texture类中实现
-        // 这里只是一个接口预留
-        return false;
-    }
-
-    void TextureLoader::FreeImageData(unsigned char *data)
-    {
-        // 对应LoadImageData的清理方法
-        // 实际的内存管理应该在Texture类中处理
-        if (data)
-        {
-            // 这里应该调用对应的图像库释放函数
-            // 例如：stbi_image_free(data);
+    bool TextureLoader::GenTexture(std::vector<uint8_t> data, std::shared_ptr <TextureAsset> asset){
+        int w, h, n;
+        void* pixels = stbi_load_from_memory(data.data(), data.size(), &w, &h, &n, 0);
+        if (!pixels) {
+            Logger::Error("Failed to load texture from memory");
+            return false;
         }
+        Logger::Debug("Loaded texture: {}x{} with {} channels", w, h, n);
+        glGenTextures(1, &asset->GetTexture()->GetId());
+        
+        // 释放像素数据
+        stbi_image_free(pixels);
+        return true;
     }
+
 
 } // namespace framework

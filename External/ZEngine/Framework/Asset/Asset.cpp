@@ -13,20 +13,23 @@ namespace framework
         m_assetId = GenerateAssetId();
     }
 
-    Asset::Asset(const std::string &name, AssetType type, const std::string &assetId)
-        : m_name(name), m_type(type), m_assetId(assetId)
-    {
-        if (m_assetId.empty())
-        {
-            m_assetId = GenerateAssetId();
-        }
-    }
 
     void Asset::Release()
     {
         if (--m_refCount <= 0)
         {
             delete this;
+        }
+    }
+
+    void Asset::ReleaseThumbnail()
+    {
+        if (m_thumbnailTextureId)
+        {
+            // 释放缩略图资源
+            // 这里需要根据具体的图形API来实现释放逻辑
+            // 例如 OpenGL: glDeleteTextures(1, &m_thumbnailTextureId);
+            m_thumbnailTextureId = nullptr;
         }
     }
 
@@ -126,6 +129,7 @@ namespace framework
             m_dependencies.erase(it);
         }
     }
+
 
     // 辅助函数实现
     std::string AssetTypeToString(AssetType type)
