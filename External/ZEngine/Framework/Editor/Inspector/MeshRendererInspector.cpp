@@ -14,22 +14,17 @@ namespace editor
             return;
 
         MeshRenderer *meshRenderer = node->GetComponent<MeshRenderer>();
-        ImGui::Text("Mesh Renderer  %s", node->GetName().c_str());
-
-        RenderMaterial(node);
+        RenderMaterial(node, meshRenderer);
     }
 
-    void MeshRendererInspector::RenderMaterial(GameObject *node)
+    void MeshRendererInspector::RenderMaterial(GameObject *node, MeshRenderer *meshRenderer)
     {
-        MeshRenderer *meshRenderer = node->GetComponent<MeshRenderer>();
-        if (!meshRenderer)
-            return;
 
         Material *material = meshRenderer->GetMaterial();
         if (material)
         {
             ImGui::Text("Material: %s", material->GetName().c_str());
-            // 这里可以添加更多关于材质的属性编辑功能
+            ImGui::Separator();
             RenderMaterialTextures(material);
         }
         else
@@ -40,11 +35,6 @@ namespace editor
 
     void MeshRendererInspector::RenderMaterialTextures(framework::Material *material)
     {
-        if (!material)
-        {
-            ImGui::Text("No material available");
-            return;
-        }
 
         auto textures = material->GetAllTextureBindings();
 
@@ -92,7 +82,7 @@ namespace editor
                     if (mutableTextureAsset != currentTextureAsset)
                     {
                         material->SetTexture(binding->name, mutableTextureAsset, binding->slot, binding->type);
-                        Logger::Log("MeshRendererInspector: Texture updated for slot %d", binding->slot);
+                        Logger::Log("MeshRendererInspector: Texture updated for slot {} ", binding->slot);
                     }
                 }
 

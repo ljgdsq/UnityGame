@@ -111,7 +111,7 @@ namespace framework
 
         // Light-related members
         std::vector<class Light *> m_lights; // 当前材质使用的光源列表
-
+        void SetMissingTexturesToDefault(const AssetTextureBinding &binding) const;
         // 辅助方法
         void ApplyTextures() const; // 应用所有纹理到着色器
         void UpdateTextureNameToIndexMapping();

@@ -18,7 +18,7 @@ namespace editor
         std::string GetComponentDisplayName() const override;
 
     private:
-        void RenderMaterial(framework::GameObject *node);
+        void RenderMaterial(framework::GameObject *node,framework::MeshRenderer *meshRenderer);
         void RenderMaterialTextures(framework::Material *material);
     };
 }

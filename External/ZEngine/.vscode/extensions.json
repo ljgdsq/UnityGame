@@ -10,7 +10,7 @@
 
         // 代码导航和搜索
         "alefragnani.bookmarks",
-        "eamodio.gitlens",
+        // "eamodio.gitlens",
         "ms-vscode.vscode-json",
 
         // 代码格式化和重构

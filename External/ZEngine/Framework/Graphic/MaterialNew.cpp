@@ -319,9 +319,6 @@ namespace framework
         m_shader->SetVector3f("u_ambientLight", ambientLight, true);
 
         // 设置相机位置（用于镜面反射计算）
-        // TODO: 从CameraManager获取当前相机位置
-        glm::vec3 viewPosition(0.0f, 0.0f, 5.0f); // 临时默认位置
-
         auto camera = CameraManager::GetInstance().GetMainCamera();
         auto trans = camera->GetGameObject()->GetTransform();
 
@@ -437,9 +434,19 @@ namespace framework
                 {
                     texture->Bind(binding.slot);
                     m_shader->SetInt(binding.name.c_str(), binding.slot);
+                }else{
+                    SetMissingTexturesToDefault(binding);
                 }
+            }else{
+                SetMissingTexturesToDefault(binding);
             }
         }
+    }
+
+    void Material::SetMissingTexturesToDefault(const AssetTextureBinding &binding) const
+    {
+        Texture::GetDefaultMissingTexture()->Bind(binding.slot);
+        m_shader->SetInt(binding.name.c_str(), binding.slot);
     }
 
     void Material::UpdateTextureNameToIndexMapping()

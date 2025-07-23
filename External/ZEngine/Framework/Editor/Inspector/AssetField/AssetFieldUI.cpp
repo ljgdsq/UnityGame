@@ -5,19 +5,19 @@ namespace editor
     // TextureAsset UI 工具函数实现
     bool RenderTextureField(const std::string &label, std::shared_ptr<framework::TextureAsset> &asset, const AssetFieldConfig &config)
     {
+
+        std::string assetName = asset ? asset->GetName() : config.nullText;
+
         ImGui::PushID(label.c_str());
         ImGui::Text("%s", label.c_str());
+
+        ImGui::Text("Asset: %s", assetName.c_str());
+
         if (config.showPreview)
         {
-            ImGui::SameLine();
             RenderTextureThumbnail(asset, config.previewSize);
         }
-        ImGui::SameLine();
-        std::string assetName = asset ? asset->GetName() : config.nullText;
-        if (ImGui::Button((assetName + "##" + label).c_str(), config.buttonSize))
-        {
-            // 这里可以实现资源选择对话框
-        }
+
         if (config.showClearButton)
         {
             ImGui::SameLine();

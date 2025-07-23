@@ -47,6 +47,7 @@ namespace framework
         void Delete();
 
         unsigned int GetId() const;
+        static Texture *GetDefaultMissingTexture();
 
     private:
         unsigned int m_textureID = 0;
@@ -54,6 +55,7 @@ namespace framework
         int m_height;
         int m_channels;
         std::string m_filepath;
+        static Texture *s_defaultMissingTexture; // 默认缺失纹理
     };
 
     struct TextureBinding

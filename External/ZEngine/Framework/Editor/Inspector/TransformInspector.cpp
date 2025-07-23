@@ -12,9 +12,6 @@ namespace editor
     void TransformInspector::Inspect(GameObject *node)
     {
         Transform *transform = node->GetComponent<Transform>();
-
-        ImGui::Text("Transform  %s", node->GetName().c_str());
-
         float min_input_width = 50.0f;
         float available_width = ImGui::GetContentRegionAvail().x;
         float input_width = (available_width - ImGui::CalcTextSize("Position X: Y: Z: ").x - 20) / 3.0f;
