@@ -7,7 +7,8 @@
 #include <string>
 #include <vector>
 #include <cstring>
-
+#include "Framework/Asset/TextureAsset.h"
+#include "Framework/Asset/MeshAsset.h"
 namespace editor
 {
 
@@ -33,11 +34,6 @@ namespace editor
         // 渲染资源字段（返回true表示值有变化）
         static bool Render(const std::string &label,
                            std::shared_ptr<AssetType> &asset,
-                           const AssetFieldConfig &config = AssetFieldConfig());
-
-        // 渲染资源引用字段
-        static bool Render(const std::string &label,
-                           framework::AssetReference<AssetType> &assetRef,
                            const AssetFieldConfig &config = AssetFieldConfig());
 
         // 渲染只读资源字段
@@ -137,8 +133,6 @@ namespace editor
         ImGui::PopID();
         return changed;
     }
-
-
 
     template <typename AssetType>
     void AssetField<AssetType>::RenderReadOnly(const std::string &label,
@@ -289,5 +283,7 @@ namespace editor
 
     // template <typename AssetType>
     // framework::AssetType AssetField<AssetType>::GetAssetType();
+
+    // 模板特化声明在 AssetField.cpp 中实现
 
 } // namespace editor

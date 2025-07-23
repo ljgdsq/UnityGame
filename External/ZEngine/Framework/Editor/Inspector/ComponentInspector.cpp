@@ -25,4 +25,19 @@ namespace editor
     {
         return GetComponent(obj) != nullptr;
     }
+
+    // 基类的默认实现（通常会被子类重写）
+    framework::Component *ComponentInspector::GetComponent(framework::GameObject *obj) const
+    {
+        // 基类无法知道具体的组件类型，返回nullptr
+        // 子类应该重写这个方法
+        return nullptr;
+    }
+
+    bool ComponentInspector::RemoveComponentT(framework::GameObject *obj)
+    {
+        // 基类无法知道具体的组件类型，返回false
+        // 子类应该重写这个方法
+        return false;
+    }
 }

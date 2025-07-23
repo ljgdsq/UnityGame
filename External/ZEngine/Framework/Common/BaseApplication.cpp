@@ -77,7 +77,7 @@ namespace framework
 
     void BaseApplication::Shutdown()
     {
-        SceneManager::GetInstance().ShutdownActiveScene();
+
     }
 
     void BaseApplication::Run()

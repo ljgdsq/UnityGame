@@ -1,6 +1,10 @@
 #include "Framework/Asset/AssetManager.h"
 #include "Framework/Log/Logger.h"
 #include "Framework/Util/FileUtil.hpp"
+
+#include "Framework/Asset/TextureAsset.h"
+#include "Framework/Asset/MeshAsset.h"
+
 namespace framework
 {
     void AssetManager::Initialize()
@@ -52,6 +56,7 @@ namespace framework
             Logger::Log("Asset {} already loaded, returning existing instance", assetName);
             return std::dynamic_pointer_cast<T>(GetAsset(assetName));
         }
+
         for (const auto &loader : m_loaders)
         {
             if (loader->CanLoadAsset(assetPath))
@@ -59,6 +64,8 @@ namespace framework
                 auto asset = loader->LoadAsset(assetPath);
                 if (asset)
                 {
+                    // 将加载的资源注册到管理器中
+                    m_assets[assetName] = asset;
                     Logger::Log("Loaded asset: {} with type {}", assetPath, loader->GetName());
                     return std::dynamic_pointer_cast<T>(asset);
                 }
@@ -161,5 +168,9 @@ namespace framework
         }
         return assetNames;
     }
+
+    // 显式模板实例化
+    template std::shared_ptr<framework::TextureAsset> AssetManager::LoadAsset<framework::TextureAsset>(const std::string &assetPath);
+    template std::shared_ptr<framework::MeshAsset> AssetManager::LoadAsset<framework::MeshAsset>(const std::string &assetPath);
 
 } // namespace framework

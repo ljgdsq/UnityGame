@@ -9,6 +9,7 @@
 #include "Framework/Graphic/Buffer.h"
 #include "Framework/Editor/ComponentRegistration.h"
 #include "TestScenes/CameraManagerExampleScene.h"
+#include "TestScenes/BasicTestScene.h"
 
 framework::TestEditorApplication::TestEditorApplication()
 {
@@ -30,10 +31,10 @@ void framework::TestEditorApplication::InitScenes()
     gameView->Initialize();
     inspectorWidget->Initialize();
     contentBrowser->Initialize();
-    auto assetManagerTestScene = new CameraManagerExampleScene();
-    SceneManager::GetInstance().AddScene("CameraManagerExampleScene", assetManagerTestScene);
+    auto testScene = new BasicTestScene();
+    SceneManager::GetInstance().AddScene("BasicTestScene", testScene);
 
-    SetInitialScene("MeshTestScene");
+    SetInitialScene("BasicTestScene");
 
     ImGui::CreateContext();
     ImGuiIO &io = ImGui::GetIO();
