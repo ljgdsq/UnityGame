@@ -1,5 +1,4 @@
 #include "Framework/Editor/GameView.h"
-#include "GameView.h"
 
 namespace editor
 {

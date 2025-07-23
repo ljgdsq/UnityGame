@@ -3,30 +3,27 @@
 #include <unordered_map>
 #include <vector>
 #include "Framework/Core/Texture.h"
-#include "Framework/Asset/AssetReference.h"
 #include "Framework/Asset/TextureAsset.h"
 #include "glm/glm.hpp"
 #include "rapidjson/document.h"
 
 namespace framework
 {
-    // 纹理绑定结构，现在使用AssetReference
+    // 纹理绑定结构
     struct AssetTextureBinding
     {
         std::string name;                          // 纹理名称
-        AssetReference<TextureAsset> textureAsset; // 纹理资源引用
         int slot = 0;                              // 纹理槽位
         TextureType type = TextureType::DIFFUSE;   // 纹理类型
-
+        std::shared_ptr<TextureAsset> asset;
         // 便利方法
-        std::shared_ptr<TextureAsset> GetTextureAsset() const { return textureAsset.Get(); }
+        std::shared_ptr<TextureAsset> GetTextureAsset() const { return asset; }
         std::shared_ptr<Texture> GetTexture() const
         {
-            auto asset = textureAsset.Get();
             return asset ? asset->GetTexture() : nullptr;
         }
 
-        bool IsValid() const { return textureAsset.IsValid() && textureAsset.IsLoaded(); }
+        bool IsValid() const { return asset && asset->IsLoaded(); }
     };
 
     class Material
@@ -64,14 +61,12 @@ namespace framework
         // 纹理管理 - 新的AssetReference版本
         void SetTexture(const std::string &name, const std::string &textureAssetId, int slot = 0, TextureType type = TextureType::DIFFUSE);
         void SetTexture(const std::string &name, std::shared_ptr<TextureAsset> textureAsset, int slot = 0, TextureType type = TextureType::DIFFUSE);
-        void SetTexture(const std::string &name, const AssetReference<TextureAsset> &textureAssetRef, int slot = 0, TextureType type = TextureType::DIFFUSE);
 
         // 兼容性方法 - 直接设置纹理对象
         virtual void SetTexture(const std::string &textureName, int slot = 0);
         void SetTexture(const std::string &name, Texture *texture, int slot = 0, TextureType type = TextureType::DIFFUSE);
 
         // 获取纹理
-        AssetReference<TextureAsset> GetTextureAssetReference(const std::string &name) const;
         std::shared_ptr<TextureAsset> GetTextureAsset(const std::string &name) const;
         std::shared_ptr<Texture> GetTextureSharedPtr(const std::string &name) const; // 新方法，返回shared_ptr
         Texture *GetTexture(const std::string &name) const;                          // 兼容性方法，返回原始指针

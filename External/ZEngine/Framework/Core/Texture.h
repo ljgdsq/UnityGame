@@ -24,8 +24,8 @@ namespace framework
                 unsigned int textureID = 0,
                 int width = 0,
                 int height = 0,
-                int channels = 0)
-            : m_filepath(filepath), m_textureID(textureID), m_width(width), m_height(height), m_channels(channels) {}
+                int channels = 0);
+
         ~Texture();
 
         // Bind texture for rendering

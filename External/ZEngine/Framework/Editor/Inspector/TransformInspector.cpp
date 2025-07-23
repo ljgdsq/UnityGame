@@ -4,11 +4,13 @@
 using namespace framework;
 namespace editor
 {
+
+    namespace
+    {
+        static std::unordered_map<Transform *, glm::vec3> eulerCache; // todo remove Transform
+    }
     void TransformInspector::Inspect(GameObject *node)
     {
-        if (!node || !node->HasComponent<Transform>())
-            return;
-
         Transform *transform = node->GetComponent<Transform>();
 
         ImGui::Text("Transform  %s", node->GetName().c_str());
@@ -53,7 +55,6 @@ namespace editor
             ImGui::DragFloat("##Z", &(transform->position.z), 1.0f);
         }
     }
-    static std::unordered_map<Transform *, glm::vec3> eulerCache; // todo remove Transform
     void TransformInspector::RenderRotation(GameObject *node)
     {
         Transform *transform = node->GetComponent<Transform>();

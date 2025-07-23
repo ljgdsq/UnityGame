@@ -42,7 +42,7 @@ namespace framework
 
         const std::string &GetName() const { return m_name; };
 
-        const std::string &GetAssetId() const { return m_assetId; }
+        const std::string &GetAssetId() const { return m_name; }
 
         const std::string &GetFilePath() const { return m_filePath; }
 

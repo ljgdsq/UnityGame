@@ -7,7 +7,7 @@
 // todo: remove CameraManager
 #include "Framework/Component/Light/Light.h"
 #include "Framework/Manager/CameraManager.h"
-
+#include <exception>
 namespace framework
 {
     void Material::Use()
@@ -35,51 +35,14 @@ namespace framework
 
     void Material::SetTexture(const std::string &name, const std::string &textureAssetId, int slot, TextureType type)
     {
-        AssetReference<TextureAsset> textureAssetRef(textureAssetId);
-        SetTexture(name, textureAssetRef, slot, type);
+        throw new std::exception("not impl");
     }
 
     void Material::SetTexture(const std::string &name, std::shared_ptr<TextureAsset> textureAsset, int slot, TextureType type)
     {
-        if (textureAsset)
-        {
-            AssetReference<TextureAsset> textureAssetRef(textureAsset->GetAssetId());
-            SetTexture(name, textureAssetRef, slot, type);
-        }
-        else
-        {
-            RemoveTexture(name);
-        }
+        throw new std::exception("not impl");
     }
 
-    void Material::SetTexture(const std::string &name, const AssetReference<TextureAsset> &textureAssetRef, int slot, TextureType type)
-    {
-        // 查找现有的纹理绑定
-        AssetTextureBinding *binding = FindTextureBinding(name);
-
-        if (binding)
-        {
-            // 更新现有绑定
-            binding->textureAsset = textureAssetRef;
-            binding->slot = slot;
-            binding->type = type;
-        }
-        else
-        {
-            // 创建新的绑定
-            AssetTextureBinding newBinding;
-            newBinding.name = name;
-            newBinding.textureAsset = textureAssetRef;
-            newBinding.slot = slot;
-            newBinding.type = type;
-
-            m_textureBindings.push_back(newBinding);
-            UpdateTextureNameToIndexMapping();
-        }
-
-        Logger::Debug("Material: Set texture asset '{}' for slot '{}' (slot {}, type {})",
-                      textureAssetRef.GetAssetId(), name, slot, static_cast<int>(type));
-    }
 
     void Material::SetTexture(const std::string &textureName, int slot)
     {
@@ -92,58 +55,15 @@ namespace framework
 
     void Material::SetTexture(const std::string &name, Texture *texture, int slot, TextureType type)
     {
-        if (!texture)
-        {
-            RemoveTexture(name);
-            return;
-        }
-
-        // 生成一个唯一的asset ID
-        std::string assetId = "Texture_" + name + "_" + std::to_string(reinterpret_cast<uintptr_t>(texture));
-
-        // 检查是否已经存在这个纹理的asset
-        auto existingAsset = AssetManager::GetInstance().GetAssetById(assetId);
-        if (existingAsset)
-        {
-            // 如果已经存在，直接使用
-            auto textureAsset = std::dynamic_pointer_cast<TextureAsset>(existingAsset);
-            if (textureAsset)
-            {
-                AssetReference<TextureAsset> textureAssetRef(textureAsset);
-                SetTexture(name, textureAssetRef, slot, type);
-                return;
-            }
-        }
-
-        // 创建一个新的TextureAsset来包装原始Texture，使用指定的assetId
-        auto textureAsset = std::make_shared<TextureAsset>(name + "_wrapped", assetId);
-        textureAsset->SetTexture(std::shared_ptr<Texture>(texture, [](Texture *)
-                                                          {
-                                                              // 不删除，因为这是外部管理的指针
-                                                          }));
-        textureAsset->SetLoadState(LoadState::Loaded);
-
-        // 手动注册到AssetManager
-        AssetManager::GetInstance().RegisterAsset(textureAsset);
-
-        // 使用AssetReference设置纹理
-        AssetReference<TextureAsset> textureAssetRef(textureAsset);
-        SetTexture(name, textureAssetRef, slot, type);
-
-        Logger::Debug("Material: Converted direct texture to asset reference for slot '{}' (assetId: {}, slot {}, type {})",
-                      name, assetId, slot, static_cast<int>(type));
+        throw new std::exception("not impl");
     }
 
-    AssetReference<TextureAsset> Material::GetTextureAssetReference(const std::string &name) const
-    {
-        const AssetTextureBinding *binding = FindTextureBinding(name);
-        return binding ? binding->textureAsset : AssetReference<TextureAsset>();
-    }
+
 
     std::shared_ptr<TextureAsset> Material::GetTextureAsset(const std::string &name) const
     {
         const AssetTextureBinding *binding = FindTextureBinding(name);
-        return binding ? binding->textureAsset.Get() : nullptr;
+        return binding ? binding->asset : nullptr;
     }
 
     std::shared_ptr<Texture> Material::GetTextureSharedPtr(const std::string &name) const
@@ -152,7 +72,7 @@ namespace framework
         const AssetTextureBinding *binding = FindTextureBinding(name);
         if (binding)
         {
-            auto textureAsset = binding->textureAsset.Get();
+            auto textureAsset = binding->asset;
             if (textureAsset && textureAsset->IsLoaded())
             {
                 return textureAsset->GetTexture();
@@ -168,7 +88,7 @@ namespace framework
         const AssetTextureBinding *binding = FindTextureBinding(name);
         if (binding)
         {
-            auto textureAsset = binding->textureAsset.Get();
+            auto textureAsset = binding->asset;
             if (textureAsset && textureAsset->IsLoaded())
             {
                 auto texture = textureAsset->GetTexture();
@@ -421,7 +341,7 @@ namespace framework
                 rapidjson::Value bindingNameValue(binding.name.c_str(), allocator);
                 bindingValue.AddMember("name", bindingNameValue, allocator);
 
-                rapidjson::Value textureAssetValue = binding.textureAsset.Serialize(allocator);
+                rapidjson::Value textureAssetValue = binding.asset->Serialize(allocator);
                 bindingValue.AddMember("textureAsset", textureAssetValue, allocator);
 
                 bindingValue.AddMember("slot", binding.slot, allocator);
@@ -463,7 +383,7 @@ namespace framework
 
                     if (bindingJson.HasMember("textureAsset") && bindingJson["textureAsset"].IsObject())
                     {
-                        binding.textureAsset.Deserialize(bindingJson["textureAsset"]);
+                        binding.asset->Deserialize(bindingJson["textureAsset"]);
                     }
 
                     if (bindingJson.HasMember("slot") && bindingJson["slot"].IsInt())
@@ -491,10 +411,9 @@ namespace framework
             return;
         }
 
-        // 应用AssetReference纹理
         for (const auto &binding : m_textureBindings)
         {
-            auto textureAsset = binding.textureAsset.Get();
+            auto textureAsset = binding.asset;
             if (textureAsset && textureAsset->IsLoaded())
             {
                 auto texture = textureAsset->GetTexture();

@@ -3,6 +3,7 @@
 #include "Framework/Graphic/MeshFilter.h"
 #include "Framework/Core/GameObject.h"
 
+
 namespace editor
 {
     class MeshFilterInspector : public TypedComponentInspector<framework::MeshFilter>

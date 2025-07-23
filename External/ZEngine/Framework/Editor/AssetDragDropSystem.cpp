@@ -1,6 +1,5 @@
 #include "Framework/Editor/AssetDragDropSystem.h"
 #include "Framework/Asset/Asset.h"
-#include "Framework/Asset/AssetReference.h"
 #include "Framework/Asset/AssetManager.h"
 #include "Framework/Log/Logger.h"
 #include <cstring>

@@ -38,13 +38,14 @@ namespace framework
 
     std::string Asset::GenerateAssetId() const
     {
-        // 基于名称、类型和时间戳生成唯一ID
-        auto now = std::chrono::system_clock::now();
-        auto time_t = std::chrono::system_clock::to_time_t(now);
-
-        std::ostringstream oss;
-        oss << AssetTypeToString(m_type) << "_" << m_name << "_" << std::hex << time_t;
-        return oss.str();
+        return m_name;
+//        // 基于名称、类型和时间戳生成唯一ID
+//        auto now = std::chrono::system_clock::now();
+//        auto time_t = std::chrono::system_clock::to_time_t(now);
+//
+//        std::ostringstream oss;
+//        oss << AssetTypeToString(m_type) << "_" << m_name << "_" << std::hex << time_t;
+//        return oss.str();
     }
 
     rapidjson::Value Asset::Serialize(rapidjson::Document::AllocatorType &allocator) const

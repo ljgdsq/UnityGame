@@ -1,7 +1,6 @@
 #pragma once
 #include "imgui.h"
 #include "Framework/Asset/AssetManager.h"
-#include "Framework/Asset/AssetReference.h"
 #include "Framework/Log/Logger.h"
 #include <string>
 #include <memory>
@@ -147,7 +146,7 @@ namespace editor
             return;
 
         AssetDragDropSystem::BeginDragDrop(DragDropType::Asset,
-                                           asset->GetAssetId(),
+                                           asset->GetName(),
                                            asset->GetName());
     }
 
@@ -172,7 +171,7 @@ namespace editor
             {
                 // 使用 AssetManager 的 GetAssetById 方法来获取已加载的资源
                 auto &assetManager = framework::AssetManager::GetInstance();
-                auto genericAsset = assetManager.GetAssetById(payload.dataId);
+                auto genericAsset = assetManager.GetAsset(payload.dataId);
                 if (genericAsset)
                 {
                     Logger::Debug("AcceptAssetDrop: Found asset by ID: {}", genericAsset->GetName());

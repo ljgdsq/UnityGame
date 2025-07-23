@@ -3,9 +3,6 @@
 #include "Framework/Asset/AssetManager.h"
 #include "Framework/Asset/TextureAsset.h"
 #include "Framework/Asset/MeshAsset.h"
-#include <filesystem>
-#include <iostream>
-#include <utility>
 #include "Framework/Log/Logger.h"
 using namespace std;
 namespace editor
@@ -64,7 +61,7 @@ namespace editor
 
     void ContentBrowser::RenderFileSystem()
     {
-        const char *rootPathCStr = "Res";
+
         auto root = std::filesystem::path(std::filesystem::current_path());
         for (const auto &c : currentPath)
         {
@@ -115,7 +112,6 @@ namespace editor
             }
         }
     }
-    void editor::ContentBrowser::RenderAsset(const std::string &assetPath) {}
 
     void ContentBrowser::RenderAssetDragSource(const std::string &filePath, const std::string &filename, const std::string &extension)
     {

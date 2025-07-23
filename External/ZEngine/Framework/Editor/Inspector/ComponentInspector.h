@@ -33,6 +33,7 @@ namespace editor
     protected:
         // 获取具体类型的组件指针 - 子类可以重写以提供类型安全的访问
         virtual framework::Component *GetComponent(framework::GameObject *obj) const;
+        virtual bool RemoveComponentT(framework::GameObject *obj);
     };
 
     // 模板基类，简化具体检查器的实现
@@ -56,6 +57,16 @@ namespace editor
         framework::Component *GetComponent(framework::GameObject *obj) const override
         {
             return GetTypedComponent(obj);
+        }
+
+        bool RemoveComponentT(framework::GameObject *obj) override
+        {
+            if (!obj || !HasComponent(obj))
+                return false;
+
+            // 使用 GameObject 的泛型 RemoveComponent 方法
+            obj->RemoveComponent<ComponentType>();
+            return true;
         }
     };
 }

@@ -46,7 +46,7 @@ namespace framework
     template <class T>
     std::shared_ptr<T> AssetManager::LoadAsset(const std::string &assetPath)
     {
-        auto assetName = FileUtils::ExtractFileName(assetPath);
+        auto assetName = FileUtil::ExtractFileName(assetPath);
         if (HasAsset(assetName))
         {
             Logger::Log("Asset {} already loaded, returning existing instance", assetName);

@@ -1,6 +1,5 @@
 #pragma once
 #include "Framework/Editor/AssetDragDropSystem.h"
-#include "Framework/Asset/AssetReference.h"
 #include "Framework/Asset/AssetManager.h"
 #include "Framework/Log/Logger.h"
 #include "imgui.h"
@@ -139,28 +138,7 @@ namespace editor
         return changed;
     }
 
-    template <typename AssetType>
-    bool AssetField<AssetType>::Render(const std::string &label,
-                                       framework::AssetReference<AssetType> &assetRef,
-                                       const AssetFieldConfig &config)
-    {
-        auto asset = assetRef.Get();
-        bool changed = Render(label, asset, config);
 
-        if (changed)
-        {
-            if (asset)
-            {
-                assetRef = framework::AssetReference<AssetType>(asset);
-            }
-            else
-            {
-                assetRef.Clear();
-            }
-        }
-
-        return changed;
-    }
 
     template <typename AssetType>
     void AssetField<AssetType>::RenderReadOnly(const std::string &label,
@@ -220,7 +198,7 @@ namespace editor
 
                 // 通过 AssetManager 获取资源
                 auto &assetManager = framework::AssetManager::GetInstance();
-                auto draggedAsset = assetManager.GetAssetById(dragPayload.dataId);
+                auto draggedAsset = assetManager.GetAsset(dragPayload.dataId);
 
                 if (draggedAsset && draggedAsset->GetType() == GetAssetType())
                 {

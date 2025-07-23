@@ -71,7 +71,7 @@ namespace editor
                 }
 
                 // 获取当前的纹理资源
-                auto currentTextureAsset = binding->textureAsset.Get();
+                auto currentTextureAsset = binding->asset;
                 std::shared_ptr<TextureAsset> mutableTextureAsset = currentTextureAsset;
 
                 // 确保缩略图已生成

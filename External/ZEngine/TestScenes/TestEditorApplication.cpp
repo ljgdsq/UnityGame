@@ -1,4 +1,3 @@
-#include "TestScenes/TestApplication.h"
 #include "glad/glad.h"
 #include "GLFW/glfw3.h"
 #include "Framework/Log/Logger.h"
@@ -7,9 +6,9 @@
 #include "imgui_impl_opengl3.h"
 #include "Framework/Core/SceneManager.h"
 #include "TestEditorApplication.h"
-#include "TestScenes/MeshTestScene.h"
 #include "Framework/Graphic/Buffer.h"
 #include "Framework/Editor/ComponentRegistration.h"
+#include "TestScenes/CameraManagerExampleScene.h"
 
 framework::TestEditorApplication::TestEditorApplication()
 {
@@ -31,8 +30,8 @@ void framework::TestEditorApplication::InitScenes()
     gameView->Initialize();
     inspectorWidget->Initialize();
     contentBrowser->Initialize();
-    auto assetManagerTestScene = new MeshTestScene();
-    SceneManager::GetInstance().AddScene("MeshTestScene", assetManagerTestScene);
+    auto assetManagerTestScene = new CameraManagerExampleScene();
+    SceneManager::GetInstance().AddScene("CameraManagerExampleScene", assetManagerTestScene);
 
     SetInitialScene("MeshTestScene");
 

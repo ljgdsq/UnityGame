@@ -1,10 +1,7 @@
-#include "MeshFilterInspector.h"
 #include "Framework/Asset/MeshAsset.h"
 #include "Framework/Editor/AssetField.h"
-#include "Framework/Asset/AssetManager.h"
 #include "Framework/Log/Logger.h"
-#include <imgui.h>
-#include <string>
+#include "Framework/Editor/Inspector/MeshFilterInspector.h"
 
 namespace editor
 {

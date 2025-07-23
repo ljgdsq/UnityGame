@@ -2,9 +2,12 @@
 #include "Framework/Core/Input.h"
 #include "Framework/Log/Logger.h"
 #include "Framework/Graphic/Buffer.h"
+#include "Framework/Asset/AssetManager.h"
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include "GLFW/glfw3.h"
+#include "Framework/Asset/TextureAsset.h"
+
 namespace framework
 {
 
@@ -15,8 +18,10 @@ namespace framework
         // 创建着色器
         m_shader = new Shader("Shaders/CameraExample.vs", "Shaders/CameraExample.fs");
 
+        auto asset=AssetManager::GetInstance().LoadAsset<TextureAsset>("Textures/container.png");
+
         // 创建纹理
-        m_cubeTexture = Texture::LoadTexture("Textures/container.png");
+        m_cubeTexture = asset->GetTexture().get();
 
         // 创建立方体
         CreateCube();

@@ -1,7 +1,6 @@
 #include "Framework/Editor/AssetField.h"
 #include "Framework/Asset/TextureAsset.h"
 #include "Framework/Asset/MeshAsset.h"
-#include "Framework/Log/Logger.h"
 
 namespace editor
 {
