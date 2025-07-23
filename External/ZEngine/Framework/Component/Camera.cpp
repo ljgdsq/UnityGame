@@ -4,8 +4,6 @@
 #include "Framework/Core/GameObject.h"
 #include "Framework/Log/Logger.h"
 #include <glm/gtc/matrix_transform.hpp>
-#include "Camera.h"
-
 namespace framework
 {
 
@@ -125,8 +123,6 @@ namespace framework
     void Camera::SetMainCamera(bool isMain)
     {
         isMainCamera = isMain;
-        //
-        // CameraManager::GetInstance().SetMainCamera(this);
     }
     void Camera::SetFieldOfView(float fov)
     {

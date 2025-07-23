@@ -99,7 +99,7 @@ void framework::TestEditorApplication::EndFrame()
 
     ImGuiIO &io = ImGui::GetIO();
 
-    ImGui::Begin("Dear ImGui Demo");
+    ImGui::Begin("state");
     ImGui::Text("FPS: %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);
     ImGui::Text("FBO size: %dx%d", gameFrameBuffer->GetWidth(), gameFrameBuffer->GetHeight());
     ImGui::Text("Color texture ID: %u", gameFrameBuffer->GetColorBuffer());

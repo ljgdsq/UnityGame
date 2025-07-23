@@ -1,9 +1,9 @@
 #include "Framework/Editor/Inspector/MeshRendererInspector.h"
 #include "Framework/Graphic/Material.h"
 #include "Framework/Core/Texture.h"
-#include "Framework/Editor/AssetField.h"
 #include "Framework/Asset/TextureAsset.h"
-#include <string>
+#include "Framework/Editor/Inspector/AssetField/AssetFieldUI.h"
+
 using namespace framework;
 
 namespace editor
@@ -85,20 +85,14 @@ namespace editor
                 config.showPreview = true;
                 config.allowNull = true;
 
-                // 渲染纹理资源字段
-                if (AssetField<TextureAsset>::Render(binding->name, mutableTextureAsset, config))
+                // 渲染纹理字段
+                if (RenderTextureField("Texture " + std::to_string(i) + ":", mutableTextureAsset, config))
                 {
-                    // 纹理资源发生变化，更新材质
-                    if (mutableTextureAsset && mutableTextureAsset->IsLoaded())
+                    // 如果纹理被修改，更新材质
+                    if (mutableTextureAsset != currentTextureAsset)
                     {
                         material->SetTexture(binding->name, mutableTextureAsset, binding->slot, binding->type);
-                        Logger::Debug("Texture asset updated: {} -> {}", binding->name, mutableTextureAsset->GetName());
-                    }
-                    else
-                    {
-                        // 清空纹理
-                        material->RemoveTexture(binding->name);
-                        Logger::Debug("Texture removed: {}", binding->name);
+                        Logger::Log("MeshRendererInspector: Texture updated for slot %d", binding->slot);
                     }
                 }
 

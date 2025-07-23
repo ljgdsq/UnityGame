@@ -6,7 +6,7 @@ in vec3 Normal;
 in vec3 FragPos;
 
 // 纹理
-uniform sampler2D texture1;
+uniform sampler2D texture_1;
 
 // 最大光源数量
 #define MAX_LIGHTS 8
@@ -45,75 +45,75 @@ uniform float u_shininess;
 // 计算方向光
 vec3 CalculateDirectionalLight(Light light, vec3 normal, vec3 viewDir, vec3 diffuseColor, vec3 specularColor) {
     vec3 lightDir = normalize(-light.direction);
-    
+
     // 漫反射
     float diff = max(dot(normal, lightDir), 0.0);
     vec3 diffuse = diff * light.color * light.intensity * diffuseColor;
-    
+
     // 镜面反射
     vec3 reflectDir = reflect(-lightDir, normal);
     float spec = pow(max(dot(viewDir, reflectDir), 0.0), u_shininess);
     vec3 specular = spec * light.color * light.intensity * specularColor;
-    
+
     return diffuse + specular;
 }
 
 // 计算点光源
 vec3 CalculatePointLight(Light light, vec3 normal, vec3 fragPos, vec3 viewDir, vec3 diffuseColor, vec3 specularColor) {
     vec3 lightDir = normalize(light.position - fragPos);
-    
+
     // 衰减计算
     float distance = length(light.position - fragPos);
     if (distance > light.range) {
         return vec3(0.0);
     }
-    
+
     float attenuation = 1.0 / (light.constant + light.linear * distance + light.quadratic * (distance * distance));
-    
+
     // 漫反射
     float diff = max(dot(normal, lightDir), 0.0);
     vec3 diffuse = diff * light.color * light.intensity * diffuseColor;
-    
+
     // 镜面反射
     vec3 reflectDir = reflect(-lightDir, normal);
     float spec = pow(max(dot(viewDir, reflectDir), 0.0), u_shininess);
     vec3 specular = spec * light.color * light.intensity * specularColor;
-    
+
     return (diffuse + specular) * attenuation;
 }
 
 // 计算聚光灯
 vec3 CalculateSpotLight(Light light, vec3 normal, vec3 fragPos, vec3 viewDir, vec3 diffuseColor, vec3 specularColor) {
     vec3 lightDir = normalize(light.position - fragPos);
-    
+
     // 检查是否在聚光灯锥体内
     float theta = dot(lightDir, normalize(-light.direction));
-    
+
     if (theta < light.spotOuterAngle) {
         return vec3(0.0); // 超出聚光灯范围
     }
-    
+
     // 衰减计算
     float distance = length(light.position - fragPos);
     if (distance > light.range) {
         return vec3(0.0);
     }
-    
+
     float attenuation = 1.0 / (light.constant + light.linear * distance + light.quadratic * (distance * distance));
-    
+
     // 聚光灯边缘软化
     float epsilon = light.spotInnerAngle - light.spotOuterAngle;
     float intensity = clamp((theta - light.spotOuterAngle) / epsilon, 0.0, 1.0);
-    
+
     // 漫反射
     float diff = max(dot(normal, lightDir), 0.0);
     vec3 diffuse = diff * light.color * light.intensity * diffuseColor;
-    
+
     // 镜面反射
     vec3 reflectDir = reflect(-lightDir, normal);
     float spec = pow(max(dot(viewDir, reflectDir), 0.0), u_shininess);
     vec3 specular = spec * light.color * light.intensity * specularColor;
-    
+
     return (diffuse + specular) * attenuation * intensity;
 }
 
@@ -131,20 +131,20 @@ vec3 CalculateLight(Light light, vec3 normal, vec3 fragPos, vec3 viewDir, vec3 d
 
 void main() {
     // 获取纹理颜色
-    vec3 textureColor = texture(texture1, TexCoord).rgb;
+    vec3 textureColor = texture(texture_1, TexCoord).rgb;
     vec3 diffuseColor = textureColor * u_diffuseColor;
-    
+
     // 法线和视图方向
     vec3 normal = normalize(Normal);
     vec3 viewDir = normalize(u_viewPosition - FragPos);
-    
+
     // 环境光
     vec3 result = u_ambientLight * diffuseColor;
-    
+
     // 计算所有光源的贡献
     for (int i = 0; i < u_lightCount && i < MAX_LIGHTS; ++i) {
         result += CalculateLight(u_lights[i], normal, FragPos, viewDir, diffuseColor, u_specularColor);
     }
-    
+
     FragColor = vec4(result, 1.0);
 }

@@ -40,7 +40,23 @@ namespace framework
 
     void Material::SetTexture(const std::string &name, std::shared_ptr<TextureAsset> textureAsset, int slot, TextureType type)
     {
-        throw new std::exception("not impl");
+        AssetTextureBinding *binding= FindTextureBinding(name);
+        if (binding){
+            binding ->asset = textureAsset;
+            binding->slot = slot;
+            binding->type = type;
+            Logger::Debug("Material: Updated texture asset binding: {}", name);
+        }else{
+            AssetTextureBinding newBinding;
+            newBinding.name = name;
+            newBinding.asset = textureAsset;
+            newBinding.slot = slot;
+            newBinding.type = type;
+
+            m_textureBindings.push_back(newBinding);
+            UpdateTextureNameToIndexMapping();
+            Logger::Debug("Material: Added new texture asset binding: {}", name);
+        }
     }
 
 

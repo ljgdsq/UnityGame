@@ -1,8 +1,7 @@
 #include "Framework/Asset/MeshAsset.h"
-#include "Framework/Editor/AssetField.h"
 #include "Framework/Log/Logger.h"
 #include "Framework/Editor/Inspector/MeshFilterInspector.h"
-
+#include "Framework/Editor/Inspector/AssetField/AssetFieldUI.h"
 namespace editor
 {
     void MeshFilterInspector::Inspect(framework::GameObject *node)
@@ -37,18 +36,9 @@ namespace editor
         config.nullText = "None (Mesh)";
         config.selectText = "Select Mesh";
 
-        // 创建网格资源字段
-        AssetField<framework::MeshAsset> meshField;
-
         // 获取当前网格资源
         auto currentMeshAsset = meshFilter->GetMeshAsset();
-
-        // 渲染资源字段
-        if (meshField.Render("Mesh", currentMeshAsset, config))
-        {
-            meshFilter->SetMesh(currentMeshAsset);
-            LOG_INFO("MeshFilterInspector: 网格资源已更新");
-        }
+        RenderMeshField("Mesh Label:", currentMeshAsset, config);
     }
 
     void MeshFilterInspector::RenderMeshInfo(framework::MeshFilter *meshFilter)
