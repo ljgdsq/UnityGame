@@ -1,11 +1,8 @@
 #pragma once
 #include "Framework/Asset/Asset.h"
-#include "Framework/Graphic/Buffer.h"
 #include "Framework/Graphic/Mesh.h"
 #include "Framework/Log/Logger.h"
 #include <memory>
-#include <string>
-#include <vector>
 
 namespace framework
 {
@@ -22,9 +19,7 @@ namespace framework
     {
     public:
         MeshAsset(const std::string &name);
-        MeshAsset(const std::string &name, const std::string &assetId);
         virtual ~MeshAsset() override;
-
         long GetSize() const override;
 
         // Serialization
@@ -40,7 +35,6 @@ namespace framework
         long GetTriangleCount() const;
 
     private:
-
         // 辅助方法
         void UpdateMeshStatistics();
         void GenerateThumbnail() override;

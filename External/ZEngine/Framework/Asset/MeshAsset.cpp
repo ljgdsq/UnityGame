@@ -1,11 +1,6 @@
 #include "Framework/Asset/MeshAsset.h"
-#include "Framework/Log/Logger.h"
 #include "Framework/Core/EngineFileIO.h"
-#include <filesystem>
-#include <fstream>
-#include <sstream>
 #include <algorithm>
-#include <cmath>
 
 #ifndef M_PI
 #define M_PI 3.14159265358979323846

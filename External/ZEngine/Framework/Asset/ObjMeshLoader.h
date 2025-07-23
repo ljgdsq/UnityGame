@@ -2,8 +2,6 @@
 #include "Framework/Asset/Asset.h"
 #include "Framework/Asset/AssetLoader.h"
 #include "glm/glm.hpp"
-#include <string>
-#include <memory>
 
 namespace framework
 {

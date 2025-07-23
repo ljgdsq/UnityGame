@@ -62,7 +62,7 @@ namespace framework
 
         int GetRefCount() const { return m_refCount; }
 
-        void Release();
+        void Release(bool force=false);
 
         virtual long GetSize() const = 0;
 

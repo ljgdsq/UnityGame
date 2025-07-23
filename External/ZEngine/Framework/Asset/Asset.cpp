@@ -14,13 +14,16 @@ namespace framework
     }
 
 
-    void Asset::Release()
+    void Asset::Release(bool force)
     {
-        if (--m_refCount <= 0)
+        if (force || --m_refCount <= 0)
         {
+            Logger::Log("Releasing asset: {}", m_name);
+            ReleaseThumbnail();
             delete this;
         }
     }
+
 
     void Asset::ReleaseThumbnail()
     {

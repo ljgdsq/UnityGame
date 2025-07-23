@@ -6,28 +6,43 @@
 #include "Framework/Core/EngineFileIO.h"
 #include "Framework/Util/FileUtil.hpp"
 #include <sstream>
-#include <unordered_map>
-#include "ObjMeshLoader.h"
 
 namespace framework
 {
     std::shared_ptr<Asset> ObjMeshLoader::LoadAsset(const std::string &assetPath)
     {
         Logger::Debug("Loading OBJ mesh from path: {}", assetPath);
+
         std::string assetName = FileUtil::ExtractFileName(assetPath);
         auto meshAsset = std::make_shared<MeshAsset>(assetName);
+        // 检查文件是否存在
+        if (!EngineFileIO::FileExists(assetPath))
+        {
+            meshAsset->SetLoadState(LoadState::Failed);
+            Logger::Error("OBJ file does not exist: {}", assetPath);
+            return meshAsset;
+        }
+
+
+        // 设置文件路径和加载状态
+        meshAsset->SetFilePath(assetPath);
+        meshAsset->SetLoadState(LoadState::Loading);
+
         std::vector<ObjVertex> vertices;
         std::vector<unsigned int> indices;
+
         if (!ParseObjFile(assetPath, vertices, indices))
         {
+            meshAsset->SetLoadState(LoadState::Failed);
             Logger::Error("Failed to parse OBJ file: {}", assetPath);
-            return nullptr;
+            return meshAsset;
         }
 
         if (vertices.empty() || indices.empty())
         {
+            meshAsset->SetLoadState(LoadState::Failed);
             Logger::Error("No valid vertices or indices found in OBJ file: {}", assetPath);
-            return nullptr;
+            return meshAsset;
         }
 
         // 转换为 Mesh 格式
@@ -48,8 +63,11 @@ namespace framework
         auto mesh = std::make_shared<Mesh>();
         mesh->SetVertices(meshVertices);
         mesh->SetIndices(indices);
-
         meshAsset->SetMesh(mesh);
+
+        // 设置加载成功状态
+        meshAsset->SetLoadState(LoadState::Loaded);
+
         Logger::Debug("Successfully loaded OBJ mesh: {}", assetName);
         Logger::Debug("  - Vertices: {} (raw count: {})", vertices.size(), meshVertices.size() / 8);
         Logger::Debug("  - Indices: {}", indices.size());

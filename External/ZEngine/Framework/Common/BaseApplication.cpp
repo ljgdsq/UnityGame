@@ -10,6 +10,9 @@
 #include "Framework/Graphic/RenderComponent.h"
 #include "Framework/Graphic/Renderer.h"
 #include "Framework/Core/Timer.h"
+#include "Framework/Asset/AssetManager.h"
+#include "Framework/Asset/TextureLoader.h"
+#include "Framework/Asset/ObjMeshLoader.h"
 // platform specific includes
 #include "Framework/Window/Platform/GLFWWindow.h"
 
@@ -29,6 +32,8 @@ namespace framework
     void BaseApplication::Initialize()
     {
 
+        AssetManager::GetInstance().Initialize();
+        RegisterDefaultLoader();
         // Initialize the logger
         Logger::Init();
 
@@ -42,7 +47,7 @@ namespace framework
 
         // Initialize the renderer
         m_renderer = new Renderer();
-        m_renderer->Initialize(m_window,glfwGetProcAddress);
+        m_renderer->Initialize(m_window, glfwGetProcAddress);
 
         Input::GetInstance().Initialize(m_window);
         // 初始化帧率管理器
@@ -85,7 +90,6 @@ namespace framework
             return;
         }
 
-
         InitScenes();
 
         // Main game loop
@@ -120,7 +124,6 @@ namespace framework
             m_renderer->SwapBuffers();
 
             FrameRateManager::GetInstance().SleepToNextFrame(frameStartTime);
-
         }
 
         // 关闭当前场景
@@ -175,6 +178,13 @@ namespace framework
     float BaseApplication::GetCurrentFPS() const
     {
         return FrameRateMonitor::GetInstance().GetCurrentFPS();
+    }
+
+    void RegisterDefaultLoader()
+    {
+        // Register default asset loaders
+        AssetManager::GetInstance().RegisterLoader(std::make_shared<TextureLoader>());
+        AssetManager::GetInstance().RegisterLoader(std::make_shared<ObjMeshLoader>());
     }
 
 } // namespace framework

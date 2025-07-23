@@ -1,7 +1,6 @@
 #pragma once
-#include "Framework/Asset/Asset.h"
-#include "Framework/Asset/TextureAsset.h"
 #include "Framework/Asset/AssetLoader.h"
+#include "Framework/Asset/TextureAsset.h"
 #include <string>
 #include <memory>
 
@@ -20,6 +19,6 @@ namespace framework
         AssetType GetAssetType() const override { return AssetType::Texture; }
 
     private:
-        bool GenTexture(std::vector<uint8_t> data, std::shared_ptr <TextureAsset> asset);
+        bool GenTexture(const std::vector<uint8_t> &data, std::shared_ptr<TextureAsset> asset);
     };
 }

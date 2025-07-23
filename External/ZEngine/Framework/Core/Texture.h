@@ -20,13 +20,13 @@ namespace framework
     {
     public:
         Texture();
+        Texture(const std::string &filepath,
+                unsigned int textureID = 0,
+                int width = 0,
+                int height = 0,
+                int channels = 0)
+            : m_filepath(filepath), m_textureID(textureID), m_width(width), m_height(height), m_channels(channels) {}
         ~Texture();
-
-        // Load texture from file
-        bool LoadFromFile(const std::string &filepath);
-
-        // Static factory method that uses ResLoader for path resolution
-        static Texture *LoadTexture(const std::string &filename);
 
         // Bind texture for rendering
         void Bind(unsigned int slot = 0) const;
@@ -42,7 +42,7 @@ namespace framework
 
         // Get the resolved file path
         const std::string &GetFilePath() const { return m_filepath; }
-
+        void SetFilePath(const std::string &filepath) { m_filepath = filepath; }
         // Delete texture
         void Delete();
 
