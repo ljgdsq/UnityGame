@@ -33,6 +33,12 @@ namespace framework
         Logger::Debug("Material: Set shader directly");
     }
 
+    void Material::SetShader(std::shared_ptr<class Shader> shader)
+    {
+        m_shader = shader.get();
+        Logger::Debug("Material: Set shader from shared_ptr");
+    }
+
     void Material::SetTexture(const std::string &name, const std::string &textureAssetId, int slot, TextureType type)
     {
         throw new std::exception("not impl");
@@ -40,13 +46,16 @@ namespace framework
 
     void Material::SetTexture(const std::string &name, std::shared_ptr<TextureAsset> textureAsset, int slot, TextureType type)
     {
-        AssetTextureBinding *binding= FindTextureBinding(name);
-        if (binding){
-            binding ->asset = textureAsset;
+        AssetTextureBinding *binding = FindTextureBinding(name);
+        if (binding)
+        {
+            binding->asset = textureAsset;
             binding->slot = slot;
             binding->type = type;
             Logger::Debug("Material: Updated texture asset binding: {}", name);
-        }else{
+        }
+        else
+        {
             AssetTextureBinding newBinding;
             newBinding.name = name;
             newBinding.asset = textureAsset;
@@ -58,7 +67,6 @@ namespace framework
             Logger::Debug("Material: Added new texture asset binding: {}", name);
         }
     }
-
 
     void Material::SetTexture(const std::string &textureName, int slot)
     {
@@ -73,8 +81,6 @@ namespace framework
     {
         throw new std::exception("not impl");
     }
-
-
 
     std::shared_ptr<TextureAsset> Material::GetTextureAsset(const std::string &name) const
     {
@@ -434,10 +440,14 @@ namespace framework
                 {
                     texture->Bind(binding.slot);
                     m_shader->SetInt(binding.name.c_str(), binding.slot);
-                }else{
+                }
+                else
+                {
                     SetMissingTexturesToDefault(binding);
                 }
-            }else{
+            }
+            else
+            {
                 SetMissingTexturesToDefault(binding);
             }
         }

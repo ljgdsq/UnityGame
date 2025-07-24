@@ -12,9 +12,9 @@ namespace framework
     // 纹理绑定结构
     struct AssetTextureBinding
     {
-        std::string name;                          // 纹理名称
-        int slot = 0;                              // 纹理槽位
-        TextureType type = TextureType::DIFFUSE;   // 纹理类型
+        std::string name;                        // 纹理名称
+        int slot = 0;                            // 纹理槽位
+        TextureType type = TextureType::DIFFUSE; // 纹理类型
         std::shared_ptr<TextureAsset> asset;
         // 便利方法
         std::shared_ptr<TextureAsset> GetTextureAsset() const { return asset; }
@@ -55,8 +55,8 @@ namespace framework
         void Use();
 
         // 设置着色器
-        virtual void SetShader(const std::string &shaderName);
-        virtual void SetShader(class Shader *shader);
+        void SetShader(class Shader *shader);
+        void SetShader(std::shared_ptr<class Shader> shader);
 
         // 纹理管理 - 新的AssetReference版本
         void SetTexture(const std::string &name, const std::string &textureAssetId, int slot = 0, TextureType type = TextureType::DIFFUSE);
