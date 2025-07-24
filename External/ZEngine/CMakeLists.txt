@@ -37,12 +37,16 @@ add_subdirectory(External/glfw)
 add_subdirectory(External/rapidjson)
 add_subdirectory(External/spdlog)
 add_subdirectory(External/imgui)
+add_subdirectory(External/ImGuiFileDialog)
 
 # 添加 GLAD
 add_library(glad External/glad/src/gl.c )
 target_include_directories(glad PUBLIC External/glad/include)
 # 将 glad 放置到 glad 文件夹下
 set_target_properties(glad PROPERTIES FOLDER "glad")
+
+# 确保 ImGuiFileDialog 能找到 imgui 头文件
+target_link_libraries(ImGuiFileDialog PRIVATE imgui)
 
 # 查找 OpenGL 库
 find_package(OpenGL REQUIRED)
@@ -84,6 +88,10 @@ target_link_libraries(zengine PRIVATE
     ${OPENGL_LIBRARIES}
     rapidjson
     spdlog::spdlog
+)
+
+target_link_libraries(zengine PUBLIC
+    ImGuiFileDialog
 )
 
 # Add stb include directory to target

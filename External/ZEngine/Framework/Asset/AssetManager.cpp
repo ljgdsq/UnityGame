@@ -1,10 +1,6 @@
 #include "Framework/Asset/AssetManager.h"
 #include "Framework/Log/Logger.h"
-#include "Framework/Util/FileUtil.hpp"
 
-#include "Framework/Asset/TextureAsset.h"
-#include "Framework/Asset/MeshAsset.h"
-#include "Framework/Asset/ShaderAsset.h"
 
 namespace framework
 {

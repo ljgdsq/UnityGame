@@ -2,6 +2,7 @@
 #include "Framework/Editor/Hierarchy.h"
 #include "Framework/Editor/GameView.h"
 #include "Framework/Editor/ContentBrowser.h"
+#include "Framework/Editor/EditorMenuBar.h"
 #include "Framework/Common/BaseApplication.h"
 #include "Framework/Editor/Inspector.h"
 
@@ -30,6 +31,7 @@ protected:
         editor::HierarchyWidget* hierarchyWidget = nullptr; // 层级视图小部件
         editor::Inspector* inspectorWidget = nullptr; // 检查器小部件，用于显示选中游戏对象的属性
         editor::ContentBrowser* contentBrowser = nullptr; // 内容浏览器小部件
+        editor::EditorMenuBar* editorMenuBar= nullptr;
     };
 
 } // namespace framework

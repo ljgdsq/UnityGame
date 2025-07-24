@@ -16,6 +16,7 @@ framework::TestEditorApplication::TestEditorApplication()
     hierarchyWidget = new editor::HierarchyWidget();
     inspectorWidget = new editor::Inspector();
     contentBrowser = new editor::ContentBrowser();
+    editorMenuBar = new editor::EditorMenuBar();
 }
 
 void framework::TestEditorApplication::InitScenes()
@@ -31,6 +32,7 @@ void framework::TestEditorApplication::InitScenes()
     gameView->Initialize();
     inspectorWidget->Initialize();
     contentBrowser->Initialize();
+    editorMenuBar->Initialize();
     auto testScene = new BasicTestScene();
     SceneManager::GetInstance().AddScene("BasicTestScene", testScene);
 
@@ -96,7 +98,7 @@ void framework::TestEditorApplication::EndFrame()
     gameView->Render();
     inspectorWidget->Render();
     contentBrowser->Render();
-
+    editorMenuBar->Render();
     ImGuiIO &io = ImGui::GetIO();
 
     ImGui::Begin("state");
@@ -134,5 +136,9 @@ void framework::TestEditorApplication::OnUpdate(float deltaTime)
     if (inspectorWidget)
     {
         inspectorWidget->Update(deltaTime);
+    }
+
+    if(editorMenuBar){
+        editorMenuBar->Update(deltaTime);
     }
 }

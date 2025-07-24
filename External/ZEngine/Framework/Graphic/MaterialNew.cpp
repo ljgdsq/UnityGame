@@ -20,13 +20,6 @@ namespace framework
         }
     }
 
-    void Material::SetShader(const std::string &shaderName)
-    {
-        // 这里应该通过ShaderManager或AssetManager获取shader
-        // 暂时保留原有逻辑
-        Logger::Debug("Material: Setting shader: {}", shaderName);
-    }
-
     void Material::SetShader(class Shader *shader)
     {
         m_shader = shader;
