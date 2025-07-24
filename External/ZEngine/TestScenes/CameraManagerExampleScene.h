@@ -30,8 +30,6 @@ namespace framework
         void Render(Renderer *renderer) override;
         void Shutdown() override;
 
-        const char *GetName() const override { return "CameraManagerExample"; }
-
     private:
         // 创建一个立方体对象用于演示不同相机视角
         void CreateCube();

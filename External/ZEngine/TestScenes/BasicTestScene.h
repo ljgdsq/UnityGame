@@ -30,8 +30,6 @@ namespace framework
         void Render(Renderer *renderer) override;
         void Shutdown() override;
 
-        const char *GetName() const override { return "BasicTestScene"; }
-
     };
 
 } // namespace framework

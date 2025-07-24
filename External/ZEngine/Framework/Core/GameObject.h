@@ -8,8 +8,8 @@
 
 namespace framework {
     class Transform;
-
-    class GameObject final {
+    class Scene;
+    class GameObject final :public Serializable {
     private:
         enum class State {
             None, // 未初始化
@@ -22,9 +22,9 @@ namespace framework {
         bool isActive = true; // 是否激活
         bool isStarted = false; // 是否已开始
     public:
-        GameObject();
+        GameObject(Scene*scene= nullptr);
 
-        GameObject(std::string name);
+        GameObject(std::string name,Scene*scene= nullptr);
 
         virtual ~GameObject() = default;
 
@@ -120,6 +120,11 @@ namespace framework {
 
         std::vector<GameObject *> children; // List of child GameObjects
         GameObject *parent = nullptr; // Pointer to the parent GameObject
+
+        public:
+        rapidjson::Value Serialize(rapidjson::MemoryPoolAllocator<> &allocator) const override;
+
+        void Deserialize(const rapidjson::Value &jsonValue) override;
     };
 
     // =============================================

@@ -67,6 +67,11 @@ namespace framework
 
     protected:
         Renderer *m_renderer = nullptr; // 渲染器实例
-        IWindow *m_window = nullptr;     // 窗口实例
+        IWindow *m_window = nullptr;    // 窗口实例
+    public:
+        static BaseApplication *GetInstance() { return m_instance; };
+        void SetShouldClose(bool shouldClose); // 设置窗口是否应该关闭
+    private:
+        static BaseApplication *m_instance; // 单例实例
     };
 } // namespace framework

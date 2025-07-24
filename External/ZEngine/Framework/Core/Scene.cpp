@@ -85,7 +85,7 @@ namespace framework
             auto it = std::find(m_gameObjects.begin(), m_gameObjects.end(), gameObject);
             if (it != m_gameObjects.end())
             {
-                gameObject->Destroy(); // 调用销毁时的回调
+                gameObject->Destroy();   // 调用销毁时的回调
                 m_gameObjects.erase(it); // 从场景中移除游戏对象
             }
             else
@@ -94,8 +94,7 @@ namespace framework
             }
 
             // 如果游戏对象在新添加列表中，也需要移除
-            auto newIt = std::find(m_newGameObjects.begin(), m_newGameObjects.end
-            (), gameObject);
+            auto newIt = std::find(m_newGameObjects.begin(), m_newGameObjects.end(), gameObject);
             if (newIt != m_newGameObjects.end())
             {
                 m_newGameObjects.erase(newIt);
@@ -127,5 +126,56 @@ namespace framework
             gameObject->Update(deltaTime);
         }
     }
+
+    rapidjson::Value Scene::Serialize(rapidjson::MemoryPoolAllocator<> &allocator) const
+    {
+        rapidjson::Value jsonValue(rapidjson::kObjectType);
+        jsonValue.AddMember("name", rapidjson::Value(GetName().c_str(), allocator), allocator);
+        jsonValue.AddMember("path", rapidjson::Value(GetPath().c_str(), allocator), allocator);
+
+        rapidjson::Value gameObjectsArray(rapidjson::kArrayType);
+        for (const auto &gameObject : m_gameObjects)
+        {
+            if (gameObject)
+            {
+                rapidjson::Value gameObjectValue = gameObject->Serialize(allocator);
+                gameObjectsArray.PushBack(gameObjectValue, allocator);
+            }
+        }
+
+        jsonValue.AddMember("gameObjects", gameObjectsArray, allocator);
+        return jsonValue;
+    }
+
+    const std::string &Scene::GetName() const { return m_name; }
+
+    void Scene::Deserialize(const rapidjson::Value &jsonValue)
+    {
+        if (jsonValue.HasMember("name"))
+        {
+            SetName(jsonValue["name"].GetString());
+        }
+
+        if (jsonValue.HasMember("path"))
+        {
+            SetPath(jsonValue["path"].GetString());
+        }
+
+        if (jsonValue.HasMember("gameObjects"))
+        {
+            const rapidjson::Value &gameObjectsArray = jsonValue["gameObjects"];
+            for (rapidjson::SizeType i = 0; i < gameObjectsArray.Size(); i++)
+            {
+                GameObject *gameObject = new GameObject(this);
+                gameObject->Deserialize(gameObjectsArray[i]);
+            }
+        }
+    }
+
+    const std::string &Scene::GetPath() const { return m_path; }
+
+    void Scene::SetName(const std::string &name) { m_name = name; }
+
+    void Scene::SetPath(const std::string &path) { m_path = path; }
 
 }

@@ -4,24 +4,22 @@
 #include <memory>
 #include <vector>
 #include "Framework/Log/Logger.h"
+#include "Framework/Core/Serializable.h"
 namespace framework
 {
     class GameObject;      // 前向声明，避免循环依赖
     class RenderComponent; // 前向声明渲染组件
     class Renderer;
-    class Scene
+    class Scene : public Serializable
     {
     public:
         Scene() = default;
         virtual ~Scene() = default;
 
-        virtual void Initialize() = 0;
+        virtual void Initialize() {};
         virtual void Update(float deltaTime);
         virtual void Render(Renderer *renderer);
-        virtual void Shutdown() = 0;
-
-        virtual const char *GetName() const = 0;
-
+        virtual void Shutdown() {};
 
     public:
         // 获取场景中的所有游戏对象
@@ -47,5 +45,23 @@ namespace framework
         void CollectRenderComponents(std::vector<RenderComponent *> &renderComponents);
 
         void SortRenderComponents(std::vector<RenderComponent *> &renderComponents);
+
+    private:
+        std::string m_name; // 场景名称
+        std::string m_path; // 场景文件路径
+
+        public:
+
+        rapidjson::Value Serialize(rapidjson::MemoryPoolAllocator<> &allocator) const override;
+
+        void Deserialize(const rapidjson::Value &jsonValue) override;
+
+        const std::string &GetName() const;
+
+        const std::string &GetPath() const;
+
+        void SetName(const std::string &name);
+
+        void SetPath(const std::string &path);
     };
 } // namespace framework

@@ -21,6 +21,7 @@ namespace framework
 {
     static const unsigned int SCR_WIDTH = 800;
     static const unsigned int SCR_HEIGHT = 600;
+    BaseApplication *BaseApplication::m_instance = nullptr;
 
     BaseApplication::BaseApplication()
         : m_renderer(nullptr), m_window(nullptr)
@@ -28,6 +29,7 @@ namespace framework
         // Constructor implementation
         Logger::Log("BaseApplication constructed");
         Timer::GetInstance().Initialize();
+        m_instance = this; // Set the singleton instance
     }
 
     void BaseApplication::Initialize()
@@ -179,6 +181,14 @@ namespace framework
     float BaseApplication::GetCurrentFPS() const
     {
         return FrameRateMonitor::GetInstance().GetCurrentFPS();
+    }
+
+    void BaseApplication::SetShouldClose(bool shouldClose)
+    {
+        if (m_window)
+        {
+            m_window->SetShouldClose(shouldClose);
+        }
     }
 
     void RegisterDefaultLoader()

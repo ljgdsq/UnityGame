@@ -34,6 +34,7 @@ void framework::TestEditorApplication::InitScenes()
     contentBrowser->Initialize();
     editorMenuBar->Initialize();
     auto testScene = new BasicTestScene();
+    testScene->SetName("BasicTestScene");
     SceneManager::GetInstance().AddScene("BasicTestScene", testScene);
 
     SetInitialScene("BasicTestScene");

@@ -1,6 +1,7 @@
 {
   "files.associations": {
     "*.lua.txt": "lua",
+    "*.scene": "json",
     "memory": "cpp",
     "algorithm": "cpp",
     "array": "cpp",

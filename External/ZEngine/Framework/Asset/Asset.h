@@ -19,6 +19,8 @@ namespace framework
         Audio,
         Animation,
         Font,
+        Scene,
+        Script,
         Count // 用于计数
     };
 
@@ -63,6 +65,8 @@ namespace framework
         int GetRefCount() const { return m_refCount; }
 
         void Release(bool force=false);
+
+        
 
         virtual long GetSize() const = 0;
 

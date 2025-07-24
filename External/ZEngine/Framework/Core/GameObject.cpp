@@ -1,19 +1,30 @@
 #include "Framework/Core/GameObject.h"
 #include "Framework/Component/Transform.h"
 #include "Framework/Core/SceneManager.h"
+#include "Framework/Core/Scene.h"
 namespace framework
 {
-    GameObject::GameObject()
+    GameObject::GameObject(Scene*scene)
     {
         transform = AddComponent<Transform>();
-        SceneManager::GetInstance().GetActiveScene()->AddGameObject(this);
+        if (scene == nullptr)
+        {
+            SceneManager::GetInstance().GetActiveScene()->AddGameObject(this);
+        }else{
+            scene->AddGameObject(this);
+        }
     }
 
-    GameObject::GameObject(std::string name)
+    GameObject::GameObject(std::string name,Scene*scene)
     {
         transform = AddComponent<Transform>();
         this->name = name;
-        SceneManager::GetInstance().GetActiveScene()->AddGameObject(this);
+        if (scene == nullptr)
+        {
+            SceneManager::GetInstance().GetActiveScene()->AddGameObject(this);
+        }else{
+            scene->AddGameObject(this);
+        }
     }
 
     void GameObject::AddChild(GameObject *child)
@@ -251,6 +262,28 @@ namespace framework
         else
         {
             OnDisable();
+        }
+    }
+
+    rapidjson::Value GameObject::Serialize(rapidjson::MemoryPoolAllocator<> &allocator) const {
+    rapidjson::Value jsonObject(rapidjson::kObjectType);
+    jsonObject.AddMember("name", rapidjson::Value(name.c_str(), allocator), allocator);
+    jsonObject.AddMember("isActive", isActive, allocator);
+    return jsonObject;
+}
+
+    void GameObject::Deserialize(const rapidjson::Value &jsonValue) {
+        if (!jsonValue.IsObject()) {
+            Logger::Error("Invalid JSON value for GameObject deserialization.");
+            return;
+        }
+
+        if (jsonValue.HasMember("name") && jsonValue["name"].IsString()) {
+            name = jsonValue["name"].GetString();
+        }
+
+        if (jsonValue.HasMember("isActive") && jsonValue["isActive"].IsBool()) {
+            isActive = jsonValue["isActive"].GetBool();
         }
     }
 

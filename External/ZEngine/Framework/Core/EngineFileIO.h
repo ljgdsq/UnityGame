@@ -36,6 +36,9 @@ namespace framework
         // 清除所有搜索路径
         static void ClearSearchPaths();
 
+        // 保存文本到文件
+        static bool SaveText(const std::string &path, const std::string &content);
+
     private:
         // 查找资源文件的实际路径
         static std::optional<std::filesystem::path> FindResourcePath(const std::string &path);

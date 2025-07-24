@@ -93,4 +93,23 @@ namespace framework
         return std::nullopt;
     }
 
+    bool EngineFileIO::SaveText(const std::string &path, const std::string &content)
+    {
+        std::filesystem::path fullPath = path;
+        if (!fullPath.is_absolute())
+        {
+            fullPath = std::filesystem::current_path() / path;
+        }
+
+        std::ofstream file(fullPath, std::ios::out);
+        if (!file.is_open())
+        {
+            Logger::Error("Failed to open file for writing: {}", fullPath.string());
+            return false;
+        }
+
+        file << content;
+        return true;
+    }
+
 } // namespace framework
