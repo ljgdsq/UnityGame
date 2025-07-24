@@ -3,6 +3,7 @@
 #include "Framework/Log/Logger.h"
 #include "Framework/Asset/AssetLoader.h"
 #include "Framework/Common/Define.h"
+#include "Framework/Util/FileUtil.hpp"
 
 namespace framework
 {
@@ -25,7 +26,34 @@ namespace framework
 
         // 同步加载
         template <class T>
-        std::shared_ptr<T> LoadAsset(const std::string &assetPath);
+        std::shared_ptr<T> LoadAsset(const std::string &assetPath)
+        {
+            auto assetName = FileUtil::ExtractFileName(assetPath);
+            if (HasAsset(assetName))
+            {
+                return std::dynamic_pointer_cast<T>(GetAsset(assetName));
+            }
+
+            for (const auto &loader : m_loaders)
+            {
+                if (loader->CanLoadAsset(assetPath))
+                {
+                    auto asset = loader->LoadAsset(assetPath);
+                    if (asset)
+                    {
+                        m_assets[assetName] = asset;
+                        Logger::Log("Loaded asset: {} with type {}", assetPath, loader->GetName());
+                        return std::dynamic_pointer_cast<T>(asset);
+                    }
+                    else
+                    {
+                        Logger::Error("Failed to load asset: {}", assetPath);
+                    }
+                }
+            }
+            Logger::Error("No suitable loader found for asset: {}", assetPath);
+            return nullptr;
+        }
 
         std::shared_ptr<Asset> LoadAsset(const std::string &assetPath, AssetType type);
 

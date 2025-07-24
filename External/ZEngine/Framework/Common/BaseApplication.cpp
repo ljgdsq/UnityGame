@@ -15,6 +15,7 @@
 #include "Framework/Asset/ObjMeshLoader.h"
 // platform specific includes
 #include "Framework/Window/Platform/GLFWWindow.h"
+#include "Framework/Asset/ShaderLoader.h"
 
 namespace framework
 {
@@ -185,6 +186,7 @@ namespace framework
         // Register default asset loaders
         AssetManager::GetInstance().RegisterLoader(std::make_shared<TextureLoader>());
         AssetManager::GetInstance().RegisterLoader(std::make_shared<ObjMeshLoader>());
+        AssetManager::GetInstance().RegisterLoader(std::make_shared<ShaderLoader>());
     }
 
 } // namespace framework

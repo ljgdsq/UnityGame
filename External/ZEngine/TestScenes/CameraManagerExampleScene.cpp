@@ -32,7 +32,6 @@ namespace framework
         // 初始化相机管理器，确保第一个相机是主相机
         if (!m_cameras.empty())
         {
-            CameraManager::GetInstance().SetMainCamera(m_cameras[0]);
             m_activeCameraIndex = 0;
             LOG_INFO("Set camera {} as main camera", 0);
         }

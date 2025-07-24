@@ -14,6 +14,8 @@ namespace editor
         {
         case DragDropType::Asset:
             return "DND_ASSET";
+        case DragDropType::Texture:
+            return "DND_TEXTURE";
         case DragDropType::GameObject:
             return "DND_GAMEOBJECT";
         case DragDropType::Component:

@@ -4,13 +4,17 @@
 
 namespace framework
 {
+
+
     void Light::OnEnable()
     {
+        Component::OnEnable();
         LightManager::RegisterLight(this);
     }
 
     void Light::OnDisable()
     {
+        Component::OnDisable();
         LightManager::UnregisterLight(this);
     }
 

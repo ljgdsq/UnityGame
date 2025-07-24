@@ -9,6 +9,8 @@ namespace framework
         if (light && std::find(s_lights.begin(), s_lights.end(), light) == s_lights.end())
         {
             s_lights.push_back(light);
+        }else{
+            Logger::Warn("LightManager: Attempted to register a null or already registered light.");
         }
     }
 

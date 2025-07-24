@@ -21,6 +21,7 @@ namespace editor
     enum class DragDropType
     {
         Asset,
+        Texture,
         GameObject,
         Component,
         File

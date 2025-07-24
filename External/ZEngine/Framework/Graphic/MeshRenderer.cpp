@@ -35,7 +35,10 @@ namespace framework
         // 设置变换矩阵
         glm::mat4 modelMatrix = transform->GetModelMatrix();
         auto camera = CameraManager::GetInstance().GetMainCamera();
-
+        if(camera == nullptr)
+        {
+            return;
+        }
         // 确保OpenGL状态正确
         // glEnable(GL_DEPTH_TEST);
         // glDepthFunc(GL_LESS);
@@ -65,6 +68,7 @@ namespace framework
 
     void MeshRenderer::OnCreate()
     {
+        Component::OnCreate();
         m_meshFilter = GetMeshFilter();
     }
 

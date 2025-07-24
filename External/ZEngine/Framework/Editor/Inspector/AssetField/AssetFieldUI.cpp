@@ -18,8 +18,6 @@ namespace editor
         bool changed = false;
         if (config.showPreview)
         {
-            // 方法2：更优雅的解决方案 - 让预览图本身就是拖拽目标
-
             // 保存当前光标位置
             ImVec2 previewPos = ImGui::GetCursorPos();
 
@@ -28,62 +26,18 @@ namespace editor
 
             DragDropPayload payload;
 
-            if (AssetDragDropSystem::AcceptDragDrop(DragDropType::Asset, payload))
+            if (AssetDragDropSystem::AcceptDragDrop(DragDropType::Texture, payload))
             {
-                Logger::Debug("Accepted drag drop payload with dataId: {}", payload.dataId);
                 if (payload.IsValid())
                 {
                     auto textureAsset = framework::AssetManager::GetInstance().GetAsset<framework::TextureAsset>(payload.dataId);
                     if (textureAsset)
                     {
-                        Logger::Debug("Successfully assigned texture asset: {}", textureAsset->GetName());
                         asset = textureAsset;
                         changed = true;
                     }
                 }
             }
-
-#if 0
-
-            // 检查刚刚渲染的预览图是否被拖拽悬停
-            if (ImGui::IsItemHovered() && ImGui::BeginDragDropTarget())
-            {
-                Logger::Debug("Successfully began drag drop target for asset field: {}", label.c_str());
-
-                // 绘制拖拽高亮效果
-                ImDrawList *drawList = ImGui::GetWindowDrawList();
-                ImVec2 screenPos = ImGui::GetItemRectMin();
-                ImVec2 screenMax = ImGui::GetItemRectMax();
-                ImU32 highlightColor = ImGui::GetColorU32(ImVec4(0.3f, 0.6f, 1.0f, 0.3f));
-                drawList->AddRectFilled(screenPos, screenMax, highlightColor);
-
-                // 处理拖拽载荷
-                const char *payloadType = AssetDragDropSystem::GetPayloadTypeString(DragDropType::Asset);
-                Logger::Debug("Accepting drag drop payload for asset field: {}", payloadType);
-                if (const ImGuiPayload *imguiPayload = ImGui::AcceptDragDropPayload(payloadType))
-                {
-                    Logger::Debug("Received drag drop payload for asset field: {}", label.c_str());
-                    DragDropPayload payload;
-                    if (AssetDragDropSystem::AcceptDragDrop(DragDropType::Asset, payload))
-                    {
-                        Logger::Debug("Accepted drag drop payload with dataId: {}", payload.dataId);
-                        if (payload.IsValid())
-                        {
-                            auto textureAsset = framework::AssetManager::GetInstance().GetAsset<framework::TextureAsset>(payload.dataId);
-                            if (textureAsset)
-                            {
-                                Logger::Debug("Successfully assigned texture asset: {}", textureAsset->GetName());
-                                asset = textureAsset;
-                                changed = true;
-                            }
-                        }
-                    }
-                }
-                ImGui::EndDragDropTarget();
-            }
-
-#endif
-
         }
 
         if (config.showClearButton)

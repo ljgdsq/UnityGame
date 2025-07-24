@@ -19,6 +19,13 @@ namespace framework
     public:
         explicit Camera(GameObject *gameObject) : ComponentBase(gameObject) {}
 
+    protected:
+        void OnEnable() override;
+
+        void OnDisable() override;
+
+    public:
+
         // 返回组件名称
         const char *GetName() const override { return "Camera"; }
 

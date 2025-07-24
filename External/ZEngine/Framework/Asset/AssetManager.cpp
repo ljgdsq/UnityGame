@@ -4,6 +4,7 @@
 
 #include "Framework/Asset/TextureAsset.h"
 #include "Framework/Asset/MeshAsset.h"
+#include "Framework/Asset/ShaderAsset.h"
 
 namespace framework
 {
@@ -45,38 +46,6 @@ namespace framework
             m_loaders.erase(it, m_loaders.end());
             Logger::Log("Unregistered asset loader: {}", loader->GetName());
         }
-    }
-
-    template <class T>
-    std::shared_ptr<T> AssetManager::LoadAsset(const std::string &assetPath)
-    {
-        auto assetName = FileUtil::ExtractFileName(assetPath);
-        if (HasAsset(assetName))
-        {
-            // Logger::Log("Asset {} already loaded, returning existing instance", assetName);
-            return std::dynamic_pointer_cast<T>(GetAsset(assetName));
-        }
-
-        for (const auto &loader : m_loaders)
-        {
-            if (loader->CanLoadAsset(assetPath))
-            {
-                auto asset = loader->LoadAsset(assetPath);
-                if (asset)
-                {
-                    // 将加载的资源注册到管理器中
-                    m_assets[assetName] = asset;
-                    Logger::Log("Loaded asset: {} with type {}", assetPath, loader->GetName());
-                    return std::dynamic_pointer_cast<T>(asset);
-                }
-                else
-                {
-                    Logger::Error("Failed to load asset: {}", assetPath);
-                }
-            }
-        }
-        Logger::Error("No suitable loader found for asset: {}", assetPath);
-        return nullptr;
     }
 
     std::shared_ptr<Asset> AssetManager::LoadAsset(const std::string &assetPath, AssetType type)
@@ -168,9 +137,5 @@ namespace framework
         }
         return assetNames;
     }
-
-    // 显式模板实例化
-    template std::shared_ptr<framework::TextureAsset> AssetManager::LoadAsset<framework::TextureAsset>(const std::string &assetPath);
-    template std::shared_ptr<framework::MeshAsset> AssetManager::LoadAsset<framework::MeshAsset>(const std::string &assetPath);
 
 } // namespace framework

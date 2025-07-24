@@ -3,6 +3,7 @@
 #include "Framework/Component/Transform.h"
 #include "Framework/Core/GameObject.h"
 #include "Framework/Log/Logger.h"
+#include "Framework/Manager/CameraManager.h"
 #include <glm/gtc/matrix_transform.hpp>
 namespace framework
 {
@@ -222,5 +223,15 @@ namespace framework
             projectionMatrix = glm::ortho(left, right, bottom, top, nearPlane, farPlane);
         }
         isProjectionDirty = false;
+    }
+
+    void Camera::OnEnable() {
+        Component::OnEnable();
+        CameraManager::GetInstance().RegisterCamera(this);
+    }
+
+    void Camera::OnDisable() {
+        Component::OnDisable();
+        CameraManager::GetInstance().UnregisterCamera(this);
     }
 } // namespace framework

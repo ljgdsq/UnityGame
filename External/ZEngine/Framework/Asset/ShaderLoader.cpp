@@ -1,0 +1,81 @@
+#include "Framework/Asset/ShaderLoader.h"
+#include "Framework/Util/FileUtil.hpp"
+#include "Framework/Log/Logger.h"
+#include "Framework/Asset/ShaderAsset.h"
+namespace framework
+{
+
+    std::shared_ptr<Asset> ShaderLoader::LoadAsset(const std::string &assetPath)
+    {
+
+        Logger::Debug("Loading shader asset from: {}", assetPath);
+
+        // 检查文件是否存在
+        if (!EngineFileIO::FileExists(assetPath + ".vs") || !EngineFileIO::FileExists(assetPath + ".fs"))
+        {
+            Logger::Error("shader file does not exist: {}", assetPath);
+            return nullptr;
+        }
+
+        // 获取文件名作为资源名称
+        std::string assetName = FileUtil::ExtractFileName(assetPath);
+
+        // shaderAsset
+        auto shaderAsset = std::make_shared<ShaderAsset>(assetName);
+        // 设置文件路径
+        shaderAsset->SetFilePath(assetPath);
+        shaderAsset->SetLoadState(LoadState::Loading);
+
+        auto data1 = EngineFileIO::LoadText(assetPath + ".vs");
+        auto data2 = EngineFileIO::LoadText(assetPath + ".fs");
+
+        if (data1.empty() || data2.empty())
+        {
+            Logger::Error("Failed to load shader source from files: {}.vs or {}.fs", assetPath, assetPath);
+            shaderAsset->SetLoadState(LoadState::Failed);
+            return shaderAsset;
+        }
+        // 创建 Shader 对象
+        auto shader = std::make_shared<Shader>();
+        shader->Compile(data1.c_str(), data2.c_str());
+
+        shaderAsset->SetShader(shader);
+
+        // 设置加载状态
+        shaderAsset->SetLoadState(LoadState::Loaded);
+
+        Logger::Debug("Successfully loaded shader asset: {}", assetName);
+
+        return shaderAsset;
+    }
+
+    bool ShaderLoader::CanLoadAsset(const std::string &assetPath) const
+    {
+        auto extension = FileUtil::GetFileExtension(assetPath);
+        if (extension == ".vs" || extension == ".fs" || extension == ".shader")
+        {
+            return true;
+        }
+        if (extension.empty())
+        {
+            // 如果没有扩展名，检查路径是否包含Shaders
+            return assetPath.find("Shaders") != std::string::npos;
+        }
+        return false;
+    }
+
+    std::vector<std::string> ShaderLoader::GetSupportedExtensions() const
+    {
+        return {".vs", ".fs", ".shader"};
+    }
+
+    std::string ShaderLoader::GetName() const
+    {
+        return "ShaderLoader";
+    }
+
+    AssetType ShaderLoader::GetAssetType() const
+    {
+        return AssetType::Shader;
+    }
+}
