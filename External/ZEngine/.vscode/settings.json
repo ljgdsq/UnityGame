@@ -81,13 +81,12 @@
     "xtree": "cpp",
     "xutility": "cpp",
     "typeindex": "cpp",
-    "__config": "cpp"
+    "__config": "cpp",
+    "deque": "cpp",
+    "queue": "cpp",
+    "ranges": "cpp"
   },
-  "cmake.debugConfig": {
-    "MIMode": "lldb",
-    "miDebuggerPath": "/usr/bin/lldb"
-  },
-  "C_Cpp.default.debuggerPath": "/usr/bin/lldb",
+
 
   // 键盘和编辑器设置
   "keyboard.dispatch": "keyCode",

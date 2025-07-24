@@ -30,13 +30,25 @@ namespace editor
     struct DragDropPayload
     {
         DragDropType type;
-        std::string dataId;       // 资源ID或其他标识符
-        std::string displayName;  // 显示名称
-        void *userData = nullptr; // 用户自定义数据
+        char dataId[256] = {};      // 资源ID或其他标识符
+        char displayName[256] = {}; // 显示名称
+        void *userData = nullptr;   // 用户自定义数据
+        void SetPayLoad(const DragDropType &t, const std::string &id, const std::string &name, void *data = nullptr)
+        {
+            if((id.length() >= sizeof(dataId) || name.length() >= sizeof(displayName)))
+            {
+                Logger::Error("DragDropPayload: dataId or displayName exceeds maximum length");
+                return;
+            }
 
+            type = t;
+            strncpy_s(dataId, sizeof(dataId), id.c_str(), _TRUNCATE);
+            strncpy_s(displayName, sizeof(displayName), name.c_str(), _TRUNCATE);
+            userData = data;
+        }
         // 便利方法
         bool IsAssetType() const { return type == DragDropType::Asset; }
-        bool IsValid() const { return !dataId.empty(); }
+        bool IsValid() const { return dataId[0] != '\0'; }
     };
 
     // 拖拽系统管理器

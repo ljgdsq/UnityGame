@@ -31,11 +31,7 @@ namespace editor
         if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_None))
         {
             DragDropPayload payload;
-            payload.type = type;
-            payload.dataId = dataId;
-            payload.displayName = displayName.empty() ? dataId : displayName;
-            payload.userData = userData;
-
+            payload.SetPayLoad(type, dataId, displayName, userData);
             SetupDragDropPayload(payload);
             RenderDragPreview(payload.displayName, nullptr);
 
@@ -88,10 +84,7 @@ namespace editor
         if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_None))
         {
             DragDropPayload payload;
-            payload.type = type;
-            payload.dataId = dataId;
-            payload.displayName = displayName.empty() ? label : displayName;
-            payload.userData = thumbnailTextureId;
+            payload.SetPayLoad(type, dataId, displayName, thumbnailTextureId);
 
             SetupDragDropPayload(payload);
             RenderDragPreview(payload.displayName, thumbnailTextureId);

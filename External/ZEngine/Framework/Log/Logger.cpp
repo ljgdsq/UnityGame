@@ -15,7 +15,7 @@ void Logger::Init(const std::vector<spdlog::sink_ptr> &custom_sinks)
     console_sink->set_pattern("[%H:%M:%S.%e] [%^%l%$] %v");
 
     auto file_sink = std::make_shared<spdlog::sinks::basic_file_sink_mt>("logs/engine_editor.log", false);
-    file_sink->set_level(spdlog::level::info);
+    file_sink->set_level(spdlog::level::debug);
     // 设置文件输出格式：[时间] [级别] [线程ID] 消息
     file_sink->set_pattern("[%Y-%m-%d %H:%M:%S.%e] [%l] [thread %t] %v");
 
