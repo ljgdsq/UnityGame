@@ -53,7 +53,7 @@ namespace framework
         auto assetName = FileUtil::ExtractFileName(assetPath);
         if (HasAsset(assetName))
         {
-            Logger::Log("Asset {} already loaded, returning existing instance", assetName);
+            // Logger::Log("Asset {} already loaded, returning existing instance", assetName);
             return std::dynamic_pointer_cast<T>(GetAsset(assetName));
         }
 
