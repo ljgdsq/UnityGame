@@ -23,7 +23,6 @@ namespace editor
 
             // 渲染预览图
             RenderTextureThumbnail(asset, config.previewSize);
-
             DragDropPayload payload;
 
             if (AssetDragDropSystem::AcceptDragDrop(DragDropType::Texture, payload))
@@ -65,6 +64,11 @@ namespace editor
         if (asset && asset->GetTexture() && asset->GetTexture()->GetTextureID() != 0)
         {
             ImGui::Image(reinterpret_cast<void *>(static_cast<intptr_t>(asset->GetTexture()->GetTextureID())), size);
+
+            // if(ImGui::BeginDragDropTarget()){
+
+            //     ImGui::EndDragDropTarget();
+            // }
         }
         else
         {

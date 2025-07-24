@@ -135,7 +135,7 @@ namespace editor
             if (auto textureAsset = std::dynamic_pointer_cast<framework::TextureAsset>(asset))
             {
                 void *thumbnailId = textureAsset->GetThumbnailTextureId();
-                AssetDragDropSystem::RenderDragSource(filename, DragDropType::Asset,
+                AssetDragDropSystem::RenderDragSource(filename, DragDropType::Texture,
                                                       textureAsset->GetAssetId(),
                                                       textureAsset->GetName(),
                                                       thumbnailId);
