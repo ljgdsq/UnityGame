@@ -20,7 +20,7 @@ namespace editor
 
         auto materialAsset = std::make_shared<framework::MaterialAsset>(fileName);
         materialAsset->SetFilePath(filePath);
-        rapidjson::Document::AllocatorType &allocator = rapidjson::Document::AllocatorType();
+        rapidjson::Document::AllocatorType allocator;
         auto value = materialAsset->Serialize(allocator);
         auto str = framework::JsonUtil::JsonToString(value);
         if (!framework::EngineFileIO::SaveText(filePath, str))
