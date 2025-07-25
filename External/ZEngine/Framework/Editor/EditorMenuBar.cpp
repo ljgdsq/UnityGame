@@ -111,7 +111,7 @@ void editor::EditorMenuBar::Render()
             auto relativePath = std::filesystem::relative(filePathName, std::filesystem::current_path()).string();
 
             scene->SetPath(relativePath);
-            rapidjson::Document::AllocatorType &allocator = rapidjson::Document::AllocatorType();
+            rapidjson::Document::AllocatorType allocator;
             auto result = scene->Serialize(allocator);
 
             rapidjson::StringBuffer buffer;
