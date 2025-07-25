@@ -7,7 +7,7 @@
 // todo: remove CameraManager
 #include "Framework/Component/Light/Light.h"
 #include "Framework/Manager/CameraManager.h"
-#include <exception>
+#include <stdexcept>
 namespace framework
 {
     void Material::Use()
@@ -34,7 +34,7 @@ namespace framework
 
     void Material::SetTexture(const std::string &name, const std::string &textureAssetId, int slot, TextureType type)
     {
-        throw new std::exception("not impl");
+        throw new std::runtime_error("not implemented");
     }
 
     void Material::SetTexture(const std::string &name, std::shared_ptr<TextureAsset> textureAsset, int slot, TextureType type)
@@ -72,7 +72,7 @@ namespace framework
 
     void Material::SetTexture(const std::string &name, Texture *texture, int slot, TextureType type)
     {
-        throw new std::exception("not impl");
+        throw new std::runtime_error("not implemented");
     }
 
     std::shared_ptr<TextureAsset> Material::GetTextureAsset(const std::string &name) const

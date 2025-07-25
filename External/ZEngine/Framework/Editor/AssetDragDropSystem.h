@@ -5,6 +5,7 @@
 #include <string>
 #include <memory>
 #include <functional>
+#include <cstring>
 
 namespace framework
 {
@@ -42,9 +43,11 @@ namespace editor
                 return;
             }
 
-            type = t;
-            strncpy_s(dataId, sizeof(dataId), id.c_str(), _TRUNCATE);
-            strncpy_s(displayName, sizeof(displayName), name.c_str(), _TRUNCATE);
+            std::strncpy(dataId, id.c_str(), sizeof(dataId) - 1);
+            dataId[sizeof(dataId) - 1] = '\0';
+            std::strncpy(displayName, name.c_str(), sizeof(displayName) - 1);
+            displayName[sizeof(displayName) - 1] = '\0';
+            userData = data;
             userData = data;
         }
         // 便利方法
