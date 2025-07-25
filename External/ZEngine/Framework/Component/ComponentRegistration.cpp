@@ -20,8 +20,9 @@ namespace framework
         // registry.RegisterComponent<Transform>("Transform");
 
         // 渲染相关组件
-        registry.RegisterComponent<MeshRenderer>("Mesh Renderer");
-        registry.RegisterComponent<MeshFilter>("Mesh Filter");
+        registry.RegisterComponent<MeshRenderer>("MeshRenderer");
+        registry.RegisterComponent<MeshFilter>("MeshFilter");
+        registry.RegisterComponent<Transform>("Transform");
 
         // 相机组件
         registry.RegisterComponent<Camera>("Camera");

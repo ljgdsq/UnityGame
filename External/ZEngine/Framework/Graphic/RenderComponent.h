@@ -19,19 +19,19 @@ public:
 
     // 渲染接口
     virtual void Render(Renderer* renderer) = 0;
-    
+
     // 可见性控制
     bool IsVisible() const { return m_visible; }
     void SetVisible(bool visible) { m_visible = visible; }
-    
+
     // 材质管理
     void SetMaterial(Material* material) { m_material = material; }
     Material* GetMaterial() const { return m_material; }
-    
+
     // 渲染层级
     int GetRenderLayer() const { return m_renderLayer; }
     void SetRenderLayer(int layer) { m_renderLayer = layer; }
-    
+
     // 排序顺序
     int GetSortingOrder() const { return m_sortingOrder; }
     void SetSortingOrder(int order) { m_sortingOrder = order; }

@@ -5,7 +5,6 @@
 namespace framework
 {
 
-
     void MeshFilter::SetMesh(std::shared_ptr<MeshAsset> meshAsset)
     {
         if (meshAsset)
@@ -21,8 +20,6 @@ namespace framework
             Logger::Debug("MeshFilter: Cleared mesh asset");
         }
     }
-
-
 
     std::shared_ptr<MeshAsset> MeshFilter::GetMeshAsset() const
     {
@@ -48,23 +45,34 @@ namespace framework
             return true;
         }
 
-
         return false;
     }
 
     void MeshFilter::Deserialize(const rapidjson::Value &jsonValue)
     {
-
-        // 兼容性：支持旧的序列化格式
-        // if (jsonValue.HasMember("mesh")) {
-        //     // 这里可以支持直接序列化mesh数据的旧格式
-        // }
+        if (jsonValue.IsObject())
+        {
+            if (jsonValue.HasMember("mesh") && jsonValue["mesh"].IsString())
+            {
+                std::string meshName = jsonValue["mesh"].GetString();
+                m_meshAsset = AssetManager::GetInstance().GetAsset<MeshAsset>(meshName);
+                if (!m_meshAsset)
+                {
+                    Logger::Error("MeshFilter: Failed to load mesh asset: {}", meshName);
+                }
+            }
+        }
     }
 
     rapidjson::Value MeshFilter::Serialize(rapidjson::Document::AllocatorType &allocator) const
     {
 
         rapidjson::Value jsonValue(rapidjson::kObjectType);
+        if (m_meshAsset)
+        {
+            jsonValue.AddMember("mesh", rapidjson::Value(m_meshAsset->GetName().c_str(), allocator), allocator);
+        }
+        jsonValue.AddMember("type", rapidjson::Value("MeshFilter", allocator), allocator);
 
         return jsonValue;
     }

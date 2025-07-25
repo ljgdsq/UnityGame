@@ -21,24 +21,9 @@ namespace framework
         void Render(Renderer *renderer) override;
         virtual void OnCreate() override;
 
-        virtual rapidjson::Value Serialize(rapidjson::Document::AllocatorType &allocator) const override
-        {
-            // 序列化为JSON值
-            // rapidjson::Value jsonValue(rapidjson::kObjectType);
-            // if (m_material) {
-            //     jsonValue.AddMember("material", m_material->Serialize(), GetAllocator());
-            // }
-            // return jsonValue;
-            return rapidjson::Value(); // 返回空值，实际实现中应返回有效的JSON值
-        }
+        virtual rapidjson::Value Serialize(rapidjson::Document::AllocatorType &allocator) const override;
 
-        virtual void Deserialize(const rapidjson::Value &jsonValue) override
-        {
-            // 从JSON值反序列化材质
-            // if (jsonValue.HasMember("material")) {
-            //     m_material = Material::Deserialize(jsonValue["material"]);
-            // }
-        }
+        virtual void Deserialize(const rapidjson::Value &jsonValue) override;
 
     private:
         MeshFilter *m_meshFilter = nullptr; // 缓存MeshFilter组件引用

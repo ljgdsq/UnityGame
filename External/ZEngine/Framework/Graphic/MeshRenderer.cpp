@@ -8,6 +8,7 @@
 #include "Framework/Log/Logger.h"
 #include "glad/glad.h"
 #include "Framework/Manager/CameraManager.h"
+#include "Framework/Asset/AssetManager.h"
 namespace framework
 {
 
@@ -35,7 +36,7 @@ namespace framework
         // 设置变换矩阵
         glm::mat4 modelMatrix = transform->GetModelMatrix();
         auto camera = CameraManager::GetInstance().GetMainCamera();
-        if(camera == nullptr)
+        if (camera == nullptr)
         {
             return;
         }
@@ -79,6 +80,22 @@ namespace framework
             m_meshFilter = GetGameObject()->GetComponent<MeshFilter>();
         }
         return m_meshFilter;
+    }
+
+    rapidjson::Value MeshRenderer::Serialize(rapidjson::Document::AllocatorType &allocator) const
+    {
+        rapidjson::Value jsonValue(rapidjson::kObjectType);
+        // jsonValue.AddMember("type", "MeshRenderer", allocator);
+        // if (m_meshFilter && m_meshFilter->HasMesh())
+        // {
+        //     jsonValue.AddMember("mesh", m_meshFilter->GetMeshAsset()->GetName(), allocator);
+        // }
+        return jsonValue;
+    }
+
+    void MeshRenderer::Deserialize(const rapidjson::Value &jsonValue)
+    {
+
     }
 
 } // namespace framework

@@ -320,6 +320,13 @@ namespace framework
                     if (componentValue.IsObject() && componentValue.HasMember("type"))
                     {
                         std::string typeName = componentValue["type"].GetString();
+                        if (typeName=="Transform")
+                        {
+                            // 特殊处理Transform组件
+                            Transform *transformComponent = GetComponent<Transform>();
+                            transformComponent->Deserialize(componentValue);
+                            continue;
+                        }
 
                         Component *component = ComponentRegistry::GetInstance().CreateComponent(typeName, this);
                         if (component)
