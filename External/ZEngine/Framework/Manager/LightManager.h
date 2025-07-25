@@ -16,6 +16,7 @@ namespace framework
 
         // 应用光源到材质
         static void ApplyLights(class Material *material);
+        static void ApplyLights(std::shared_ptr<class Material> material);
 
         // 获取当前光源数量
         static int GetLightCount();

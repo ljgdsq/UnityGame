@@ -33,7 +33,7 @@ namespace framework
         std::shared_ptr<MaterialAsset> GetMaterialSharedPtr() const
         {
             return m_material;
-        }        // 渲染层级
+        } // 渲染层级
         int GetRenderLayer() const { return m_renderLayer; }
         void SetRenderLayer(int layer) { m_renderLayer = layer; }
 
@@ -46,7 +46,7 @@ namespace framework
 
     protected:
         bool m_visible = true;
-        std::shared_ptr<Material> m_material; // 材质
+        std::shared_ptr<MaterialAsset> m_material; // 材质
         int m_renderLayer = 0;
         int m_sortingOrder = 0;
     };

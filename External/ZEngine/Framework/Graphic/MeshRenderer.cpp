@@ -3,6 +3,7 @@
 #include "Framework/Graphic/MeshFilter.h"
 #include "Framework/Graphic/Renderer.h"
 #include "Framework/Graphic/Material.h"
+#include "Framework/Asset/MaterialAsset.h"
 #include "Framework/Component/Transform.h"
 #include "Framework/Manager/LightManager.h"
 #include "Framework/Log/Logger.h"
@@ -50,16 +51,17 @@ namespace framework
         // 使用材质渲染网格
         if (m_material)
         {
+            auto material = m_material->GetMaterial();
             // 应用光照到材质
-            LightManager::ApplyLights(m_material);
+            LightManager::ApplyLights(material);
 
             // 输出完整矩阵用于调试
             glm::mat4 viewMatrix = camera->GetViewMatrix();
             glm::mat4 projectionMatrix = camera->GetProjectionMatrix();
-            m_material->Use();
-            m_material->SetMatrix("model", modelMatrix);
-            m_material->SetMatrix("view", viewMatrix);
-            m_material->SetMatrix("projection", projectionMatrix);
+            material->Use();
+            material->SetMatrix("model", modelMatrix);
+            material->SetMatrix("view", viewMatrix);
+            material->SetMatrix("projection", projectionMatrix);
         }
         mesh->Use();
 

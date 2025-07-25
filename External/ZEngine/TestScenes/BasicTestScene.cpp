@@ -6,7 +6,7 @@
 #include "Framework/Graphic/MeshRenderer.h"
 #include "Framework/Graphic/MeshFilter.h"
 #include "Framework/Graphic/Material.h"
-
+#include "Framework/Asset/MaterialAsset.h"
 #include "Framework/Component/Light/Light.h"
 #include "Framework/Manager/LightManager.h"
 #include "Framework/Asset/ShaderAsset.h"
@@ -26,13 +26,14 @@ namespace framework
         auto material = std::make_shared<Material>("TestMaterial");
         material->SetShader(shaderAsset->GetShader().get());
         material->SetTexture("texture_1", texture, 0, TextureType::DIFFUSE);
+        auto materialAsset = std::make_shared<MaterialAsset>("TestMaterialAsset");
 
         auto go = new GameObject("TestTexture");
         go->AddComponent<MeshFilter>();
         go->GetComponent<MeshFilter>()->SetMesh(AssetManager::GetInstance().LoadAsset<MeshAsset>("Models/primitives/Cube.obj"));
 
         go->AddComponent<MeshRenderer>();
-        go->GetComponent<MeshRenderer>()->SetMaterial(material.get());
+        go->GetComponent<MeshRenderer>()->SetMaterial(materialAsset);
 
         auto light = new GameObject("TestLight");
         light->AddComponent<Light>();

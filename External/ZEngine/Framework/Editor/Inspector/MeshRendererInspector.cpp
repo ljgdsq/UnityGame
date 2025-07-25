@@ -2,6 +2,7 @@
 #include "Framework/Graphic/Material.h"
 #include "Framework/Core/Texture.h"
 #include "Framework/Asset/TextureAsset.h"
+#include "Framework/Asset/MaterialAsset.h"
 #include "Framework/Editor/Inspector/AssetField/AssetFieldUI.h"
 
 using namespace framework;
@@ -20,12 +21,13 @@ namespace editor
     void MeshRendererInspector::RenderMaterial(GameObject *node, MeshRenderer *meshRenderer)
     {
 
-        Material *material = meshRenderer->GetMaterial();
-        if (material)
+        auto materialAsset = meshRenderer->GetMaterial();
+        if (materialAsset)
         {
+            auto material = materialAsset->GetMaterial();
             ImGui::Text("Material: %s", material->GetName().c_str());
             ImGui::Separator();
-            RenderMaterialTextures(material);
+            RenderMaterialTextures(material.get());
         }
         else
         {

@@ -22,6 +22,12 @@ namespace framework
             s_lights.erase(it, s_lights.end());
         }
     }
+    void LightManager::ApplyLights(std::shared_ptr<Material> material)
+    {
+        if (!material)
+            return;
+        ApplyLights(material.get());
+    }
 
     void LightManager::ApplyLights(Material *material)
     {

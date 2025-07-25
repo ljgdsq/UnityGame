@@ -1,5 +1,6 @@
 #include "Framework/Graphic/RenderComponent.h"
 #include "Framework/Graphic/Material.h"
+#include "Framework/Asset/MaterialAsset.h"
 #include "Framework/Asset/AssetManager.h"
 #include "Framework/Log/Logger.h"
 namespace framework

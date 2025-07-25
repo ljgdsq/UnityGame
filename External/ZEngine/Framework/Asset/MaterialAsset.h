@@ -3,7 +3,7 @@
 #include "Framework/Graphic/Shader.h"
 namespace framework
 {
-
+    class Material;
     class MaterialAsset : public Asset
     {
     public:
@@ -26,6 +26,7 @@ namespace framework
         // 生成缩略图
         void GenerateThumbnail() override;
         std::shared_ptr<Material> GetMaterial() const { return m_material; }
+
     private:
         std::string m_name;                   // 材质名称
         std::shared_ptr<Shader> m_shader;     // 关联的着色器
