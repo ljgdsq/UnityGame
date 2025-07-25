@@ -94,7 +94,7 @@
 
   // 键盘和编辑器设置
   "keyboard.dispatch": "keyCode",
-  "editor.multiCursorModifier": "ctrlCmd",
+  "editor.multiCursorModifier": "alt",
   "editor.formatOnSave": true,
   "editor.formatOnPaste": true,
   "editor.codeActionsOnSave": {
