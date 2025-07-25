@@ -15,10 +15,10 @@ namespace framework
         virtual ~BaseApplication() = default;
 
         // Initialize the application
-        void Initialize() override;
+         void Initialize() override;
 
         // Shutdown the application
-        void Shutdown() override;
+         void Shutdown() override;
 
         // Run the application
         void Run() override;

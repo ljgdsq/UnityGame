@@ -28,7 +28,7 @@ namespace editor
     {
 
         // todo : EditorContext::GetInstance()->GetSelectedGameObject() remove?
-        SetSelectedGameObject(EditorContext::GetInstance()->GetSelectedGameObject());
+        SetSelectedGameObject(EditorContext::GetInstance().GetSelectedGameObject());
 
         for (auto inspector : m_inspectors)
         {

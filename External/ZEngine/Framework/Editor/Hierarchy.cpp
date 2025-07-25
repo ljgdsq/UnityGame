@@ -96,7 +96,7 @@ namespace editor
                 if (ImGui::Selectable((childs[n]->GetName() + "##" + std::to_string(n)).c_str(), is_selected, ImGuiButtonFlags_MouseButtonRight | ImGuiButtonFlags_MouseButtonLeft))
                 {
                     selectIndex = n;
-                    EditorContext::GetInstance()->SetSelectedGameObject(childs[n]);
+                    EditorContext::GetInstance().SetSelectedGameObject(childs[n]);
                 }
 
                 if (ImGui::IsItemClicked(ImGuiMouseButton_Right))

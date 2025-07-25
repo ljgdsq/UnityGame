@@ -10,6 +10,7 @@
 #include "Framework/Component/ComponentRegistration.h"
 #include "TestScenes/CameraManagerExampleScene.h"
 #include "TestScenes/BasicTestScene.h"
+#include "Framework/Editor/Log/EditorLogSink.h"
 
 framework::TestEditorApplication::TestEditorApplication()
 {
@@ -17,6 +18,11 @@ framework::TestEditorApplication::TestEditorApplication()
     inspectorWidget = new editor::Inspector();
     contentBrowser = new editor::ContentBrowser();
     editorMenuBar = new editor::EditorMenuBar();
+    logView = new editor::LogView();
+    auto logSink = std::make_shared<editor::EditorLogSink>();
+    logView->SetLogSink(logSink);
+    Logger::Init({logSink});
+
 }
 
 void framework::TestEditorApplication::InitScenes()
@@ -33,6 +39,7 @@ void framework::TestEditorApplication::InitScenes()
     inspectorWidget->Initialize();
     contentBrowser->Initialize();
     editorMenuBar->Initialize();
+    logView->Initialize();
     auto testScene = new BasicTestScene();
     testScene->SetName("BasicTestScene");
     SceneManager::GetInstance().AddScene("BasicTestScene", testScene);
@@ -100,6 +107,7 @@ void framework::TestEditorApplication::EndFrame()
     inspectorWidget->Render();
     contentBrowser->Render();
     editorMenuBar->Render();
+    logView->Render();
     ImGuiIO &io = ImGui::GetIO();
 
     ImGui::Begin("state");
@@ -142,5 +150,15 @@ void framework::TestEditorApplication::OnUpdate(float deltaTime)
     if (editorMenuBar)
     {
         editorMenuBar->Update(deltaTime);
+    }
+
+    if (contentBrowser)
+    {
+        contentBrowser->Update(deltaTime);
+    }
+
+    if (logView)
+    {
+        logView->Update(deltaTime);
     }
 }

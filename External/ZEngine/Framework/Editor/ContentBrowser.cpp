@@ -4,6 +4,7 @@
 #include "Framework/Asset/TextureAsset.h"
 #include "Framework/Asset/MeshAsset.h"
 #include "Framework/Log/Logger.h"
+#include "Framework/Editor/EditorContext.h"
 using namespace std;
 namespace editor
 {
@@ -94,13 +95,14 @@ namespace editor
             std::string filename = filePath.filename().string();
             std::string extension = filePath.extension().string();
 
-            if (ImGui::Selectable(filename.c_str()))
-            {
-                // std::cout << "Selected file: " << file << std::endl;
-            }
-
             // 使用新的资源拖拽系统
             RenderAssetDragSource(file, filename, extension);
+
+            if (ImGui::IsMouseClicked(ImGuiMouseButton_Left) && ImGui::IsItemHovered())
+            {
+                // 处理文件选择事件
+                EditorContext::GetInstance().OnFileSelected(file);
+            }
         }
 
         if (!currentPath.empty())

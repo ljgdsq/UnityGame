@@ -5,6 +5,7 @@
 #include "Framework/Editor/EditorMenuBar.h"
 #include "Framework/Common/BaseApplication.h"
 #include "Framework/Editor/Inspector.h"
+#include "Framework/Editor/LogView.h"
 
 namespace framework {
 
@@ -16,7 +17,7 @@ public:
 protected:
     // 重写初始化测试场景的方法
     void InitScenes() override;
-    
+
     // 处理测试相关的按键输入
     void HandleInput() override;
 
@@ -32,6 +33,7 @@ protected:
         editor::Inspector* inspectorWidget = nullptr; // 检查器小部件，用于显示选中游戏对象的属性
         editor::ContentBrowser* contentBrowser = nullptr; // 内容浏览器小部件
         editor::EditorMenuBar* editorMenuBar= nullptr;
+        editor::LogView* logView = nullptr; // 日志视图小部件
     };
 
 } // namespace framework

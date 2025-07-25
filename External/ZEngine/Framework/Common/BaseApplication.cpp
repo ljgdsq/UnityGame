@@ -15,6 +15,7 @@
 #include "Framework/Asset/ObjMeshLoader.h"
 #include "Framework/Asset/SceneLoader.h"
 #include "Framework/Asset/ShaderManager.h"
+
 // platform specific includes
 #include "Framework/Window/Platform/GLFWWindow.h"
 #include "Framework/Asset/ShaderLoader.h"
