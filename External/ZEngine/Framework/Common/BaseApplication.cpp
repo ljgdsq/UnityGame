@@ -14,6 +14,7 @@
 #include "Framework/Asset/TextureLoader.h"
 #include "Framework/Asset/ObjMeshLoader.h"
 #include "Framework/Asset/SceneLoader.h"
+#include "Framework/Asset/ShaderManager.h"
 // platform specific includes
 #include "Framework/Window/Platform/GLFWWindow.h"
 #include "Framework/Asset/ShaderLoader.h"
@@ -28,8 +29,7 @@ namespace framework
         : m_renderer(nullptr), m_window(nullptr)
     {
         // Constructor implementation
-        Logger::Log("BaseApplication constructed");
-        Timer::GetInstance().Initialize();
+
         m_instance = this; // Set the singleton instance
     }
 
@@ -37,6 +37,7 @@ namespace framework
     {
         // Initialize the logger
         Logger::Init();
+        Timer::GetInstance().Initialize();
         AssetManager::GetInstance().Initialize();
         RegisterDefaultLoader();
 
@@ -58,6 +59,8 @@ namespace framework
         // 默认设置为固定帧率策略
         FrameRateManager::GetInstance().SetFrameRateStrategy(FrameRateStrategy::FixedTarget);
         FrameRateManager::GetInstance().SetTargetFrameRate(60);
+
+        ShaderManager::GetInstance().Initialize();
     }
 
     void BaseApplication::HandleInput()

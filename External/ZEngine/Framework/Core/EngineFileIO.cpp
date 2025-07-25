@@ -7,7 +7,7 @@
 
 namespace framework
 {
-    std::vector<std::filesystem::path> EngineFileIO::searchPaths{std::filesystem::current_path() / "Res"};
+    std::vector<std::filesystem::path> EngineFileIO::searchPaths{std::filesystem::current_path() / "Res", std::filesystem::current_path()};
 
     std::string EngineFileIO::LoadText(const std::string &path)
     {
@@ -110,6 +110,29 @@ namespace framework
 
         file << content;
         return true;
+    }
+
+    std::vector<std::filesystem::path> EngineFileIO::ListFilesInDirectory(const std::string &directory, const std::string &extension)
+    {
+        std::vector<std::filesystem::path> files;
+        std::filesystem::path dirPath(directory);
+        if (!std::filesystem::exists(dirPath) || !std::filesystem::is_directory(dirPath))
+        {
+            Logger::Error("Invalid directory: {}", directory);
+            return files;
+        }
+
+        for (const auto &entry : std::filesystem::directory_iterator(dirPath))
+        {
+            if (entry.is_regular_file())
+            {
+                if (extension.empty() || entry.path().extension() == extension)
+                {
+                    files.push_back(entry.path());
+                }
+            }
+        }
+        return files;
     }
 
 } // namespace framework

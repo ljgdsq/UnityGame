@@ -86,7 +86,9 @@
     "deque": "cpp",
     "queue": "cpp",
     "ranges": "cpp",
-    "set": "cpp"
+    "set": "cpp",
+    "coroutine": "cpp",
+    "xstddef": "cpp"
   },
 
 

@@ -27,8 +27,10 @@ namespace framework
         material->SetShader(shaderAsset->GetShader().get());
         material->SetTexture("texture_1", texture, 0, TextureType::DIFFUSE);
         auto materialAsset = std::make_shared<MaterialAsset>("TestMaterialAsset");
+        materialAsset->SetMaterial(material);
+        materialAsset->SetShader(shaderAsset->GetShader());
 
-        auto go = new GameObject("TestTexture");
+            auto go = new GameObject("TestTexture");
         go->AddComponent<MeshFilter>();
         go->GetComponent<MeshFilter>()->SetMesh(AssetManager::GetInstance().LoadAsset<MeshAsset>("Models/primitives/Cube.obj"));
 

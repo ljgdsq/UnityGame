@@ -8,6 +8,7 @@
 #include "Framework/Core/EngineFileIO.h"
 #include "Framework/Log/Logger.h"
 #include "Framework/Asset/AssetManager.h"
+#include "Framework/Editor/AssetCreator.h"
 void editor::EditorMenuBar::Initialize()
 {
 }
@@ -55,6 +56,16 @@ void editor::EditorMenuBar::Render()
             if (ImGui::MenuItem("Paste", "Ctrl+V"))
             {
             }
+            ImGui::EndMenu();
+        }
+
+        if (ImGui::BeginMenu("Create"))
+        {
+            if (ImGui::MenuItem("Material"))
+            {
+                editor::AssetCreator::CreateMaterialAsset("NewMaterial.mat");
+            }
+
             ImGui::EndMenu();
         }
 
@@ -125,7 +136,7 @@ void editor::EditorMenuBar::Render()
             {
                 LOG_DEBUG("Open loaded Scene: {}", sceneAsset->GetName());
 
-                framework::SceneManager::GetInstance().AddScene(sceneAsset->GetName(),sceneAsset->GetScene().get());
+                framework::SceneManager::GetInstance().AddScene(sceneAsset->GetName(), sceneAsset->GetScene().get());
                 framework::SceneManager::GetInstance().SetActiveScene(sceneAsset->GetName());
             }
             else

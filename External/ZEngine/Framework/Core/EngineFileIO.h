@@ -39,6 +39,9 @@ namespace framework
         // 保存文本到文件
         static bool SaveText(const std::string &path, const std::string &content);
 
+        // 列出目录下的所有文件
+        static std::vector<std::filesystem::path> ListFilesInDirectory(const std::string &directory, const std::string &extension = "");
+
     private:
         // 查找资源文件的实际路径
         static std::optional<std::filesystem::path> FindResourcePath(const std::string &path);
