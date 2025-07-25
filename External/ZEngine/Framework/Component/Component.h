@@ -43,7 +43,7 @@ namespace framework
         virtual void OnDisable();
         virtual void OnDestroy();
 
-    private:
+    protected:
         GameObject *gameObject; // Pointer to the GameObject this component is attached to
         bool isActive = true;   // Whether the component is enabled
 

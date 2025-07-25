@@ -1,12 +1,13 @@
 #pragma once
 
 #include "Framework/Log/Logger.h"
-#include "Framework/Asset/AssetLoader.h"
 #include "Framework/Common/Define.h"
 #include "Framework/Util/FileUtil.hpp"
-
+#include "Framework/Asset/AssetLoader.h"
+#include "Framework/Asset/Asset.h"
 namespace framework
 {
+
     class AssetManager
     {
 
@@ -21,6 +22,22 @@ namespace framework
     public:
         // 加载器管理
         void RegisterLoader(std::shared_ptr<AssetLoader> loader);
+
+        template <class T>
+        void RegisterLoader()
+        {
+            {
+                auto loader = std::make_shared<T>();
+                if (loader)
+                {
+                    RegisterLoader(loader);
+                }
+                else
+                {
+                    Logger::Error("Failed to create asset loader of type: {}", typeid(T).name());
+                }
+            }
+        }
 
         void UnregisterLoader(std::shared_ptr<AssetLoader> loader);
 

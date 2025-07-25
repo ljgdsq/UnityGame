@@ -5,7 +5,6 @@
 namespace framework
 {
 
-
     void Light::OnEnable()
     {
         Component::OnEnable();
@@ -21,11 +20,9 @@ namespace framework
     rapidjson::Value Light::Serialize(rapidjson::Document::AllocatorType &allocator) const
     {
 
-        rapidjson::Value typeValue;
-        typeValue.SetString(GetTypeName(), allocator);
-        typeValue.AddMember("type", typeValue, allocator);
-
-        rapidjson::Value lightTypeValue;
+        rapidjson::Value typeValue(rapidjson::kObjectType);
+        typeValue.AddMember("type", "Light", allocator);
+        rapidjson::Value lightTypeValue(rapidjson::kNumberType);
         lightTypeValue.SetInt(static_cast<int>(type));
         typeValue.AddMember("lightType", lightTypeValue, allocator);
 

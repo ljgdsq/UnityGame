@@ -2,6 +2,8 @@
 #pragma once
 #include "Framework/Component/Component.h"
 #include "glm/glm.hpp"
+#include "glm/detail/type_quat.hpp"
+
 namespace framework
 {
     enum class ProjectionType
@@ -23,6 +25,8 @@ namespace framework
         void OnEnable() override;
 
         void OnDisable() override;
+
+        void OnUpdate(float deltaTime) override;
 
     public:
 
@@ -92,5 +96,9 @@ namespace framework
         float farPlane = 100.0f;                       // 远裁剪面
         glm::vec2 orthoSize = glm::vec2(10.0f, 10.0f); // 正交投影时的大小
         glm::vec2 orthoOffset = glm::vec2(0.0f, 0.0f); // 正交投影时的偏移
+
+    private:
+        glm::vec3 oldPos;
+        glm::quat oldRotate;
     };
 }

@@ -13,6 +13,7 @@
 #include "Framework/Asset/AssetManager.h"
 #include "Framework/Asset/TextureLoader.h"
 #include "Framework/Asset/ObjMeshLoader.h"
+#include "Framework/Asset/SceneLoader.h"
 // platform specific includes
 #include "Framework/Window/Platform/GLFWWindow.h"
 #include "Framework/Asset/ShaderLoader.h"
@@ -34,11 +35,10 @@ namespace framework
 
     void BaseApplication::Initialize()
     {
-
-        AssetManager::GetInstance().Initialize();
-        RegisterDefaultLoader();
         // Initialize the logger
         Logger::Init();
+        AssetManager::GetInstance().Initialize();
+        RegisterDefaultLoader();
 
         // Initialize the window
         m_window = new GLFWWindow();
@@ -80,7 +80,6 @@ namespace framework
 
     void BaseApplication::Shutdown()
     {
-
     }
 
     void BaseApplication::Run()
@@ -193,10 +192,7 @@ namespace framework
 
     void RegisterDefaultLoader()
     {
-        // Register default asset loaders
-        AssetManager::GetInstance().RegisterLoader(std::make_shared<TextureLoader>());
-        AssetManager::GetInstance().RegisterLoader(std::make_shared<ObjMeshLoader>());
-        AssetManager::GetInstance().RegisterLoader(std::make_shared<ShaderLoader>());
+        // // Register default asset loaders
     }
 
 } // namespace framework

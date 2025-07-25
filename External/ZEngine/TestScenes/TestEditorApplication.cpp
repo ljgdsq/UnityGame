@@ -7,7 +7,7 @@
 #include "Framework/Core/SceneManager.h"
 #include "TestEditorApplication.h"
 #include "Framework/Graphic/Buffer.h"
-#include "Framework/Editor/ComponentRegistration.h"
+#include "Framework/Component/ComponentRegistration.h"
 #include "TestScenes/CameraManagerExampleScene.h"
 #include "TestScenes/BasicTestScene.h"
 
@@ -139,7 +139,8 @@ void framework::TestEditorApplication::OnUpdate(float deltaTime)
         inspectorWidget->Update(deltaTime);
     }
 
-    if(editorMenuBar){
+    if (editorMenuBar)
+    {
         editorMenuBar->Update(deltaTime);
     }
 }

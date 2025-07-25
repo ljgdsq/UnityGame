@@ -1,7 +1,6 @@
 #include "Framework/Asset/AssetManager.h"
 #include "Framework/Log/Logger.h"
 
-
 namespace framework
 {
     void AssetManager::Initialize()
@@ -33,6 +32,7 @@ namespace framework
         m_loaders.push_back(loader);
         Logger::Log("Registered asset loader: {}", loader->GetName());
     }
+
 
     void AssetManager::UnregisterLoader(std::shared_ptr<AssetLoader> loader)
     {

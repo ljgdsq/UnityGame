@@ -2,27 +2,32 @@
 #include "Framework/Component/Transform.h"
 #include "Framework/Core/SceneManager.h"
 #include "Framework/Core/Scene.h"
+#include "Framework/Component/ComponentRegistry.h"
 namespace framework
 {
-    GameObject::GameObject(Scene*scene)
+    GameObject::GameObject(Scene *scene)
     {
         transform = AddComponent<Transform>();
         if (scene == nullptr)
         {
             SceneManager::GetInstance().GetActiveScene()->AddGameObject(this);
-        }else{
+        }
+        else
+        {
             scene->AddGameObject(this);
         }
     }
 
-    GameObject::GameObject(std::string name,Scene*scene)
+    GameObject::GameObject(std::string name, Scene *scene)
     {
         transform = AddComponent<Transform>();
         this->name = name;
         if (scene == nullptr)
         {
             SceneManager::GetInstance().GetActiveScene()->AddGameObject(this);
-        }else{
+        }
+        else
+        {
             scene->AddGameObject(this);
         }
     }
@@ -248,7 +253,7 @@ namespace framework
 
     void GameObject::SetActive(bool active)
     {
-        //todo : process children
+        // todo : process children
         if (isActive == active)
             return; // 如果状态没有变化，直接返回
         isActive = active;
@@ -265,25 +270,69 @@ namespace framework
         }
     }
 
-    rapidjson::Value GameObject::Serialize(rapidjson::MemoryPoolAllocator<> &allocator) const {
-    rapidjson::Value jsonObject(rapidjson::kObjectType);
-    jsonObject.AddMember("name", rapidjson::Value(name.c_str(), allocator), allocator);
-    jsonObject.AddMember("isActive", isActive, allocator);
-    return jsonObject;
-}
+    rapidjson::Value GameObject::Serialize(rapidjson::MemoryPoolAllocator<> &allocator) const
+    {
+        rapidjson::Value jsonObject(rapidjson::kObjectType);
+        jsonObject.AddMember("name", rapidjson::Value(name.c_str(), allocator), allocator);
+        jsonObject.AddMember("isActive", isActive, allocator);
 
-    void GameObject::Deserialize(const rapidjson::Value &jsonValue) {
-        if (!jsonValue.IsObject()) {
+        // 序列化所有组件
+        rapidjson::Value componentsArray(rapidjson::kArrayType);
+        for (const auto &pair : components)
+        {
+            for (const auto *component : pair.second)
+            {
+                rapidjson::Value componentJson = component->Serialize(allocator);
+                componentsArray.PushBack(componentJson, allocator);
+            }
+        }
+        jsonObject.AddMember("components", componentsArray, allocator);
+
+        return jsonObject;
+    }
+
+    void GameObject::Deserialize(const rapidjson::Value &jsonValue)
+    {
+        if (!jsonValue.IsObject())
+        {
             Logger::Error("Invalid JSON value for GameObject deserialization.");
             return;
         }
 
-        if (jsonValue.HasMember("name") && jsonValue["name"].IsString()) {
+        if (jsonValue.HasMember("name") && jsonValue["name"].IsString())
+        {
             name = jsonValue["name"].GetString();
         }
 
-        if (jsonValue.HasMember("isActive") && jsonValue["isActive"].IsBool()) {
+        if (jsonValue.HasMember("isActive") && jsonValue["isActive"].IsBool())
+        {
             isActive = jsonValue["isActive"].GetBool();
+        }
+
+        if (jsonValue.HasMember("components") && jsonValue["components"].IsArray())
+        {
+            const rapidjson::Value &componentsArray = jsonValue["components"];
+            if (componentsArray.IsArray() && componentsArray.Size() > 0)
+            {
+                for (rapidjson::SizeType i = 0; i < componentsArray.Size(); ++i)
+                {
+                    const rapidjson::Value &componentValue = componentsArray[i];
+                    if (componentValue.IsObject() && componentValue.HasMember("type"))
+                    {
+                        std::string typeName = componentValue["type"].GetString();
+
+                        Component *component = ComponentRegistry::GetInstance().CreateComponent(typeName, this);
+                        if (component)
+                        {
+                            component->Deserialize(componentValue);
+                        }
+                        else
+                        {
+                            Logger::Warn("Unknown component type: {}", typeName);
+                        }
+                    }
+                }
+            }
         }
     }
 

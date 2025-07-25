@@ -10,7 +10,8 @@
 rapidjson::Value framework::Transform::Serialize(rapidjson::Document::AllocatorType &allocator) const
 {
     rapidjson::Value value(rapidjson::kObjectType);
-
+    // 序列化组件类型
+    value.AddMember("type", "Transform", allocator);
     // 创建position数组
     rapidjson::Value posArray(rapidjson::kArrayType);
     posArray.PushBack(position.x, allocator);

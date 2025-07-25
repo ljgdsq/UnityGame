@@ -2,9 +2,10 @@
 #include "Framework/Util/FileUtil.hpp"
 #include "Framework/Log/Logger.h"
 #include "Framework/Asset/ShaderAsset.h"
+#include "Framework/Asset/AssetRegister.h"
 namespace framework
 {
-
+    REGISTER_LOADER(ShaderLoader);
     std::shared_ptr<Asset> ShaderLoader::LoadAsset(const std::string &assetPath)
     {
 

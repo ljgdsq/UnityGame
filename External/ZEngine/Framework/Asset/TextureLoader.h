@@ -21,4 +21,5 @@ namespace framework
     private:
         bool GenTexture(const std::vector<uint8_t> &data, std::shared_ptr<TextureAsset> asset);
     };
+
 }

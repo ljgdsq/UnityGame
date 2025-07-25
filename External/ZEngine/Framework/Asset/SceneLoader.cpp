@@ -1,8 +1,10 @@
 #include "Framework/Asset/SceneLoader.h"
 #include "Framework/Log/Logger.h"
+#include "Framework/Asset/AssetRegister.h"
 namespace framework
 {
 
+    REGISTER_LOADER(SceneLoader);
     std::shared_ptr<Asset> SceneLoader::LoadAsset(const std::string &assetPath) {
         Logger::Debug("Loading scene asset from: {}", assetPath);
 

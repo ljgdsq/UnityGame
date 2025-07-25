@@ -30,13 +30,12 @@ namespace framework
         bool ParseNormal(const std::string &line, glm::vec3 &normal);
         bool ParseTexCoord(const std::string &line, glm::vec2 &texCoord);
         bool ParseFace(const std::string &line,
-                         const std::vector<glm::vec3> &positions,
-                         const std::vector<glm::vec2> &texCoords,
-                         const std::vector<glm::vec3> &normals,
-                         std::vector<ObjVertex> &vertices,
-                         std::vector<unsigned int> &indices,
-                         std::unordered_map<std::string, unsigned int> &vertexCache);
+                       const std::vector<glm::vec3> &positions,
+                       const std::vector<glm::vec2> &texCoords,
+                       const std::vector<glm::vec3> &normals,
+                       std::vector<ObjVertex> &vertices,
+                       std::vector<unsigned int> &indices,
+                       std::unordered_map<std::string, unsigned int> &vertexCache);
         void GenerateNormals(std::vector<ObjVertex> &vertices, const std::vector<unsigned int> &indices);
     };
-
 }

@@ -123,8 +123,10 @@ void editor::EditorMenuBar::Render()
             auto sceneAsset = framework::AssetManager::GetInstance().LoadAsset<framework::SceneAsset>(filePathName);
             if (sceneAsset)
             {
+                LOG_DEBUG("Open loaded Scene: {}", sceneAsset->GetName());
+
+                framework::SceneManager::GetInstance().AddScene(sceneAsset->GetName(),sceneAsset->GetScene().get());
                 framework::SceneManager::GetInstance().SetActiveScene(sceneAsset->GetName());
-                LOG_DEBUG("Scene loaded: {}", sceneAsset->GetName());
             }
             else
             {

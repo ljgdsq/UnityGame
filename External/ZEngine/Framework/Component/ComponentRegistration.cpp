@@ -1,4 +1,4 @@
-#include "Framework/Editor/ComponentRegistry.h"
+#include "Framework/Component/ComponentRegistry.h"
 
 // 组件头文件
 #include "Framework/Component/Transform.h"

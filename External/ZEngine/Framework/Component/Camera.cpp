@@ -5,13 +5,15 @@
 #include "Framework/Log/Logger.h"
 #include "Framework/Manager/CameraManager.h"
 #include <glm/gtc/matrix_transform.hpp>
+#include <math.h>
 namespace framework
 {
 
     rapidjson::Value Camera::Serialize(rapidjson::Document::AllocatorType &allocator) const
     {
         rapidjson::Value obj(rapidjson::kObjectType);
-
+        // 序列化组件类型
+        obj.AddMember("type", "Camera", allocator);
         // 序列化基本属性
         obj.AddMember("isMainCamera", isMainCamera, allocator);
         obj.AddMember("projectionType", static_cast<int>(projectionType), allocator);
@@ -196,16 +198,16 @@ namespace framework
         glm::vec3 forward;
         glm::vec3 up;
 
-        // 使用Transform的旋转计算前向向量和上向量
-        // 这里有两种方法：使用欧拉角或直接使用四元数
-
-        // 方法1：使用四元数(推荐)
+        // 四元数
         glm::quat rotation = transform->GetRotation();
         forward = rotation * glm::vec3(0.0f, 0.0f, -1.0f);
         up = rotation * glm::vec3(0.0f, 1.0f, 0.0f);
 
         viewMatrix = glm::lookAt(position, position + forward, up);
         isViewDirty = false;
+
+        oldPos = position;
+        oldRotate = rotation;
     }
     void Camera::RecalculateProjectionMatrix()
     {
@@ -225,13 +227,43 @@ namespace framework
         isProjectionDirty = false;
     }
 
-    void Camera::OnEnable() {
+    void Camera::OnEnable()
+    {
         Component::OnEnable();
         CameraManager::GetInstance().RegisterCamera(this);
     }
 
-    void Camera::OnDisable() {
+    void Camera::OnDisable()
+    {
         Component::OnDisable();
         CameraManager::GetInstance().UnregisterCamera(this);
+    }
+
+    void Camera::OnUpdate(float deltaTime)
+    {
+        Component::OnUpdate(deltaTime);
+        if (isViewDirty || isProjectionDirty)
+        {
+            return;
+        }
+
+        Transform *transform = gameObject->GetComponent<Transform>();
+        glm::vec3 position = transform->GetPosition();
+        glm::quat rotation = transform->GetRotation();
+        // 检查位置和旋转是否发生变化 float 可能有误差避免
+        if (glm::length(position - oldPos) > 0.001f)
+        {
+            isViewDirty = true;
+            return;
+        }
+
+        if (abs(rotation.x - oldRotate.x) > 0.001f ||
+            abs(rotation.y - oldRotate.y) > 0.001f ||
+            abs(rotation.z - oldRotate.z) > 0.001f ||
+            abs(rotation.w - oldRotate.w) > 0.001f)
+        {
+            isViewDirty = true;
+            return;
+        }
     }
 } // namespace framework

@@ -6,9 +6,11 @@
 #include "Framework/Core/EngineFileIO.h"
 #include "Framework/Util/FileUtil.hpp"
 #include <sstream>
-
+#include "Framework/Asset/AssetRegister.h"
 namespace framework
 {
+    REGISTER_LOADER(ObjMeshLoader);
+
     std::shared_ptr<Asset> ObjMeshLoader::LoadAsset(const std::string &assetPath)
     {
         Logger::Debug("Loading OBJ mesh from path: {}", assetPath);
@@ -22,7 +24,6 @@ namespace framework
             Logger::Error("OBJ file does not exist: {}", assetPath);
             return meshAsset;
         }
-
 
         // 设置文件路径和加载状态
         meshAsset->SetFilePath(assetPath);

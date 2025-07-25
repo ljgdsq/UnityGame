@@ -14,10 +14,13 @@ namespace framework
         AssetLoader() = default;
         virtual ~AssetLoader() = default;
         virtual std::shared_ptr<Asset> LoadAsset(const std::string &assetPath) = 0;
-        virtual bool CanLoadAsset(const std::string &assetPath) const {
+        virtual bool CanLoadAsset(const std::string &assetPath) const
+        {
             auto extension = FileUtil::GetFileExtension(assetPath);
-            for (const auto &ext: GetSupportedExtensions()) {
-                if (FileUtil::HasExtension(assetPath, ext)) {
+            for (const auto &ext : GetSupportedExtensions())
+            {
+                if (FileUtil::HasExtension(assetPath, ext))
+                {
                     return true;
                 }
             }
@@ -28,4 +31,5 @@ namespace framework
         virtual std::string GetName() const = 0;
         virtual AssetType GetAssetType() const = 0;
     };
+
 }

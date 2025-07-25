@@ -1,5 +1,5 @@
 #include "Framework/Editor/ComponentMenuHelper.h"
-#include "Framework/Editor/ComponentRegistry.h"
+#include "Framework/Component/ComponentRegistry.h"
 #include "Framework/Core/GameObject.h"
 #include "Framework/Log/Logger.h"
 

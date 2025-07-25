@@ -4,12 +4,15 @@
 #include "Framework/Util/FileUtil.hpp"
 #include <algorithm>
 #include "GLFW/glfw3.h"
+#include "Framework/Asset/AssetRegister.h"
 
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 
 namespace framework
 {
+    REGISTER_LOADER(TextureLoader);
+
     std::shared_ptr<Asset> TextureLoader::LoadAsset(const std::string &assetPath)
     {
         Logger::Debug("Loading texture asset from: {}", assetPath);

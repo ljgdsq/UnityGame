@@ -4,15 +4,105 @@
     "gameObjects": [
         {
             "name": "TestTexture",
-            "isActive": true
+            "isActive": true,
+            "components": [
+                {
+                    "type": "Transform",
+                    "position": [
+                        1.100000023841858,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                },
+                {},
+                null
+            ]
         },
         {
             "name": "TestLight",
-            "isActive": true
+            "isActive": true,
+            "components": [
+                {
+                    "type": "Light",
+                    "lightType": 0,
+                    "color": [
+                        1.0,
+                        0.5,
+                        0.20000000298023225
+                    ],
+                    "intensity": 1.0
+                },
+                {
+                    "type": "Transform",
+                    "position": [
+                        0.0,
+                        5.0,
+                        5.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
         },
         {
             "name": "MainCamera",
-            "isActive": true
+            "isActive": true,
+            "components": [
+                {
+                    "type": "Transform",
+                    "position": [
+                        0.0,
+                        0.0,
+                        3.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                },
+                {
+                    "type": "Camera",
+                    "isMainCamera": true,
+                    "projectionType": 0,
+                    "fieldOfView": 45.0,
+                    "aspectRatio": 1.7777777910232545,
+                    "nearPlane": 0.10000000149011612,
+                    "farPlane": 100.0,
+                    "clearColor": [
+                        0.20000000298023225,
+                        0.30000001192092898,
+                        0.30000001192092898,
+                        1.0
+                    ]
+                }
+            ]
         }
     ]
 }

@@ -23,6 +23,7 @@ namespace framework
         // 当前加载的场景
         std::unique_ptr<SceneAsset> m_currentScene;
     };
+
 } // namespace framework
 
 
