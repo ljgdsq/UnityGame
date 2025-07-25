@@ -11,12 +11,13 @@ namespace framework {
 
         // State
         int id;
+        std::string shaderPath;
         // Constructor
         Shader() {}
         // Sets the current shader as active
         void   Use();
         // Compiles the shader from given source code
-        void    Compile(const char* vertexSource, const char* fragmentSource, const char* geometrySource = nullptr); // Note: geometry source code is optional 
+        void    Compile(const char* vertexSource, const char* fragmentSource, const char* geometrySource = nullptr); // Note: geometry source code is optional
         // Utility functions
         void    SetFloat(const char* name, float value, bool useShader = false);
         void    SetInteger(const char* name, int value, bool useShader = false);

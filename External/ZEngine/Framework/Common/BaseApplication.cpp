@@ -78,6 +78,18 @@ namespace framework
         }
     }
 
+    void BaseApplication::SetTitle(const std::string &title)
+    {
+        if (m_window)
+        {
+            m_window->SetTitle(title);
+        }
+        else
+        {
+            Logger::Error("Window not initialized, cannot set title.");
+        }
+    }
+
     void BaseApplication::Shutdown()
     {
     }

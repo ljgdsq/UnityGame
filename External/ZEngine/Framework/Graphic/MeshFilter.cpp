@@ -54,12 +54,14 @@ namespace framework
         {
             if (jsonValue.HasMember("mesh") && jsonValue["mesh"].IsString())
             {
-                std::string meshName = jsonValue["mesh"].GetString();
-                m_meshAsset = AssetManager::GetInstance().GetAsset<MeshAsset>(meshName);
+                std::string meshPath = jsonValue["mesh"].GetString();
+                m_meshAsset = AssetManager::GetInstance().LoadAsset<MeshAsset>(meshPath);
                 if (!m_meshAsset)
                 {
-                    Logger::Error("MeshFilter: Failed to load mesh asset: {}", meshName);
+                    Logger::Error("MeshFilter: Failed to load mesh asset: {}", meshPath);
+                    return;
                 }
+                SetMesh(m_meshAsset);
             }
         }
     }
@@ -70,7 +72,7 @@ namespace framework
         rapidjson::Value jsonValue(rapidjson::kObjectType);
         if (m_meshAsset)
         {
-            jsonValue.AddMember("mesh", rapidjson::Value(m_meshAsset->GetName().c_str(), allocator), allocator);
+            jsonValue.AddMember("mesh", rapidjson::Value(m_meshAsset->GetFilePath().c_str(), allocator), allocator);
         }
         jsonValue.AddMember("type", rapidjson::Value("MeshFilter", allocator), allocator);
 

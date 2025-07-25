@@ -1,6 +1,7 @@
 #include "Framework/Core/SceneManager.h"
 #include "Framework/Log/Logger.h"
 #include "Framework/Graphic/Renderer.h"
+#include "Framework/Common/BaseApplication.h"
 namespace framework
 {
 
@@ -35,6 +36,7 @@ namespace framework
             m_activeScene = it->second;
             m_activeSceneName = name;
             Logger::Log("Active scene set to '{}'", name);
+            BaseApplication::GetInstance()->SetTitle("ZEngine - Running scene : " + name);
             return true;
         }
 

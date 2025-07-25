@@ -84,7 +84,10 @@ namespace framework
 
     rapidjson::Value MeshRenderer::Serialize(rapidjson::Document::AllocatorType &allocator) const
     {
+        auto baseJson = RenderComponent::Serialize(allocator);
         rapidjson::Value jsonValue(rapidjson::kObjectType);
+        jsonValue.AddMember("__base", baseJson, allocator);
+
         // jsonValue.AddMember("type", "MeshRenderer", allocator);
         // if (m_meshFilter && m_meshFilter->HasMesh())
         // {
@@ -95,7 +98,10 @@ namespace framework
 
     void MeshRenderer::Deserialize(const rapidjson::Value &jsonValue)
     {
-
+        if (jsonValue.HasMember("__base") && jsonValue["__base"].IsObject())
+        {
+            RenderComponent::Deserialize(jsonValue["__base"]);
+        }
     }
 
 } // namespace framework

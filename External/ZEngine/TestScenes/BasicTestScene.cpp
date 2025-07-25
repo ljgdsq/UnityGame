@@ -23,7 +23,7 @@ namespace framework
         //        auto shader = new Shader("Shaders/BaseLight.vs", "Shaders/BaseLight.fs");
 
         auto texture = AssetManager::GetInstance().LoadAsset<TextureAsset>("Textures/container.png");
-        auto material = new Material("TestMaterial");
+        auto material = std::make_shared<Material>("TestMaterial");
         material->SetShader(shaderAsset->GetShader().get());
         material->SetTexture("texture_1", texture, 0, TextureType::DIFFUSE);
 
@@ -32,7 +32,7 @@ namespace framework
         go->GetComponent<MeshFilter>()->SetMesh(AssetManager::GetInstance().LoadAsset<MeshAsset>("Models/primitives/Cube.obj"));
 
         go->AddComponent<MeshRenderer>();
-        go->GetComponent<MeshRenderer>()->SetMaterial(material);
+        go->GetComponent<MeshRenderer>()->SetMaterial(material.get());
 
         auto light = new GameObject("TestLight");
         light->AddComponent<Light>();

@@ -85,7 +85,8 @@
     "__config": "cpp",
     "deque": "cpp",
     "queue": "cpp",
-    "ranges": "cpp"
+    "ranges": "cpp",
+    "set": "cpp"
   },
 
 

@@ -32,6 +32,8 @@ namespace framework
         // Check if the application should exit
         bool ShouldExit() override;
 
+        void SetTitle(const std::string &title);
+
     protected:
         // 设置初始场景
         virtual void SetInitialScene(const std::string &sceneName);
