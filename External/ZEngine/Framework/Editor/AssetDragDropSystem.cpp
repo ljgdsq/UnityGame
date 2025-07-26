@@ -84,7 +84,7 @@ namespace editor
         }
 
         // 设置拖拽源
-        if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_None))
+        if (type != DragDropType::Unknown && ImGui::BeginDragDropSource(ImGuiDragDropFlags_None))
         {
             clicked = false;
             DragDropPayload payload;

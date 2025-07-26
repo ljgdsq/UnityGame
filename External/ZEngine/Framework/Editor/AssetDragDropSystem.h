@@ -21,6 +21,7 @@ namespace editor
     // 拖拽数据类型
     enum class DragDropType
     {
+        Unknown = 0,
         Asset,
         Texture,
         GameObject,

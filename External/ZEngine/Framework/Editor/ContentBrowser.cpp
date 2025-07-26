@@ -89,6 +89,7 @@ namespace editor
         }
         EditorContext::GetInstance().isDrag = false;
 
+        ImGui::Separator();
         // Display files
         for (const auto &file : files)
         {
@@ -100,8 +101,6 @@ namespace editor
             if(RenderAssetDragSource(file, filename, extension)){
                 EditorContext::GetInstance().OnFileSelected(file);
             }
-     
-
         }
 
         if (!currentPath.empty())
@@ -117,18 +116,7 @@ namespace editor
     bool ContentBrowser::RenderAssetDragSource(const std::string &filePath, const std::string &filename, const std::string &extension)
     {
         // 检查文件扩展名以确定资源类型
-        std::shared_ptr<framework::Asset> asset = nullptr;
-
-        if (extension == ".png" || extension == ".jpg" || extension == ".jpeg" || extension == ".bmp" || extension == ".tga")
-        {
-            // 尝试加载纹理资源
-            asset = framework::AssetManager::GetInstance().LoadAsset<framework::TextureAsset>(filePath);
-        }
-        else if (extension == ".obj" || extension == ".fbx" || extension == ".gltf" || extension == ".glb")
-        {
-            // 尝试加载网格资源
-            asset = framework::AssetManager::GetInstance().LoadAsset<framework::MeshAsset>(filePath);
-        }
+        std::shared_ptr<framework::Asset> asset = framework::AssetManager::GetInstance().LoadAsset<Asset>(filePath);
 
         if (asset)
         {
@@ -149,18 +137,16 @@ namespace editor
                                                       meshAsset->GetName(),
                                                       thumbnailId);
             }
-        }
-        else
-        {
-            // 通用文件拖拽（用于不支持的文件类型）
-            if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_SourceAllowNullID))
+
+            else
             {
-                ImGui::SetDragDropPayload("CONTENT_BROWSER_FILE", filePath.c_str(), filePath.size() + 1);
-                ImGui::Text("拖拽: %s", filename.c_str());
-                ImGui::EndDragDropSource();
+                return AssetDragDropSystem::RenderDragSource(filename, DragDropType::Unknown,
+                                                             asset->GetAssetId(),
+                                                             asset->GetName(),
+                                                             nullptr);
             }
         }
-        return false;
+
     }
 
 }

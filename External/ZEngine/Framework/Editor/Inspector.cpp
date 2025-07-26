@@ -32,6 +32,7 @@ namespace editor
         if (EditorContext::GetInstance().GetSelectedGameObject()){
             SetSelectedGameObject(EditorContext::GetInstance().GetSelectedGameObject());
         }else{
+            SetSelectedGameObject(nullptr);
             SetSelectedAsset(EditorContext::GetInstance().GetSelectedAsset());
         }
 
