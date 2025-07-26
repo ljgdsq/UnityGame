@@ -19,6 +19,9 @@ namespace editor
         m_inspectors.push_back(new MeshFilterInspector());
 
         m_inspectors.push_back(new LightInspector()); // 添加光照检查器
+
+
+        m_assetInspector = new AssetInspector(); // 添加资源检查器
     }
 
     void Inspector::Initialize()
@@ -36,6 +39,8 @@ namespace editor
         {
             inspector->Update(deltaTime);
         }
+
+        m_assetInspector->Update(deltaTime);
     }
 
     void Inspector::Render()
@@ -46,9 +51,14 @@ namespace editor
             ImGui::Text("Selected GameObject: %s", m_selectedGameObject->GetName().c_str());
             RenderInspectorContent();
         }
+        else if (m_selectedAsset)
+        {
+            ImGui::Text("Selected Asset: %s", m_selectedAsset->GetName().c_str());
+            m_assetInspector->Inspect(m_selectedAsset);
+        }
         else
         {
-            ImGui::Text("No GameObject selected");
+            ImGui::Text("Not selected any GameObject or Asset");
         }
         ImGui::End();
     }
@@ -61,6 +71,7 @@ namespace editor
     }
     void Inspector::RenderInspectorContent()
     {
+
         if (!m_selectedGameObject)
             return;
 
