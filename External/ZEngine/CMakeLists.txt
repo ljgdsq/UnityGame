@@ -38,7 +38,7 @@ add_subdirectory(External/rapidjson)
 add_subdirectory(External/spdlog)
 add_subdirectory(External/imgui)
 add_subdirectory(External/ImGuiFileDialog)
-
+add_subdirectory(External/fake)
 # 添加 GLAD
 add_library(glad External/glad/src/gl.c )
 target_include_directories(glad PUBLIC External/glad/include)
@@ -79,15 +79,18 @@ target_include_directories(zengine PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
+set_target_properties(fake PROPERTIES EXCLUDE_FROM_ALL TRUE)
+
 # Link all required libraries
 target_link_libraries(zengine PRIVATE
-    glfw
-    glad
-    glm
-    imgui
-    ${OPENGL_LIBRARIES}
-    rapidjson
-    spdlog::spdlog
+        glfw
+        glad
+        glm
+        imgui
+        fake
+        ${OPENGL_LIBRARIES}
+        rapidjson
+        spdlog::spdlog
 )
 
 target_link_libraries(zengine PUBLIC

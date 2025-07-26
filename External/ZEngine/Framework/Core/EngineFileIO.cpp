@@ -135,4 +135,16 @@ namespace framework
         return files;
     }
 
+    unsigned int EngineFileIO::GetFileSize(const std::string &path)
+    {
+        auto fullPath = FindResourcePath(path);
+        if (!fullPath.has_value() || !std::filesystem::exists(fullPath.value()))
+        {
+            Logger::Error("File does not exist: {}", fullPath.value().string());
+            return 0;
+        }
+
+        return static_cast<unsigned int>(std::filesystem::file_size(fullPath.value()));
+    }
+
 } // namespace framework

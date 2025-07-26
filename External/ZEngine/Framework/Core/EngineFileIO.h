@@ -42,6 +42,10 @@ namespace framework
         // 列出目录下的所有文件
         static std::vector<std::filesystem::path> ListFilesInDirectory(const std::string &directory, const std::string &extension = "");
 
+        // 获取文件大小
+        // 返回文件大小，单位为字节
+        static unsigned int GetFileSize(const std::string &path);
+
     private:
         // 查找资源文件的实际路径
         static std::optional<std::filesystem::path> FindResourcePath(const std::string &path);

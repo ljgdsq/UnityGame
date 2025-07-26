@@ -91,6 +91,7 @@ namespace editor
         // Display files
         for (const auto &file : files)
         {
+
             std::filesystem::path filePath(file);
             std::string filename = filePath.filename().string();
             std::string extension = filePath.extension().string();

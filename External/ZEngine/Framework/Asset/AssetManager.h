@@ -5,6 +5,8 @@
 #include "Framework/Util/FileUtil.hpp"
 #include "Framework/Asset/AssetLoader.h"
 #include "Framework/Asset/Asset.h"
+#include "Framework/Asset/UnknownAsset.h"
+#include "Framework/Asset/UnknownAssetLoader.h"
 namespace framework
 {
 
@@ -68,6 +70,18 @@ namespace framework
                     }
                 }
             }
+
+            if (m_unknownAssetLoader)
+            {
+                // 如果没有找到合适的加载器，使用未知资源加载器
+                auto asset = m_unknownAssetLoader->LoadAsset(assetPath);
+                if (asset)
+                {
+                    m_assets[assetName] = asset;
+                    Logger::Log("Loaded unknown asset: {}", assetPath);
+                    return std::dynamic_pointer_cast<T>(asset);
+                }
+            }
             Logger::Error("No suitable loader found for asset: {}", assetPath);
             return nullptr;
         }
@@ -113,6 +127,8 @@ namespace framework
     private:
         std::vector<std::shared_ptr<AssetLoader>> m_loaders; // 加载器列表
         std::unordered_map<std::string, std::shared_ptr<Asset>> m_assets;
+
+        std::shared_ptr<AssetLoader> m_unknownAssetLoader; // 用于加载未知类型的资源
     };
 
     void RegisterDefaultLoader();

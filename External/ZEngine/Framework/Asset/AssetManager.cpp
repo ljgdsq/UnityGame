@@ -1,12 +1,14 @@
 #include "Framework/Asset/AssetManager.h"
 #include "Framework/Log/Logger.h"
 
+
 namespace framework
 {
     void AssetManager::Initialize()
     {
         // Initialize asset manager
         Logger::Log("AssetManager initialized");
+        RegisterLoader<UnknownAssetLoader>();
     }
 
     void AssetManager::Shutdown()
@@ -46,6 +48,12 @@ namespace framework
 
     std::shared_ptr<Asset> AssetManager::LoadAsset(const std::string &assetPath, AssetType type)
     {
+        auto assetName = FileUtil::ExtractFileName(assetPath);
+        if (HasAsset(assetName))
+        {
+            return GetAsset(assetName);
+        }
+
         for (const auto &loader : m_loaders)
         {
             if (loader->GetAssetType() == type && loader->CanLoadAsset(assetPath))
@@ -62,6 +70,19 @@ namespace framework
                 }
             }
         }
+
+        if (m_unknownAssetLoader)
+        {
+            // 如果没有找到合适的加载器，使用未知资源加载器
+            auto asset = m_unknownAssetLoader->LoadAsset(assetPath);
+            if (asset)
+            {
+                m_assets[assetName] = asset;
+                Logger::Log("Loaded unknown asset: {}", assetPath);
+                return asset;
+            }
+        }
+
         Logger::Error("No suitable loader found for asset: {}", assetPath);
         return nullptr;
     }
