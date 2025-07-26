@@ -52,7 +52,7 @@ namespace framework
         // 创建 Shader 对象
         auto shader = std::make_shared<Shader>();
         shader->Compile(data1.c_str(), data2.c_str());
-
+        shader->shaderPath = newAssetPath; // 设置着色器路径
         shaderAsset->SetShader(shader);
 
         // 设置加载状态

@@ -5,6 +5,7 @@
 #include "Framework/Editor/EditorContext.h"
 #include "Framework/Editor/Inspector/LightInspector.h"
 #include "Framework/Editor/ComponentMenuHelper.h"
+#include "Framework/Editor/AssetInspectorRegistry.h"
 #include <imgui_internal.h>
 namespace editor
 {
@@ -19,9 +20,6 @@ namespace editor
         m_inspectors.push_back(new MeshFilterInspector());
 
         m_inspectors.push_back(new LightInspector()); // 添加光照检查器
-
-
-        m_assetInspector = new AssetInspector(); // 添加资源检查器
     }
 
     void Inspector::Initialize()
@@ -29,9 +27,12 @@ namespace editor
     }
     void Inspector::Update(float deltaTime)
     {
-        if (EditorContext::GetInstance().GetSelectedGameObject()){
+        if (EditorContext::GetInstance().GetSelectedGameObject())
+        {
             SetSelectedGameObject(EditorContext::GetInstance().GetSelectedGameObject());
-        }else{
+        }
+        else
+        {
             SetSelectedGameObject(nullptr);
             SetSelectedAsset(EditorContext::GetInstance().GetSelectedAsset());
         }
@@ -40,8 +41,11 @@ namespace editor
         {
             inspector->Update(deltaTime);
         }
+        if (m_selectedAsset)
+        {
+            AssetInspectorRegistry::GetInstance().GetInspector(m_selectedAsset->GetType())->Update(deltaTime);
+        }
 
-        m_assetInspector->Update(deltaTime);
     }
 
     void Inspector::Render()
@@ -55,7 +59,7 @@ namespace editor
         else if (m_selectedAsset)
         {
             ImGui::Text("Selected Asset: %s", m_selectedAsset->GetName().c_str());
-            m_assetInspector->Inspect(m_selectedAsset);
+            AssetInspectorRegistry::GetInstance().GetInspector(m_selectedAsset->GetType())->Inspect(m_selectedAsset);
         }
         else
         {
@@ -218,7 +222,8 @@ namespace editor
         return false;
     }
 
-    void Inspector::SetSelectedAsset(std::shared_ptr<framework::Asset> asset) {
-        m_selectedAsset= asset;
+    void Inspector::SetSelectedAsset(std::shared_ptr<framework::Asset> asset)
+    {
+        m_selectedAsset = asset;
     }
 }

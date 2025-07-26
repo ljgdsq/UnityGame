@@ -21,11 +21,11 @@
         // "vscode-icons-team.vscode-icons",
 
         // 调试和测试
-        "ms-vscode.test-adapter-converter",
+        // "ms-vscode.test-adapter-converter",
 
         // 实用工具
-        "formulahendry.auto-rename-tag",
-        "streetsidesoftware.code-spell-checker",
+        // "formulahendry.auto-rename-tag",
+        // "streetsidesoftware.code-spell-checker",
         "ms-vscode.hexeditor"
     ]
 }

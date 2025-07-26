@@ -2,7 +2,6 @@
 #include "Framework/Editor/EditorWidget.h"
 #include "Framework/Editor/Inspector/ComponentInspector.h"
 #include "Framework/Asset/Asset.h"
-#include "Framework/Editor/Inspector/AssetInspector.h"
 
 #include <vector>
 namespace editor
@@ -48,7 +47,6 @@ namespace editor
 
         // 新增：检查对象是否有特定组件
         bool HasComponent(ComponentInspector *inspector, framework::GameObject *obj);
-        AssetInspector* m_assetInspector = nullptr;
         std::vector<ComponentInspector *> m_inspectors; // 存储所有组件检查器
     };
 
