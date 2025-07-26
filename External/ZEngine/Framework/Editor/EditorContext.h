@@ -29,6 +29,8 @@ namespace editor{
         {
             m_selectedGameObject = nullptr;
         }
+
+        bool isDrag;
     private:
         GameObject *m_selectedGameObject = nullptr; // 当前选中的游戏对象
         std::shared_ptr<Asset> m_selectedAsset; // 当前选中的资源

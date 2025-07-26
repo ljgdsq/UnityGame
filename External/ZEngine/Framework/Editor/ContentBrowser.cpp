@@ -87,6 +87,7 @@ namespace editor
                 ImGui::TreePop();
             }
         }
+        EditorContext::GetInstance().isDrag = false;
 
         // Display files
         for (const auto &file : files)
@@ -95,15 +96,12 @@ namespace editor
             std::filesystem::path filePath(file);
             std::string filename = filePath.filename().string();
             std::string extension = filePath.extension().string();
-
             // 使用新的资源拖拽系统
-            RenderAssetDragSource(file, filename, extension);
-
-            if (ImGui::IsMouseClicked(ImGuiMouseButton_Left) && ImGui::IsItemHovered())
-            {
-                // 处理文件选择事件
+            if(RenderAssetDragSource(file, filename, extension)){
                 EditorContext::GetInstance().OnFileSelected(file);
             }
+     
+
         }
 
         if (!currentPath.empty())
@@ -116,7 +114,7 @@ namespace editor
         }
     }
 
-    void ContentBrowser::RenderAssetDragSource(const std::string &filePath, const std::string &filename, const std::string &extension)
+    bool ContentBrowser::RenderAssetDragSource(const std::string &filePath, const std::string &filename, const std::string &extension)
     {
         // 检查文件扩展名以确定资源类型
         std::shared_ptr<framework::Asset> asset = nullptr;
@@ -138,7 +136,7 @@ namespace editor
             if (auto textureAsset = std::dynamic_pointer_cast<framework::TextureAsset>(asset))
             {
                 void *thumbnailId = textureAsset->GetThumbnailTextureId();
-                AssetDragDropSystem::RenderDragSource(filename, DragDropType::Texture,
+                return AssetDragDropSystem::RenderDragSource(filename, DragDropType::Texture,
                                                       textureAsset->GetAssetId(),
                                                       textureAsset->GetName(),
                                                       thumbnailId);
@@ -146,7 +144,7 @@ namespace editor
             else if (auto meshAsset = std::dynamic_pointer_cast<framework::MeshAsset>(asset))
             {
                 void *thumbnailId = meshAsset->GetThumbnailTextureId();
-                AssetDragDropSystem::RenderDragSource(filename, DragDropType::Asset,
+                return AssetDragDropSystem::RenderDragSource(filename, DragDropType::Asset,
                                                       meshAsset->GetAssetId(),
                                                       meshAsset->GetName(),
                                                       thumbnailId);
@@ -162,6 +160,7 @@ namespace editor
                 ImGui::EndDragDropSource();
             }
         }
+        return false;
     }
 
 }

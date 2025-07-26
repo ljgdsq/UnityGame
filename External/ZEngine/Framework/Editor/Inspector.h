@@ -1,7 +1,7 @@
 #pragma once
 #include "Framework/Editor/EditorWidget.h"
 #include "Framework/Editor/Inspector/ComponentInspector.h"
-
+#include "Framework/Asset/Asset.h"
 #include <vector>
 namespace editor
 {
@@ -26,11 +26,12 @@ namespace editor
     public:
         // 设置当前选中的游戏对象
         void SetSelectedGameObject(framework::GameObject *gameObject);
+        void SetSelectedAsset(std::shared_ptr<framework::Asset> asset);
 
     private:
         // 当前选中的游戏对象
         framework::GameObject *m_selectedGameObject = nullptr;
-
+        std::shared_ptr<framework::Asset> m_selectedAsset;
         // 渲染检查器内容
         void RenderInspectorContent();
 

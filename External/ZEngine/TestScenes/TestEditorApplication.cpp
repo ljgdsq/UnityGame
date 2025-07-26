@@ -11,6 +11,7 @@
 #include "TestScenes/CameraManagerExampleScene.h"
 #include "TestScenes/BasicTestScene.h"
 #include "Framework/Editor/Log/EditorLogSink.h"
+#include "Framework/Editor/EditorContext.h"
 
 framework::TestEditorApplication::TestEditorApplication()
 {
@@ -114,6 +115,15 @@ void framework::TestEditorApplication::EndFrame()
     ImGui::Text("FPS: %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);
     ImGui::Text("FBO size: %dx%d", gameFrameBuffer->GetWidth(), gameFrameBuffer->GetHeight());
     ImGui::Text("Color texture ID: %u", gameFrameBuffer->GetColorBuffer());
+    ImGui::Text("Drag : %s",editor::EditorContext::GetInstance().isDrag ? "true":"false");
+    auto selectGo=editor::EditorContext::GetInstance().GetSelectedGameObject();
+    auto asset= editor::EditorContext::GetInstance().GetSelectedAsset();
+    if (selectGo){
+        ImGui::Text("Select Object: %s",selectGo->GetName().c_str());
+    }else if(asset){
+        ImGui::Text("Select Asset: %s",asset->GetName().c_str());
+    }
+
     ImGui::End();
 
     ImGui::Render();

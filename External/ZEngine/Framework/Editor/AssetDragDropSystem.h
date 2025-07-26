@@ -47,7 +47,7 @@ namespace editor
             dataId[sizeof(dataId) - 1] = '\0';
             std::strncpy(displayName, name.c_str(), sizeof(displayName) - 1);
             displayName[sizeof(displayName) - 1] = '\0';
-            userData = data;
+            type = t;
             userData = data;
         }
         // 便利方法
@@ -71,7 +71,7 @@ namespace editor
         static bool IsAcceptableDragDrop(DragDropType expectedType);
 
         // 渲染拖拽源（带图标和文本）
-        static void RenderDragSource(const std::string &label, DragDropType type,
+        static bool RenderDragSource(const std::string &label, DragDropType type,
                                      const std::string &dataId,
                                      const std::string &displayName = "",
                                      void *thumbnailTextureId = nullptr,

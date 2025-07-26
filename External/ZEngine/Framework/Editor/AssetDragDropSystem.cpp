@@ -3,6 +3,7 @@
 #include "Framework/Asset/AssetManager.h"
 #include "Framework/Log/Logger.h"
 #include <cstring>
+#include "Framework/Editor/EditorContext.h"
 
 namespace editor
 {
@@ -65,7 +66,7 @@ namespace editor
                ImGui::GetDragDropPayload()->IsDataType(payloadType);
     }
 
-    void AssetDragDropSystem::RenderDragSource(const std::string &label, DragDropType type,
+    bool AssetDragDropSystem::RenderDragSource(const std::string &label, DragDropType type,
                                                const std::string &dataId,
                                                const std::string &displayName,
                                                void *thumbnailTextureId,
@@ -85,12 +86,13 @@ namespace editor
         // 设置拖拽源
         if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_None))
         {
+            clicked = false;
             DragDropPayload payload;
             payload.SetPayLoad(type, dataId, displayName, thumbnailTextureId);
 
             SetupDragDropPayload(payload);
             RenderDragPreview(payload.displayName, thumbnailTextureId);
-
+            EditorContext::GetInstance().isDrag= true;
             ImGui::EndDragDropSource();
         }
 
@@ -99,6 +101,8 @@ namespace editor
         {
             ImGui::SetTooltip("%s", displayName.empty() ? label.c_str() : displayName.c_str());
         }
+
+        return clicked;
     }
 
     bool AssetDragDropSystem::RenderDropTarget(const std::string &hint, DragDropType expectedType,

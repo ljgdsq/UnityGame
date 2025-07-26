@@ -18,7 +18,7 @@ namespace editor
 
     private:
         void RenderFileSystem();
-        void RenderAssetDragSource(const std::string &filePath, const std::string &filename, const std::string &extension);
+        bool RenderAssetDragSource(const std::string &filePath, const std::string &filename, const std::string &extension);
 
         std::string rootPath;
         std::vector<std::string> currentPath;

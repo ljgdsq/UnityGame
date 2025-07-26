@@ -26,9 +26,11 @@ namespace editor
     }
     void Inspector::Update(float deltaTime)
     {
-
-        // todo : EditorContext::GetInstance()->GetSelectedGameObject() remove?
-        SetSelectedGameObject(EditorContext::GetInstance().GetSelectedGameObject());
+        if (EditorContext::GetInstance().GetSelectedGameObject()){
+            SetSelectedGameObject(EditorContext::GetInstance().GetSelectedGameObject());
+        }else{
+            SetSelectedAsset(EditorContext::GetInstance().GetSelectedAsset());
+        }
 
         for (auto inspector : m_inspectors)
         {
@@ -202,5 +204,9 @@ namespace editor
         }
 
         return false;
+    }
+
+    void Inspector::SetSelectedAsset(std::shared_ptr<framework::Asset> asset) {
+        m_selectedAsset= asset;
     }
 }
