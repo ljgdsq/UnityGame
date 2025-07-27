@@ -103,6 +103,7 @@ namespace editor
             {
                 EditorContext::GetInstance().OnFileSelected(file);
             }
+            ImGui::TextUnformatted(filename.c_str());
         }
 
         if (!currentPath.empty())
@@ -136,7 +137,6 @@ namespace editor
                     thumbnailId = nullptr;
                 }
             }
-
             // 使用基础的拖拽系统
             if (auto textureAsset = std::dynamic_pointer_cast<framework::TextureAsset>(asset))
             {

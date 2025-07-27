@@ -76,12 +76,8 @@ namespace editor
         bool clicked = false;
         if (thumbnailTextureId)
         {
-        //   ImGui::PushID(label.c_str());
-    //ImGui::BeginGroup();
-    clicked = ImGui::ImageButton(thumbnailTextureId, size);
-    // ImGui::TextUnformatted(displayName.c_str());
-    // ImGui::EndGroup();
-    // ImGui::PopID();
+
+            clicked = ImGui::ImageButton(thumbnailTextureId, size);
         }
         else
         {
