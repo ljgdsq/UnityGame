@@ -77,7 +77,7 @@ namespace editor
         if (thumbnailTextureId)
         {
 
-            clicked = ImGui::ImageButton(thumbnailTextureId, size);
+            clicked = ImGui::ImageButton(label.c_str(), thumbnailTextureId, size);
         }
         else
         {
