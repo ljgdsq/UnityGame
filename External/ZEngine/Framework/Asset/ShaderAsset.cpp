@@ -1,4 +1,5 @@
 #include "Framework/Asset/ShaderAsset.h"
+
 namespace framework{
 
     long ShaderAsset::GetSize() const {

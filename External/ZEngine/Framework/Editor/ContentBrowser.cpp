@@ -5,6 +5,7 @@
 #include "Framework/Asset/MeshAsset.h"
 #include "Framework/Log/Logger.h"
 #include "Framework/Editor/EditorContext.h"
+#include "Framework/Editor/ThumbnailManager.h"
 using namespace std;
 namespace editor
 {
@@ -98,7 +99,8 @@ namespace editor
             std::string filename = filePath.filename().string();
             std::string extension = filePath.extension().string();
             // 使用新的资源拖拽系统
-            if(RenderAssetDragSource(file, filename, extension)){
+            if (RenderAssetDragSource(file, filename, extension))
+            {
                 EditorContext::GetInstance().OnFileSelected(file);
             }
         }
@@ -120,33 +122,46 @@ namespace editor
 
         if (asset)
         {
+            void *thumbnailId = asset->GetThumbnailTextureId();
+            if (!thumbnailId)
+            {
+                auto defaultThumbnail = ThumbnailManager::GetInstance().GetThumbnail(asset->GetType());
+                if (defaultThumbnail)
+                {
+                    thumbnailId = defaultThumbnail->GetThumbnailTextureId();
+                }
+                else
+                {
+                    LOG_WARN("No default thumbnail found for asset type: {}", AssetTypeToString(asset->GetType()));
+                    thumbnailId = nullptr;
+                }
+            }
+
             // 使用基础的拖拽系统
             if (auto textureAsset = std::dynamic_pointer_cast<framework::TextureAsset>(asset))
             {
-                void *thumbnailId = textureAsset->GetThumbnailTextureId();
+
                 return AssetDragDropSystem::RenderDragSource(filename, DragDropType::Texture,
-                                                      textureAsset->GetAssetId(),
-                                                      textureAsset->GetName(),
-                                                      thumbnailId);
+                                                             textureAsset->GetAssetId(),
+                                                             textureAsset->GetName(),
+                                                             thumbnailId);
             }
             else if (auto meshAsset = std::dynamic_pointer_cast<framework::MeshAsset>(asset))
             {
-                void *thumbnailId = meshAsset->GetThumbnailTextureId();
                 return AssetDragDropSystem::RenderDragSource(filename, DragDropType::Asset,
-                                                      meshAsset->GetAssetId(),
-                                                      meshAsset->GetName(),
-                                                      thumbnailId);
+                                                             meshAsset->GetAssetId(),
+                                                             meshAsset->GetName(),
+                                                             thumbnailId);
             }
-
             else
             {
                 return AssetDragDropSystem::RenderDragSource(filename, DragDropType::Unknown,
                                                              asset->GetAssetId(),
                                                              asset->GetName(),
-                                                             nullptr);
+                                                             thumbnailId);
             }
         }
-
+        return false;
     }
 
 }

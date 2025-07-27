@@ -76,7 +76,12 @@ namespace editor
         bool clicked = false;
         if (thumbnailTextureId)
         {
-            clicked = ImGui::ImageButton(thumbnailTextureId, size);
+        //   ImGui::PushID(label.c_str());
+    //ImGui::BeginGroup();
+    clicked = ImGui::ImageButton(thumbnailTextureId, size);
+    // ImGui::TextUnformatted(displayName.c_str());
+    // ImGui::EndGroup();
+    // ImGui::PopID();
         }
         else
         {
@@ -92,7 +97,7 @@ namespace editor
 
             SetupDragDropPayload(payload);
             RenderDragPreview(payload.displayName, thumbnailTextureId);
-            EditorContext::GetInstance().isDrag= true;
+            EditorContext::GetInstance().isDrag = true;
             ImGui::EndDragDropSource();
         }
 

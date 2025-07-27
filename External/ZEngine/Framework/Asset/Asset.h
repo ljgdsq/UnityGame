@@ -17,6 +17,7 @@ namespace framework
         Mesh,
         Material,
         Audio,
+        Video,
         Animation,
         Font,
         Scene,
@@ -66,7 +67,7 @@ namespace framework
 
         void Release(bool force=false);
 
-        
+
 
         virtual long GetSize() const = 0;
 
