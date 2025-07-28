@@ -1,5 +1,9 @@
 #include "Framework/Asset/MeshAsset.h"
 #include "Framework/Core/EngineFileIO.h"
+#include "Framework/Graphic/Buffer.h"
+#include "Framework/Asset/ShaderManager.h"
+#include "glm/glm.hpp"
+#include "glm/gtc/matrix_transform.hpp"
 #include <algorithm>
 
 #ifndef M_PI
@@ -14,13 +18,11 @@ namespace framework
         Logger::Debug("Created MeshAsset: {}", name);
     }
 
-
     MeshAsset::~MeshAsset()
     {
         ReleaseThumbnail();
         Logger::Debug("Destroyed MeshAsset: {}", GetName());
     }
-
 
     long MeshAsset::GetSize() const
     {
@@ -127,7 +129,49 @@ namespace framework
             return;
         }
 
-        Logger::Debug("not Generated thumbnail for mesh: {}", GetName());
+        FrameBuffer *thumbnailBuffer = new FrameBuffer(128, 128);
+        thumbnailBuffer->BindBuffer();
+        // save old viewport
+        GLint viewport[4];
+        glGetIntegerv(GL_VIEWPORT, viewport);
+
+        glViewport(0, 0, 128, 128);
+        glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        // 使用缩略图着色器
+        auto shader = ShaderManager::GetInstance().GetShader("Shaders/Thumbnail")->GetShader();
+        shader->Use();
+
+        // 设置变换矩阵
+        // 创建绕X轴旋转45度的模型矩阵
+        glm::mat4 model = glm::mat4(1.0f);
+        model = glm::rotate(model, glm::radians(45.0f), glm::vec3(1.0f, 0.0f, 0.0f)); // 绕X轴旋转45度
+        model = glm::rotate(model, glm::radians(30.0f), glm::vec3(0.0f, 1.0f, 0.0f)); // 绕Y轴旋转30度以获得更好的视角
+
+        // 设置视图矩阵（相机位置）
+        glm::mat4 view = glm::lookAt(
+            glm::vec3(0.0f, 0.0f, 3.0f), // 相机位置
+            glm::vec3(0.0f, 0.0f, 0.0f), // 看向原点
+            glm::vec3(0.0f, 1.0f, 0.0f)  // 上方向
+        );
+
+        // 设置投影矩阵
+        glm::mat4 projection = glm::perspective(glm::radians(45.0f), 1.0f, 0.1f, 100.0f);
+
+        // 将矩阵传递给着色器
+        shader->SetMatrix4("model", model);
+        shader->SetMatrix4("view", view);
+        shader->SetMatrix4("projection", projection);
+
+        // 绘制网格
+        m_mesh->Use();
+        glDrawElements(GL_TRIANGLES, m_mesh->GetIndices().size(), GL_UNSIGNED_INT, 0);
+        thumbnailBuffer->UnbindBuffer();
+        m_thumbnailTextureId = reinterpret_cast<void *>(thumbnailBuffer->GetColorBuffer());
+        // 恢复旧的viewport
+        glViewport(viewport[0], viewport[1], viewport[2], viewport[3]);
+        Logger::Debug("Generated thumbnail for mesh: {}", GetName());
     }
 
 } // namespace framework
