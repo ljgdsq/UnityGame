@@ -10,6 +10,11 @@ namespace framework
     public:
 
         TextureAsset(const std::string &name);
+        TextureAsset(unsigned int textureID,
+                     const std::string &name,
+                     int width = 0,
+                     int height = 0,
+                     int channels = 0);
         virtual ~TextureAsset() override;
 
         long GetSize() const override;

@@ -46,7 +46,7 @@ namespace framework
         void *FinalizeThumbnail();
 
         std::unique_ptr<FrameBuffer> m_frameBuffer;
-        Shader *m_thumbnailShader = nullptr;
+        std::shared_ptr<Shader> m_thumbnailShader = nullptr;
     };
 
 } // namespace framework

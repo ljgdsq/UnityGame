@@ -13,6 +13,17 @@ namespace framework
         Logger::Debug("Created TextureAsset: {}", name);
     }
 
+    TextureAsset::TextureAsset(unsigned int textureID,
+                               const std::string &name,
+                               int width,
+                               int height,
+                               int channels)
+        : Asset(name, AssetType::Texture),
+          m_texture(std::make_shared<Texture>(name, textureID, width, height, channels))
+    {
+        Logger::Debug("Created TextureAsset with ID: {}, Name: {}, Size: {}x{}x{}", textureID, name, width, height, channels);
+    }
+
     TextureAsset::~TextureAsset()
     {
         ReleaseThumbnail();
@@ -194,7 +205,6 @@ namespace framework
         }
     }
 
-
     void TextureAsset::GenerateThumbnailFromTexture()
     {
         ReleaseThumbnail();
@@ -222,6 +232,5 @@ namespace framework
         // 2. 将原纹理渲染到较小的纹理上
         // 3. 保存缩略图纹理ID
     }
-
 
 } // namespace framework

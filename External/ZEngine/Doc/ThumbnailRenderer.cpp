@@ -9,6 +9,8 @@
 
 namespace framework
 {
+
+    
     ThumbnailRenderer &ThumbnailRenderer::GetInstance()
     {
         static ThumbnailRenderer instance;
