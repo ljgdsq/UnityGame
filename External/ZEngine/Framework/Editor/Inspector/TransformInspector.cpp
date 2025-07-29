@@ -34,20 +34,32 @@ namespace editor
             ImGui::Text("Position");
             ImGui::SameLine();
 
-            // Display the "X" label and input
-            ImGui::Text("X:");
+            // X: 红色按钮标签
+            ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(1, 0.2f, 0.2f, 1));
+            ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(1, 0.3f, 0.3f, 1));
+            ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(1, 0.4f, 0.4f, 1));
+            ImGui::Button("X");
+            ImGui::PopStyleColor(3);
             ImGui::SameLine();
             ImGui::DragFloat("##X", &(transform->position.x), 1.0f);
             ImGui::SameLine();
 
-            // Display the "Y" label and input
-            ImGui::Text("Y:");
+            // Y: 绿色按钮标签
+            ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.2f, 1, 0.2f, 1));
+            ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.3f, 1, 0.3f, 1));
+            ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.4f, 1, 0.4f, 1));
+            ImGui::Button("Y");
+            ImGui::PopStyleColor(3);
             ImGui::SameLine();
             ImGui::DragFloat("##Y", &(transform->position.y), 1.0f);
             ImGui::SameLine();
 
-            // Display the "Z" label and input
-            ImGui::Text("Z:");
+            // Z: 蓝色按钮标签
+            ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.2f, 0.2f, 1, 1));
+            ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.3f, 0.3f, 1, 1));
+            ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.4f, 0.4f, 1, 1));
+            ImGui::Button("Z");
+            ImGui::PopStyleColor(3);
             ImGui::SameLine();
             ImGui::DragFloat("##Z", &(transform->position.z), 1.0f);
         }
@@ -66,23 +78,35 @@ namespace editor
         glm::vec3 originalEuler = eulerAngles;
 
         {
-
             ImGui::Text("Rotation");
             ImGui::SameLine();
 
-            ImGui::Text("X:");
+            // X: 红色按钮标签
+            ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(1, 0.2f, 0.2f, 1));
+            ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(1, 0.3f, 0.3f, 1));
+            ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(1, 0.4f, 0.4f, 1));
+            ImGui::Button("X");
+            ImGui::PopStyleColor(3);
             ImGui::SameLine();
             ImGui::DragFloat("##RX", &eulerAngles.x, 1.0f);
             ImGui::SameLine();
 
-            // Display the "Y" label and input
-            ImGui::Text("Y:");
+            // Y: 绿色按钮标签
+            ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.2f, 1, 0.2f, 1));
+            ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.3f, 1, 0.3f, 1));
+            ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.4f, 1, 0.4f, 1));
+            ImGui::Button("Y");
+            ImGui::PopStyleColor(3);
             ImGui::SameLine();
             ImGui::DragFloat("##RY", &eulerAngles.y, 1.0f);
             ImGui::SameLine();
 
-            // Display the "Z" label and input
-            ImGui::Text("Z:");
+            // Z: 蓝色按钮标签
+            ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.2f, 0.2f, 1, 1));
+            ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.3f, 0.3f, 1, 1));
+            ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.4f, 0.4f, 1, 1));
+            ImGui::Button("Z");
+            ImGui::PopStyleColor(3);
             ImGui::SameLine();
             ImGui::DragFloat("##RZ", &eulerAngles.z, 1.0f);
         }
@@ -101,23 +125,35 @@ namespace editor
         Transform *transform = node->GetComponent<Transform>();
 
         {
-
             ImGui::Text("Scale   ");
             ImGui::SameLine();
 
-            ImGui::Text("X:");
+            // X: 红色按钮标签
+            ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(1, 0.2f, 0.2f, 1));
+            ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(1, 0.3f, 0.3f, 1));
+            ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(1, 0.4f, 0.4f, 1));
+            ImGui::Button("X");
+            ImGui::PopStyleColor(3);
             ImGui::SameLine();
             ImGui::DragFloat("##SX", &(transform->scale.x), 0.1f);
             ImGui::SameLine();
 
-            // Display the "Y" label and input
-            ImGui::Text("Y:");
+            // Y: 绿色按钮标签
+            ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.2f, 1, 0.2f, 1));
+            ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.3f, 1, 0.3f, 1));
+            ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.4f, 1, 0.4f, 1));
+            ImGui::Button("Y");
+            ImGui::PopStyleColor(3);
             ImGui::SameLine();
             ImGui::DragFloat("##SY", &(transform->scale.y), 0.1f);
             ImGui::SameLine();
 
-            // Display the "Z" label and input
-            ImGui::Text("Z:");
+            // Z: 蓝色按钮标签
+            ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.2f, 0.2f, 1, 1));
+            ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.3f, 0.3f, 1, 1));
+            ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.4f, 0.4f, 1, 1));
+            ImGui::Button("Z");
+            ImGui::PopStyleColor(3);
             ImGui::SameLine();
             ImGui::DragFloat("##SZ", &(transform->scale.z), 0.1f);
         }

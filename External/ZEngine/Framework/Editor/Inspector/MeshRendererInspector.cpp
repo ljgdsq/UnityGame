@@ -31,33 +31,27 @@ namespace editor
         if (materialAsset)
         {
             auto material = materialAsset->GetMaterial();
-            ImGui::Text("Material: %s", material->GetName().c_str());
-            ImGui::Separator();
+
             ImGui::PushStyleColor(ImGuiCol_Header, ImVec4(0, 0, 0, 0));       // 透明
             ImGui::PushStyleColor(ImGuiCol_HeaderActive, ImVec4(0, 0, 0, 0)); // 透明
                                                                               // 记录区域起始位置
             if (ImGui::CollapsingHeader("Material Asset Details", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_AllowItemOverlap))
             {
+                ImGui::BeginGroup();
+                ImGui::Indent(20.0f);
+                ImGui::Spacing();
                 materialAssetInspector->Inspect(materialAsset);
+                ImGui::Spacing();
 
-
+                ImGui::Unindent(20.0f);
+                ImGui::EndGroup();
                 ImVec2 rectMin = ImGui::GetItemRectMin();
-
-    ImGui::BeginGroup();
-    materialAssetInspector->Inspect(materialAsset);
-    ImGui::EndGroup();
-
-        ImVec2 rectMax = ImGui::GetItemRectMax();
-    float padding = 6.0f;
-    // 绘制淡蓝色背景（覆盖整个折叠区域）
-    ImGui::GetWindowDrawList()->AddRectFilled(
-        ImVec2(rectMin.x - padding, rectMin.y - padding),
-        ImVec2(rectMax.x + padding, rectMax.y + padding),
-        ImColor(180, 200, 255, 60), 6.0f
-    );
+                ImVec2 rectMax = ImGui::GetItemRectMax();
+                rectMax.x = rectMin.x + ImGui::GetContentRegionAvail().x-20;
+                // 绘制整个区域的边框
+                ImDrawList *drawList = ImGui::GetWindowDrawList();
+                drawList->AddRect(rectMin, rectMax, IM_COL32(100, 150, 255, 255), 4.0f, 0, 2.0f);
             }
-
-
 
             ImGui::PopStyleColor(2);
         }

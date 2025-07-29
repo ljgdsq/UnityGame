@@ -25,18 +25,19 @@ namespace editor
             ImGui::Text("Invalid Material Asset");
             return;
         }
-        // 绘制 下拉列表 显示所有的shader名字
-        ImGui::SeparatorText("Select Shader");
+
         ImGui::Spacing();
 
         static int selectedShaderIndex = 0;
+        ImGui::SetNextItemWidth(180);
+
         if (ImGui::BeginCombo("##ShaderCombo", shaders[selectedShaderIndex]->GetName().c_str()))
         {
             for (int i = 0; i < shaders.size(); ++i)
             {
                 const auto &shader = shaders[i];
                 bool isSelected = (selectedShaderIndex == i);
-                if (ImGui::Selectable(shader->GetName().c_str(), isSelected))
+                if(ImGui::Selectable(shader->GetName().c_str(), isSelected))
                 {
                     selectedShaderIndex = i;
                     // 设置当前材质的着色器
@@ -55,7 +56,6 @@ namespace editor
             ImGui::Text("No Material associated with this asset.");
             return;
         }
-
 
         auto textures = material->GetAllTextureBindings();
         for (size_t i = 0; i < textures.size(); ++i)
@@ -120,7 +120,6 @@ namespace editor
                 ImGui::Text("Error rendering texture at index %zu", i);
             }
 
-            ImGui::Separator();
             ImGui::PopID();
         }
 
