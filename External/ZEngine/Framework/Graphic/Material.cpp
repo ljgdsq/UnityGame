@@ -1,4 +1,4 @@
-#include "Framework/Graphic/MaterialNew.h"
+#include "Framework/Graphic/Material.h"
 #include "Framework/Asset/AssetManager.h"
 #include "Framework/Log/Logger.h"
 #include "Framework/Graphic/Shader.h"

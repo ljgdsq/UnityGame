@@ -35,6 +35,26 @@ namespace framework
         {
             jsonValue.AddMember("shader", rapidjson::Value(m_shader->shaderPath.c_str(), allocator), allocator);
         }
+
+        if (m_material)
+        {
+            std::vector<framework::Material::UnifiedTextureBinding> bindings = m_material->GetAllTextureBindings();
+            auto textureBinding = rapidjson::Value(rapidjson::kArrayType);
+            jsonValue.AddMember("binding", textureBinding, allocator);
+            for (const auto &binding : bindings)
+            {
+                    rapidjson::Value bindingValue(rapidjson::kObjectType);
+                    bindingValue.AddMember("name", rapidjson::Value(binding.name.c_str(), allocator), allocator);
+                    bindingValue.AddMember("slot", binding.slot, allocator);
+                    bindingValue.AddMember("type", static_cast<int>(binding.type), allocator);
+                    if (binding.textureAsset){
+                        bindingValue.AddMember("texture", rapidjson::Value(binding.textureAsset->GetTexture()->GetFilePath().c_str(), allocator), allocator);
+                    }
+                    textureBinding.PushBack(bindingValue, allocator);
+                }
+        }
+
+
         return jsonValue;
     }
 
@@ -56,14 +76,37 @@ namespace framework
             else
             {
                 m_shader = asset->GetShader();
-                m_material = std::make_shared<Material>(m_name);
-                m_material->SetShader(m_shader.get());
             }
+            m_material = std::make_shared<Material>(m_name);
+            m_material->SetShader(m_shader.get());
         }
         else
         {
             m_shader.reset();
         }
+
+        if (json.HasMember("binding") && json["binding"].IsArray())
+        {
+            const auto &bindings = json["binding"];
+            for (int i =0;i<bindings.Size();i++)
+            {
+                const auto& binding=bindings[i];
+                if (binding.IsObject() && binding.HasMember("name") && binding.HasMember("slot") && binding.HasMember("type"))
+                {
+                    std::string name = binding["name"].GetString();
+                    int slot = binding["slot"].GetInt();
+                    TextureType type = static_cast<TextureType>(binding["type"].GetInt());
+                    std::shared_ptr<TextureAsset> textureAsset;
+                    if (binding.HasMember("texture") && binding["texture"].IsString())
+                    {
+                        std::string texturePath = binding["texture"].GetString();
+                        textureAsset = AssetManager::GetInstance().LoadAsset<TextureAsset>(texturePath);
+                    }
+                    m_material->SetTexture(name, textureAsset, slot, type);
+                }
+            }
+        }
+
     }
 
     long MaterialAsset::GetSize() const

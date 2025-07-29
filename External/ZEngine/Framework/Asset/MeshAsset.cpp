@@ -133,7 +133,7 @@ namespace framework
         auto &thumbnailManager = editor::ThumbnailManager::GetInstance();
         auto tex = thumbnailManager.GetAssetThumbnail(std::make_shared<MeshAsset>(*this));
         if(tex && tex->GetTexture()){
-            m_thumbnailTextureId = reinterpret_cast<void *>(tex->GetTexture()->GetId());
+            m_thumbnailTextureId = reinterpret_cast<void *>(static_cast<intptr_t>(tex->GetTexture()->GetId()));
         }else{
             m_thumbnailTextureId = nullptr;
         }

@@ -30,12 +30,12 @@ namespace framework
         materialAsset->SetMaterial(material);
         materialAsset->SetShader(shaderAsset->GetShader());
 
-            auto go = new GameObject("TestTexture");
+        auto go = new GameObject("TestTexture");
         go->AddComponent<MeshFilter>();
         go->GetComponent<MeshFilter>()->SetMesh(AssetManager::GetInstance().LoadAsset<MeshAsset>("Models/primitives/Cube.obj"));
-
         go->AddComponent<MeshRenderer>();
         go->GetComponent<MeshRenderer>()->SetMaterial(materialAsset);
+        go->GetTransform()->SetPosition(glm::vec3(10.0f, 0.0f, 0.0f));
 
         auto light = new GameObject("TestLight");
         light->AddComponent<Light>();
