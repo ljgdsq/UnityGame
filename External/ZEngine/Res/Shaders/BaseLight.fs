@@ -6,7 +6,7 @@ in vec3 Normal;
 in vec3 FragPos;
 
 // 纹理
-uniform sampler2D texture_1;
+uniform sampler2D texture_0;
 
 // 最大光源数量
 #define MAX_LIGHTS 8
@@ -131,7 +131,7 @@ vec3 CalculateLight(Light light, vec3 normal, vec3 fragPos, vec3 viewDir, vec3 d
 
 void main() {
     // 获取纹理颜色
-    vec3 textureColor = texture(texture_1, TexCoord).rgb;
+    vec3 textureColor = texture(texture_0, TexCoord).rgb;
     vec3 diffuseColor = textureColor * u_diffuseColor;
 
     // 法线和视图方向

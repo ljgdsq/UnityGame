@@ -65,7 +65,7 @@ namespace framework
     {
         // 兼容性方法 - 通过名称查找纹理
         Logger::Debug("Material: SetTexture compatibility method called with name: {}", textureName);
-
+        throw new std::runtime_error("not implemented");
         // 这里可以尝试通过AssetManager查找纹理
         // 暂时保留原有行为
     }

@@ -39,8 +39,7 @@ namespace framework
         if (m_material)
         {
             std::vector<framework::Material::UnifiedTextureBinding> bindings = m_material->GetAllTextureBindings();
-            auto textureBinding = rapidjson::Value(rapidjson::kArrayType);
-            jsonValue.AddMember("binding", textureBinding, allocator);
+            rapidjson::Value textureBinding(rapidjson::kArrayType);
             for (const auto &binding : bindings)
             {
                     rapidjson::Value bindingValue(rapidjson::kObjectType);
@@ -51,7 +50,9 @@ namespace framework
                         bindingValue.AddMember("texture", rapidjson::Value(binding.textureAsset->GetTexture()->GetFilePath().c_str(), allocator), allocator);
                     }
                     textureBinding.PushBack(bindingValue, allocator);
-                }
+            }
+            jsonValue.AddMember("binding", textureBinding, allocator);
+
         }
 
 

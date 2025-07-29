@@ -4,15 +4,21 @@
 #include "Framework/Asset/TextureAsset.h"
 #include "Framework/Asset/MaterialAsset.h"
 #include "Framework/Editor/Inspector/AssetField/AssetFieldUI.h"
-
+#include "Framework/Editor/Inspector/MaterialAssetInspector.h"
 using namespace framework;
 
 namespace editor
 {
+
     void MeshRendererInspector::Inspect(GameObject *node)
     {
         if (!node || !node->HasComponent<MeshRenderer>())
             return;
+
+        if (!materialAssetInspector)
+        {
+            materialAssetInspector = new MaterialAssetInspector();
+        }
 
         MeshRenderer *meshRenderer = node->GetComponent<MeshRenderer>();
         RenderMaterial(node, meshRenderer);
@@ -20,14 +26,40 @@ namespace editor
 
     void MeshRendererInspector::RenderMaterial(GameObject *node, MeshRenderer *meshRenderer)
     {
-
+        float padding = 6.0f;
         auto materialAsset = meshRenderer->GetMaterial();
         if (materialAsset)
         {
             auto material = materialAsset->GetMaterial();
             ImGui::Text("Material: %s", material->GetName().c_str());
             ImGui::Separator();
-            RenderMaterialTextures(material.get());
+            ImGui::PushStyleColor(ImGuiCol_Header, ImVec4(0, 0, 0, 0));       // 透明
+            ImGui::PushStyleColor(ImGuiCol_HeaderActive, ImVec4(0, 0, 0, 0)); // 透明
+                                                                              // 记录区域起始位置
+            if (ImGui::CollapsingHeader("Material Asset Details", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_AllowItemOverlap))
+            {
+                materialAssetInspector->Inspect(materialAsset);
+
+
+                ImVec2 rectMin = ImGui::GetItemRectMin();
+
+    ImGui::BeginGroup();
+    materialAssetInspector->Inspect(materialAsset);
+    ImGui::EndGroup();
+
+        ImVec2 rectMax = ImGui::GetItemRectMax();
+    float padding = 6.0f;
+    // 绘制淡蓝色背景（覆盖整个折叠区域）
+    ImGui::GetWindowDrawList()->AddRectFilled(
+        ImVec2(rectMin.x - padding, rectMin.y - padding),
+        ImVec2(rectMax.x + padding, rectMax.y + padding),
+        ImColor(180, 200, 255, 60), 6.0f
+    );
+            }
+
+
+
+            ImGui::PopStyleColor(2);
         }
         else
         {
@@ -37,84 +69,14 @@ namespace editor
 
     void MeshRendererInspector::RenderMaterialTextures(framework::Material *material)
     {
+    }
 
-        auto textures = material->GetAllTextureBindings();
-
-        ImGui::Text("Material Textures:");
-        ImGui::Separator();
-
-        for (size_t i = 0; i < textures.size(); ++i)
+    // 更新方法
+    void MeshRendererInspector::Update(float deltaTime)
+    {
+        if (materialAssetInspector)
         {
-            ImGui::PushID(static_cast<int>(i));
-
-            try
-            {
-                const auto &texture = textures[i];
-
-                // 直接从材质获取纹理绑定的引用，而不是副本
-                AssetTextureBinding *binding = material->GetTextureAtIndex(i);
-                if (!binding)
-                {
-                    ImGui::Text("Texture: %s (No Binding)", texture.name.c_str());
-                    ImGui::Text("Slot: %d", texture.slot);
-                    ImGui::Separator();
-                    ImGui::PopID();
-                    continue;
-                }
-
-                // 获取当前的纹理资源
-                auto currentTextureAsset = binding->asset;
-                std::shared_ptr<TextureAsset> mutableTextureAsset = currentTextureAsset;
-
-                // 确保缩略图已生成
-                if (currentTextureAsset && currentTextureAsset->IsLoaded() && !currentTextureAsset->HasThumbnail())
-                {
-                    currentTextureAsset->GenerateThumbnail();
-                }
-
-                AssetFieldConfig config;
-                config.previewSize = ImVec2(128, 128);
-                config.showPreview = true;
-                config.allowNull = true;
-
-                // 渲染纹理字段
-                if (RenderTextureField("Texture " + std::to_string(i) + ":", mutableTextureAsset, config))
-                {
-                    // 如果纹理被修改，更新材质
-                    if (mutableTextureAsset != currentTextureAsset)
-                    {
-                        material->SetTexture(binding->name, mutableTextureAsset, binding->slot, binding->type);
-                        Logger::Log("MeshRendererInspector: Texture updated for slot {} ", binding->slot);
-                    }
-                }
-
-                // 显示纹理类型信息
-                const char *textureTypeNames[] = {"Diffuse", "Specular", "Normal", "Height", "Ambient"};
-                int typeIndex = static_cast<int>(binding->type);
-                if (typeIndex >= 0 && typeIndex < IM_ARRAYSIZE(textureTypeNames))
-                {
-                    ImGui::Text("Type: %s", textureTypeNames[typeIndex]);
-                }
-
-                // 显示纹理槽位
-                ImGui::Text("Slot: %d", binding->slot);
-            }
-            catch (const std::exception &e)
-            {
-                Logger::Error("Error in texture rendering: {}", e.what());
-                ImGui::Text("Error rendering texture at index %zu", i);
-            }
-
-            ImGui::Separator();
-            ImGui::PopID();
-        }
-
-        // 添加新纹理绑定按钮
-        if (ImGui::Button("Add Texture Binding"))
-        {
-            // 简化实现：添加一个新的 diffuse 纹理绑定
-            std::string newTextureName = "texture_" + std::to_string(textures.size());
-            material->SetTexture(newTextureName, nullptr, textures.size(), TextureType::DIFFUSE);
+            materialAssetInspector->Update(deltaTime);
         }
     }
 

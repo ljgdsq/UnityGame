@@ -16,9 +16,11 @@ namespace editor
 
         // 组件显示名称
         std::string GetComponentDisplayName() const override;
+        void Update(float deltaTime) override;
 
     private:
-        void RenderMaterial(framework::GameObject *node,framework::MeshRenderer *meshRenderer);
+        void RenderMaterial(framework::GameObject *node, framework::MeshRenderer *meshRenderer);
         void RenderMaterialTextures(framework::Material *material);
+        class MaterialAssetInspector *materialAssetInspector = nullptr;
     };
 }
