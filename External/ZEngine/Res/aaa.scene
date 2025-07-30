@@ -10,14 +10,14 @@
                     "type": "Transform",
                     "position": [
                         1.0,
-                        1.0,
-                        1.0
+                        0.0,
+                        0.0
                     ],
                     "rotation": [
                         0.0,
                         0.0,
-                        0.8788171410560608,
-                        0.4771587550640106
+                        0.0,
+                        1.0
                     ],
                     "scale": [
                         1.0,
@@ -26,10 +26,31 @@
                     ]
                 },
                 {
-                    "mesh": "Cube",
+                    "mesh": "Models/primitives/Cube.obj",
                     "type": "MeshFilter"
                 },
-                {}
+                {
+                    "__base": {
+                        "type": "RenderComponent",
+                        "visible": true,
+                        "material": {
+                            "name": "TestMaterialAsset",
+                            "shader": "Res/Shaders\\BaseLight",
+                            "filePath": "",
+                            "binding": [
+                                {
+                                    "name": "texture_0",
+                                    "slot": 0,
+                                    "type": 0,
+                                    "texture": "Textures/container.png"
+                                }
+                            ]
+                        },
+                        "renderLayer": 0,
+                        "sortingOrder": 0
+                    },
+                    "type": "MeshRenderer"
+                }
             ]
         },
         {
@@ -40,9 +61,9 @@
                     "type": "Light",
                     "lightType": 0,
                     "color": [
-                        0.014057088643312455,
-                        0.2917535901069641,
-                        0.3186274766921997
+                        1.0,
+                        0.5,
+                        0.20000000298023225
                     ],
                     "intensity": 1.0
                 },

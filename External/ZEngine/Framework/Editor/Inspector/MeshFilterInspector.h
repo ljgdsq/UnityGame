@@ -15,7 +15,6 @@ namespace editor
         std::string GetComponentDisplayName() const override;
 
     private:
-        void RenderMeshAssetField(framework::MeshFilter *meshFilter);
         void RenderMeshInfo(framework::MeshFilter *meshFilter);
     };
 }

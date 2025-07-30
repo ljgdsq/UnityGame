@@ -38,6 +38,8 @@ namespace framework
 
         if (m_material)
         {
+            jsonValue.AddMember("filePath", rapidjson::Value(GetFilePath().c_str(), allocator), allocator);
+
             std::vector<framework::Material::UnifiedTextureBinding> bindings = m_material->GetAllTextureBindings();
             rapidjson::Value textureBinding(rapidjson::kArrayType);
             for (const auto &binding : bindings)
@@ -61,6 +63,9 @@ namespace framework
 
     void MaterialAsset::Deserialize(const rapidjson::Value &json)
     {
+
+
+
         if (json.HasMember("name") && json["name"].IsString())
         {
             m_name = json["name"].GetString();
@@ -84,6 +89,11 @@ namespace framework
         else
         {
             m_shader.reset();
+        }
+
+        if (json.HasMember("filePath") && json["filePath"].IsString())
+        {
+            SetFilePath(json["filePath"].GetString());
         }
 
         if (json.HasMember("binding") && json["binding"].IsArray())

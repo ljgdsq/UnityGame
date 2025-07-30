@@ -41,12 +41,6 @@ namespace framework
         {
             return;
         }
-        // 确保OpenGL状态正确
-        // glEnable(GL_DEPTH_TEST);
-        // glDepthFunc(GL_LESS);
-        // glEnable(GL_CULL_FACE);
-        // glCullFace(GL_BACK);
-        // glFrontFace(GL_CCW);
 
         // 使用材质渲染网格
         if (m_material)
@@ -89,12 +83,7 @@ namespace framework
         auto baseJson = RenderComponent::Serialize(allocator);
         rapidjson::Value jsonValue(rapidjson::kObjectType);
         jsonValue.AddMember("__base", baseJson, allocator);
-
-        // jsonValue.AddMember("type", "MeshRenderer", allocator);
-        // if (m_meshFilter && m_meshFilter->HasMesh())
-        // {
-        //     jsonValue.AddMember("mesh", m_meshFilter->GetMeshAsset()->GetName(), allocator);
-        // }
+        jsonValue.AddMember("type", "MeshRenderer", allocator);
         return jsonValue;
     }
 

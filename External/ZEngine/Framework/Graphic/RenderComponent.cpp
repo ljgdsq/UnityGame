@@ -12,7 +12,8 @@ namespace framework
         jsonValue.AddMember("visible", m_visible, allocator);
         if (m_material)
         {
-            jsonValue.AddMember("material", rapidjson::Value(m_material->GetName().c_str(), allocator), allocator);
+
+            jsonValue.AddMember("material", m_material->Serialize(allocator), allocator);
         }
         jsonValue.AddMember("renderLayer", m_renderLayer, allocator);
         jsonValue.AddMember("sortingOrder", m_sortingOrder, allocator);
@@ -25,12 +26,27 @@ namespace framework
         {
             m_visible = jsonValue["visible"].GetBool();
         }
-        if (jsonValue.HasMember("material") && jsonValue["material"].IsString())
+        if (jsonValue.HasMember("material") && jsonValue["material"].IsObject())
         {
-            std::string materialName = jsonValue["material"].GetString();
-            // 注意: 这里需要从AssetManager加载Material而不是MaterialAsset
-            // 暂时设为nullptr，需要实现Material的加载逻辑
-            m_material = nullptr;
+            const rapidjson::Value& mtValue = jsonValue["material"];
+            if (mtValue.HasMember("filePath"))
+            {
+                std::string materialPath = mtValue["filePath"].GetString();
+                if(materialPath.empty())
+                {
+                    Logger::Error("Material path is empty in RenderComponent deserialization.");
+                    m_material = std::make_shared<MaterialAsset>(mtValue["name"].GetString());
+                }else{
+                    m_material = AssetManager::GetInstance().LoadAsset<MaterialAsset>(materialPath);
+                }
+
+                if (!m_material)
+                {
+                    Logger::Error("Failed to load material: {}", materialPath);
+                }
+                m_material = std::make_shared<MaterialAsset>(m_material->GetName());
+            }
+            m_material->Deserialize(mtValue);
         }
         if (jsonValue.HasMember("renderLayer") && jsonValue["renderLayer"].IsInt())
         {

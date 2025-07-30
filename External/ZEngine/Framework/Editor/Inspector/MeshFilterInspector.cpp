@@ -24,33 +24,26 @@ namespace editor
         return "Mesh Filter";
     }
 
-    void MeshFilterInspector::RenderMeshAssetField(framework::MeshFilter *meshFilter)
-    {
-    }
-
     void MeshFilterInspector::RenderMeshInfo(framework::MeshFilter *meshFilter)
     {
         auto meshAsset = meshFilter->GetMeshAsset();
         if (!meshAsset)
         {
-            ImGui::TextColored(ImVec4(0.7f, 0.7f, 0.7f, 1.0f), "没有分配网格资源");
+            ImGui::TextColored(ImVec4(0.7f, 0.7f, 0.7f, 1.0f), "no mesh");
             return;
         }
 
         // 显示网格信息
         ImGui::Separator();
-        ImGui::TextColored(ImVec4(0.8f, 0.8f, 0.8f, 1.0f), "网格信息:"); // 显示网格名称
-        ImGui::Text("名称: %s", meshAsset->GetName().c_str());
+        ImGui::TextColored(ImVec4(0.8f, 0.8f, 0.8f, 1.0f), "Mesh Information:"); // 显示网格名称
+        ImGui::Text("Name: %s", meshAsset->GetName().c_str());
 
         // 显示网格ID
         ImGui::Text("ID: %s", meshAsset->GetAssetId().c_str());
 
-        // 显示网格统计信息（如果有的话）
-        // 这里假设MeshAsset有获取顶点数和面数的方法
-        // 实际实现可能需要根据MeshAsset的具体接口调整
         if (meshAsset->IsLoaded())
         {
-            ImGui::Text("状态: 已加载");
+            ImGui::Text("Status: Loaded");
             // 配置资源字段
             AssetFieldConfig config;
             config.showPreview = true;
@@ -66,7 +59,7 @@ namespace editor
         }
         else
         {
-            ImGui::TextColored(ImVec4(1.0f, 0.8f, 0.0f, 1.0f), "状态: 正在加载...");
+            ImGui::TextColored(ImVec4(1.0f, 0.8f, 0.0f, 1.0f), "Status: Loading...");
         }
     }
 }
