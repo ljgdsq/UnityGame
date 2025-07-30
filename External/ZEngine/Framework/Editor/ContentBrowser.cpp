@@ -148,7 +148,7 @@ namespace editor
             }
             else if (auto meshAsset = std::dynamic_pointer_cast<framework::MeshAsset>(asset))
             {
-                return AssetDragDropSystem::RenderDragSource(filename, DragDropType::Asset,
+                return AssetDragDropSystem::RenderDragSource(filename, DragDropType::Mesh,
                                                              meshAsset->GetAssetId(),
                                                              meshAsset->GetName(),
                                                              thumbnailId);

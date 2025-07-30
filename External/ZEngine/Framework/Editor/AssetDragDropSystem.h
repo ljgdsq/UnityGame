@@ -24,6 +24,7 @@ namespace editor
         Unknown = 0,
         Asset,
         Texture,
+        Mesh,
         GameObject,
         Component,
         File

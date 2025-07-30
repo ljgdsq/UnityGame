@@ -24,7 +24,7 @@ namespace editor
     // TextureAsset UI 工具函数
     bool RenderTextureField(const std::string &label, std::shared_ptr<framework::TextureAsset> &asset, const AssetFieldConfig &config);
     bool RenderTextureButton(const std::string &label, std::shared_ptr<framework::TextureAsset> asset, const AssetFieldConfig &config);
-    void RenderTextureThumbnail(std::shared_ptr<framework::TextureAsset> asset, const ImVec2 &size);
+    void RenderTextureThumbnail(void *textureID, const ImVec2 &size);
 
     // MeshAsset UI 工具函数
     bool RenderMeshField(const std::string &label, std::shared_ptr<framework::MeshAsset> &asset, const AssetFieldConfig &config);

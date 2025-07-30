@@ -22,7 +22,7 @@ namespace editor
             ImVec2 previewPos = ImGui::GetCursorPos();
 
             // 渲染预览图
-            RenderTextureThumbnail(asset, config.previewSize);
+            RenderTextureThumbnail(asset->GetThumbnailTextureId(), config.previewSize);
             DragDropPayload payload;
 
             if (AssetDragDropSystem::AcceptDragDrop(DragDropType::Texture, payload))
@@ -59,16 +59,11 @@ namespace editor
         return ImGui::Button((buttonText + "##" + label).c_str(), config.buttonSize);
     }
 
-    void RenderTextureThumbnail(std::shared_ptr<framework::TextureAsset> asset, const ImVec2 &size)
+    void RenderTextureThumbnail(void* textureID, const ImVec2 &size)
     {
-        if (asset && asset->GetTexture() && asset->GetTexture()->GetTextureID() != 0)
+        if (textureID != nullptr)
         {
-            ImGui::Image(reinterpret_cast<void *>(static_cast<intptr_t>(asset->GetTexture()->GetTextureID())), size);
-
-            // if(ImGui::BeginDragDropTarget()){
-
-            //     ImGui::EndDragDropTarget();
-            // }
+            ImGui::Image(textureID, size);
         }
         else
         {
@@ -83,14 +78,27 @@ namespace editor
         if (config.showPreview)
         {
             ImGui::SameLine();
-            RenderMeshThumbnail(asset, config.previewSize);
+            RenderTextureThumbnail(asset->GetThumbnailTextureId(), config.previewSize);
         }
-        ImGui::SameLine();
+
         std::string assetName = asset ? asset->GetName() : config.nullText;
-        if (ImGui::Button((assetName + "##" + label).c_str(), config.buttonSize))
+
+        bool changed = false;
+
+        DragDropPayload payload;
+        if (AssetDragDropSystem::AcceptDragDrop(DragDropType::Mesh, payload))
         {
-            // 这里可以实现资源选择对话框
+            if (payload.IsValid())
+            {
+                auto meshAsset = framework::AssetManager::GetInstance().GetAsset<framework::MeshAsset>(payload.dataId);
+                if (meshAsset)
+                {
+                    asset = meshAsset;
+                    changed = true;
+                }
+            }
         }
+
         if (config.showClearButton)
         {
             ImGui::SameLine();
@@ -102,7 +110,7 @@ namespace editor
             }
         }
         ImGui::PopID();
-        return false;
+        return changed;
     }
 
     bool RenderMeshButton(const std::string &label, std::shared_ptr<framework::MeshAsset> asset, const AssetFieldConfig &config)

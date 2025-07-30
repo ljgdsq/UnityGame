@@ -16,8 +16,6 @@ namespace editor
         // 渲染组件标题
         ImGui::Text("Mesh Filter");
         ImGui::Separator();
-
-        RenderMeshAssetField(meshFilter);
         RenderMeshInfo(meshFilter);
     }
 
@@ -28,17 +26,6 @@ namespace editor
 
     void MeshFilterInspector::RenderMeshAssetField(framework::MeshFilter *meshFilter)
     {
-        // 配置资源字段
-        AssetFieldConfig config;
-        config.showPreview = true;
-        config.allowNull = true;
-        config.previewSize = ImVec2(64, 64);
-        config.nullText = "None (Mesh)";
-        config.selectText = "Select Mesh";
-
-        // 获取当前网格资源
-        auto currentMeshAsset = meshFilter->GetMeshAsset();
-        RenderMeshField("Mesh Label:", currentMeshAsset, config);
     }
 
     void MeshFilterInspector::RenderMeshInfo(framework::MeshFilter *meshFilter)
@@ -64,10 +51,18 @@ namespace editor
         if (meshAsset->IsLoaded())
         {
             ImGui::Text("状态: 已加载");
+            // 配置资源字段
+            AssetFieldConfig config;
+            config.showPreview = true;
+            config.allowNull = true;
+            config.previewSize = ImVec2(64, 64);
+            config.nullText = "None (Mesh)";
+            config.selectText = "Select Mesh";
 
-            // 如果MeshAsset有统计信息，显示它们
-            // ImGui::Text("顶点数: %d", meshAsset->GetVertexCount());
-            // ImGui::Text("面数: %d", meshAsset->GetTriangleCount());
+            if (RenderMeshField("Mesh Preview:", meshAsset, config))
+            {
+                meshFilter->SetMesh(meshAsset);
+            }
         }
         else
         {
