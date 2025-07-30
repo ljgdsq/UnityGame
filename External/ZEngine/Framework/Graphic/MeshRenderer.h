@@ -24,6 +24,7 @@ namespace framework
         virtual rapidjson::Value Serialize(rapidjson::Document::AllocatorType &allocator) const override;
 
         virtual void Deserialize(const rapidjson::Value &jsonValue) override;
+        virtual void OnComponentAdd(Component *component) override;
 
     private:
         MeshFilter *m_meshFilter = nullptr; // 缓存MeshFilter组件引用

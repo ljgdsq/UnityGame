@@ -78,6 +78,15 @@ namespace framework
         return m_meshFilter;
     }
 
+    void MeshRenderer::OnComponentAdd(Component *component)
+    {
+        RenderComponent::OnComponentAdd(component);
+        if (auto meshFilter = dynamic_cast<MeshFilter *>(component))
+        {
+            m_meshFilter = meshFilter;
+        }
+    }
+
     rapidjson::Value MeshRenderer::Serialize(rapidjson::Document::AllocatorType &allocator) const
     {
         auto baseJson = RenderComponent::Serialize(allocator);

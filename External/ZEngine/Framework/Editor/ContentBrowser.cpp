@@ -3,6 +3,7 @@
 #include "Framework/Asset/AssetManager.h"
 #include "Framework/Asset/TextureAsset.h"
 #include "Framework/Asset/MeshAsset.h"
+#include "Framework/Asset/MaterialAsset.h"
 #include "Framework/Log/Logger.h"
 #include "Framework/Editor/EditorContext.h"
 #include "Framework/Editor/ThumbnailManager.h"
@@ -151,6 +152,13 @@ namespace editor
                 return AssetDragDropSystem::RenderDragSource(filename, DragDropType::Mesh,
                                                              meshAsset->GetAssetId(),
                                                              meshAsset->GetName(),
+                                                             thumbnailId);
+            }
+            else if (auto materialAsset = std::dynamic_pointer_cast<framework::MaterialAsset>(asset))
+            {
+                return AssetDragDropSystem::RenderDragSource(filename, DragDropType::Material,
+                                                             materialAsset->GetAssetId(),
+                                                             materialAsset->GetName(),
                                                              thumbnailId);
             }
             else

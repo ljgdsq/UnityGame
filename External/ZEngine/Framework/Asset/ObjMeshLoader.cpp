@@ -46,19 +46,43 @@ namespace framework
             return meshAsset;
         }
 
-        // 转换为 Mesh 格式
-        std::vector<float> meshVertices;
-        meshVertices.reserve(vertices.size() * 8); // 3 for position, 3 for normal, 2 for texCoords
-        for (const auto &vertex : vertices)
+        // 判断是否有法线数据
+        bool hasNormals = true;
+        for (const auto &v : vertices)
         {
-            meshVertices.push_back(vertex.position.x);
-            meshVertices.push_back(vertex.position.y);
-            meshVertices.push_back(vertex.position.z);
-            meshVertices.push_back(vertex.normal.x);
-            meshVertices.push_back(vertex.normal.y);
-            meshVertices.push_back(vertex.normal.z);
-            meshVertices.push_back(vertex.texCoords.x);
-            meshVertices.push_back(vertex.texCoords.y);
+            if (v.normal == glm::vec3(0.0f))
+            {
+                hasNormals = false;
+                break;
+            }
+        }
+        std::vector<float> meshVertices;
+        if (hasNormals)
+        {
+            meshVertices.reserve(vertices.size() * 8); // 3 pos, 3 normal, 2 tex
+            for (const auto &vertex : vertices)
+            {
+                meshVertices.push_back(vertex.position.x);
+                meshVertices.push_back(vertex.position.y);
+                meshVertices.push_back(vertex.position.z);
+                meshVertices.push_back(vertex.normal.x);
+                meshVertices.push_back(vertex.normal.y);
+                meshVertices.push_back(vertex.normal.z);
+                meshVertices.push_back(vertex.texCoords.x);
+                meshVertices.push_back(vertex.texCoords.y);
+            }
+        }
+        else
+        {
+            meshVertices.reserve(vertices.size() * 5); // 3 pos, 2 tex
+            for (const auto &vertex : vertices)
+            {
+                meshVertices.push_back(vertex.position.x);
+                meshVertices.push_back(vertex.position.y);
+                meshVertices.push_back(vertex.position.z);
+                meshVertices.push_back(vertex.texCoords.x);
+                meshVertices.push_back(vertex.texCoords.y);
+            }
         }
 
         auto mesh = std::make_shared<Mesh>();

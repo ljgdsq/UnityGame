@@ -35,6 +35,7 @@ namespace framework
         virtual const char *GetTypeName() const = 0;
         virtual const std::type_info &GetTypeInfo() const = 0;
 
+        virtual void OnComponentAdd(Component *component) {}
     protected:
         virtual void OnCreate() ;
         virtual void OnEnable() ;

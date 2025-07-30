@@ -1,5 +1,7 @@
 {
   "files.associations": {
+    "mat" : "json",
+    "*.mat": "json",
     "*.lua.txt": "lua",
     "*.scene": "json",
     "memory": "cpp",

@@ -1,1 +1,12 @@
-{"name":"NewMaterial","shader":"Res/Shaders\\BaseLight","binding":[{"name":"texture_0","slot":0,"type":0,"texture":"D:\\UnityGame\\External\\ZEngine\\Res\\Textures\\blending_transparent_window.png"}]}
+{
+    "name": "NewMaterial",
+    "shader": "Res/Shaders\\BaseLight",
+    "binding": [
+        {
+            "name": "texture_0",
+            "slot": 0,
+            "type": 0,
+            "texture": "Res\\Textures\\blending_transparent_window.png"
+        }
+    ]
+}

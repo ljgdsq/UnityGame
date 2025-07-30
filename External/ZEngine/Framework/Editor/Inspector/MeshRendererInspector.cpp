@@ -5,6 +5,7 @@
 #include "Framework/Asset/MaterialAsset.h"
 #include "Framework/Editor/Inspector/AssetField/AssetFieldUI.h"
 #include "Framework/Editor/Inspector/MaterialAssetInspector.h"
+#include "Framework/Editor/AssetDragDropSystem.h"
 using namespace framework;
 
 namespace editor
@@ -56,7 +57,26 @@ namespace editor
         }
         else
         {
-            ImGui::Text("No material assigned.");
+            ImGui::Dummy(ImVec2(ImGui::GetContentRegionAvail().x, 40)); // 空白区域
+            ImVec2 rectMin = ImGui::GetItemRectMin();
+            ImVec2 rectMax = ImGui::GetItemRectMax();
+            ImDrawList *drawList = ImGui::GetWindowDrawList();
+            drawList->AddRect(rectMin, rectMax, IM_COL32(180, 180, 180, 128), 6.0f, 0, 2.0f);
+            ImGui::SetCursorScreenPos(ImVec2(rectMin.x + 12, rectMin.y + 12));
+            ImGui::TextDisabled("Drag Material Here");
+            DragDropPayload payload;
+
+            if (AssetDragDropSystem::AcceptDragDrop(DragDropType::Material, payload))
+            {
+                if (payload.IsValid())
+                {
+                    auto asset = framework::AssetManager::GetInstance().GetAsset<framework::MaterialAsset>(payload.dataId);
+                    if (asset)
+                    {
+                        meshRenderer->SetMaterial(asset);
+                    }
+                }
+            }
         }
     }
 
