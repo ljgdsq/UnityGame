@@ -2,6 +2,9 @@
 #include "Framework/Log/Logger.h"
 #include "Framework/Editor/Inspector/MeshFilterInspector.h"
 #include "Framework/Editor/Inspector/AssetField/AssetFieldUI.h"
+#include "Framework/Core/Texture.h"
+#include "Framework/Editor/AssetDragDropSystem.h"
+using namespace framework;
 namespace editor
 {
     void MeshFilterInspector::Inspect(framework::GameObject *node)
@@ -9,11 +12,11 @@ namespace editor
         framework::MeshFilter *meshFilter = node->GetComponent<framework::MeshFilter>();
         if (!meshFilter)
         {
-            LOG_ERROR("MeshFilterInspector: 尝试检查没有MeshFilter组件的GameObject");
+            LOG_ERROR("MeshFilterInspector: no mesh filter component found on GameObject: {}", node->GetName());
             return;
         }
 
-        // 渲染组件标题
+        // Render component title
         ImGui::Text("Mesh Filter");
         ImGui::Separator();
         RenderMeshInfo(meshFilter);
@@ -26,10 +29,31 @@ namespace editor
 
     void MeshFilterInspector::RenderMeshInfo(framework::MeshFilter *meshFilter)
     {
+        // 配置资源字段
+        AssetFieldConfig config;
+        config.showPreview = true;
+        config.allowNull = true;
+        config.previewSize = ImVec2(64, 64);
+        config.nullText = "None (Mesh)";
+        config.selectText = "Select Mesh";
+
         auto meshAsset = meshFilter->GetMeshAsset();
         if (!meshAsset)
         {
             ImGui::TextColored(ImVec4(0.7f, 0.7f, 0.7f, 1.0f), "no mesh");
+            RenderTextureThumbnail(reinterpret_cast<void *>(static_cast<intptr_t>(Texture::GetDefaultMissingTexture()->GetTextureID())), config.previewSize);
+            DragDropPayload payload;
+            if (AssetDragDropSystem::AcceptDragDrop(DragDropType::Mesh, payload))
+            {
+                if (payload.IsValid())
+                {
+                    auto asset = framework::AssetManager::GetInstance().GetAsset<framework::MeshAsset>(payload.dataId);
+                    if (asset)
+                    {
+                        meshFilter->SetMesh(asset);
+                    }
+                }
+            }
             return;
         }
 
@@ -44,13 +68,6 @@ namespace editor
         if (meshAsset->IsLoaded())
         {
             ImGui::Text("Status: Loaded");
-            // 配置资源字段
-            AssetFieldConfig config;
-            config.showPreview = true;
-            config.allowNull = true;
-            config.previewSize = ImVec2(64, 64);
-            config.nullText = "None (Mesh)";
-            config.selectText = "Select Mesh";
 
             if (RenderMeshField("Mesh Preview:", meshAsset, config))
             {

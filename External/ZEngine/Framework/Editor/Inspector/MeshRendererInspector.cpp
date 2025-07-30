@@ -42,7 +42,6 @@ namespace editor
                 ImGui::Spacing();
                 materialAssetInspector->Inspect(materialAsset);
                 ImGui::Spacing();
-
                 ImGui::Unindent(20.0f);
                 ImGui::EndGroup();
                 ImVec2 rectMin = ImGui::GetItemRectMin();
