@@ -23,7 +23,6 @@ framework::TestEditorApplication::TestEditorApplication()
     auto logSink = std::make_shared<editor::EditorLogSink>();
     logView->SetLogSink(logSink);
     Logger::Init({logSink});
-
 }
 
 void framework::TestEditorApplication::InitScenes()
@@ -90,6 +89,7 @@ void framework::TestEditorApplication::BegineFrame()
 {
     gameFrameBuffer->BindBuffer();
 }
+#include "ImGuizmo.h"
 
 void framework::TestEditorApplication::EndFrame()
 {
@@ -100,8 +100,11 @@ void framework::TestEditorApplication::EndFrame()
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplGlfw_NewFrame();
     ImGui::NewFrame();
+    ImGuizmo::BeginFrame(); // 移到这里，每帧开始时调用
     static ImGuiID id = ImGui::GetID("EditorPanelDockSpace");
     ImGui::DockSpaceOverViewport(id, ImGui::GetMainViewport());
+    ImGuiIO &io = ImGui::GetIO();
+    ImGuizmo::SetRect(0, 0, io.DisplaySize.x, io.DisplaySize.y);
 
     hierarchyWidget->Render();
     gameView->Render();
@@ -109,19 +112,21 @@ void framework::TestEditorApplication::EndFrame()
     contentBrowser->Render();
     editorMenuBar->Render();
     logView->Render();
-    ImGuiIO &io = ImGui::GetIO();
 
     ImGui::Begin("state");
     ImGui::Text("FPS: %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);
     ImGui::Text("FBO size: %dx%d", gameFrameBuffer->GetWidth(), gameFrameBuffer->GetHeight());
     ImGui::Text("Color texture ID: %u", gameFrameBuffer->GetColorBuffer());
-    ImGui::Text("Drag : %s",editor::EditorContext::GetInstance().isDrag ? "true":"false");
-    auto selectGo=editor::EditorContext::GetInstance().GetSelectedGameObject();
-    auto asset= editor::EditorContext::GetInstance().GetSelectedAsset();
-    if (selectGo){
-        ImGui::Text("Select Object: %s",selectGo->GetName().c_str());
-    }else if(asset){
-        ImGui::Text("Select Asset: %s",asset->GetName().c_str());
+    ImGui::Text("Drag : %s", editor::EditorContext::GetInstance().isDrag ? "true" : "false");
+    auto selectGo = editor::EditorContext::GetInstance().GetSelectedGameObject();
+    auto asset = editor::EditorContext::GetInstance().GetSelectedAsset();
+    if (selectGo)
+    {
+        ImGui::Text("Select Object: %s", selectGo->GetName().c_str());
+    }
+    else if (asset)
+    {
+        ImGui::Text("Select Asset: %s", asset->GetName().c_str());
     }
 
     ImGui::End();

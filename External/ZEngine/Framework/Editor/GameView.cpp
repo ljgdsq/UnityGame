@@ -1,5 +1,5 @@
 #include "Framework/Editor/GameView.h"
-
+#include "ImGuizmo.h"
 namespace editor
 {
     GameView::GameView() : EditorWidget("Game View"),
@@ -45,6 +45,13 @@ namespace editor
             texturePosition.y += (windowSize.y - displayHeight) * 0.5f;
             ImGui::SetCursorScreenPos(texturePosition);
             ImGui::Image(ImTextureID(static_cast<size_t>(m_gameFrameBuffer->GetColorBuffer())), ImVec2(displayWidth, displayHeight));
+
+            // 设置ImGuizmo的渲染区域为GameView窗口
+            if (true)
+            {
+                ImGuizmo::SetDrawlist();
+                ImGuizmo::SetRect(0, 0, displayWidth, displayHeight);
+            }
         }
 
         ImGui::End();

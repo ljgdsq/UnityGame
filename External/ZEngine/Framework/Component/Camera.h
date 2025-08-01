@@ -19,7 +19,17 @@ namespace framework
     class Camera : public ComponentBase<Camera>
     {
     public:
-        explicit Camera(GameObject *gameObject) : ComponentBase(gameObject) {}
+        explicit Camera(GameObject *gameObject) : ComponentBase(gameObject) {
+            fieldOfView = 45.0f;
+            aspectRatio = 16.0f / 9.0f; // 确保aspect ratio正确
+            nearPlane = 0.1f;
+            farPlane = 100.0f;
+            projectionType = ProjectionType::Perspective;
+
+            // 确保相机初始朝向是看向-Z方向（OpenGL标准）
+            isViewDirty = true;
+            isProjectionDirty = true;
+        }
 
     protected:
         void OnEnable() override;

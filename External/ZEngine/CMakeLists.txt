@@ -38,7 +38,9 @@ add_subdirectory(External/rapidjson)
 add_subdirectory(External/spdlog)
 add_subdirectory(External/imgui)
 add_subdirectory(External/ImGuiFileDialog)
+add_subdirectory(External/ImGuizmo)
 add_subdirectory(External/fake)
+
 # 添加 GLAD
 add_library(glad External/glad/src/gl.c )
 target_include_directories(glad PUBLIC External/glad/include)
@@ -87,6 +89,7 @@ target_link_libraries(zengine PRIVATE
         glad
         glm
         imgui
+        ImGuizmo
         fake
         ${OPENGL_LIBRARIES}
         rapidjson

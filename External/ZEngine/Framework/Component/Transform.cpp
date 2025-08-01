@@ -37,17 +37,20 @@ rapidjson::Value framework::Transform::Serialize(rapidjson::Document::AllocatorT
     return value;
 }
 
-void framework::Transform::Deserialize(const rapidjson::Value& jsonValue)
+void framework::Transform::Deserialize(const rapidjson::Value &jsonValue)
 {
-    if (!jsonValue.IsObject()) {
+    if (!jsonValue.IsObject())
+    {
         Logger::Error("Transform::Deserialize: Invalid JSON object");
         return;
     }
 
     // 反序列化position
-    if (jsonValue.HasMember("position") && jsonValue["position"].IsArray()) {
-        const auto& posArray = jsonValue["position"];
-        if (posArray.Size() >= 3) {
+    if (jsonValue.HasMember("position") && jsonValue["position"].IsArray())
+    {
+        const auto &posArray = jsonValue["position"];
+        if (posArray.Size() >= 3)
+        {
             position.x = static_cast<float>(posArray[0].GetDouble());
             position.y = static_cast<float>(posArray[1].GetDouble());
             position.z = static_cast<float>(posArray[2].GetDouble());
@@ -55,9 +58,11 @@ void framework::Transform::Deserialize(const rapidjson::Value& jsonValue)
     }
 
     // 反序列化rotation
-    if (jsonValue.HasMember("rotation") && jsonValue["rotation"].IsArray()) {
-        const auto& rotArray = jsonValue["rotation"];
-        if (rotArray.Size() >= 4) {
+    if (jsonValue.HasMember("rotation") && jsonValue["rotation"].IsArray())
+    {
+        const auto &rotArray = jsonValue["rotation"];
+        if (rotArray.Size() >= 4)
+        {
             rotation.x = static_cast<float>(rotArray[0].GetDouble());
             rotation.y = static_cast<float>(rotArray[1].GetDouble());
             rotation.z = static_cast<float>(rotArray[2].GetDouble());
@@ -66,9 +71,11 @@ void framework::Transform::Deserialize(const rapidjson::Value& jsonValue)
     }
 
     // 反序列化scale
-    if (jsonValue.HasMember("scale") && jsonValue["scale"].IsArray()) {
-        const auto& scaleArray = jsonValue["scale"];
-        if (scaleArray.Size() >= 3) {
+    if (jsonValue.HasMember("scale") && jsonValue["scale"].IsArray())
+    {
+        const auto &scaleArray = jsonValue["scale"];
+        if (scaleArray.Size() >= 3)
+        {
             scale.x = static_cast<float>(scaleArray[0].GetDouble());
             scale.y = static_cast<float>(scaleArray[1].GetDouble());
             scale.z = static_cast<float>(scaleArray[2].GetDouble());
@@ -97,19 +104,12 @@ void framework::Transform::Rotate(const glm::vec3 &axis, float angle)
 
 glm::mat4 framework::Transform::GetModelMatrix() const
 {
-    // 创建变换矩阵
-    glm::mat4 modelMatrix = glm::mat4(1.0f);
+    // 标准变换顺序：缩放 → 旋转 → 平移
+    glm::mat4 scaleMatrix = glm::scale(glm::mat4(1.0f), scale);
+    glm::mat4 rotationMatrix = glm::toMat4(rotation);
+    glm::mat4 translationMatrix = glm::translate(glm::mat4(1.0f), position);
 
-    // 应用平移
-    modelMatrix = glm::translate(modelMatrix, position);
-
-    // 应用旋转
-    modelMatrix = modelMatrix * glm::toMat4(rotation);
-
-    // 应用缩放
-    modelMatrix = glm::scale(modelMatrix, scale);
-
-    return modelMatrix;
+    return translationMatrix * rotationMatrix * scaleMatrix;
 }
 
 glm::vec3 framework::Transform::GetForward() const

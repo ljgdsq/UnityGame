@@ -1,7 +1,12 @@
 # ZEngine 开发任务清单
 
 ## 🚀 优先任务
-
+- [ ] Content Browser 显示优化
+- [ ] Editor Gizemo
+- [ ] Assimp
+- [ ] Thumbnail save & load
+- [ ] LogView add filter
+- [ ] Material property panel
 - [ ] 场景序列化
 - [ ] Editor 添加创建对象，添加组件
 - [ ] GameObject生命周期管理
