@@ -40,17 +40,29 @@ namespace editor
             }
 
             // 计算纹理显示位置使其居中
-            ImVec2 texturePosition = ImGui::GetCursorScreenPos();
-            texturePosition.x += (windowSize.x - displayWidth) * 0.5f;
-            texturePosition.y += (windowSize.y - displayHeight) * 0.5f;
-            ImGui::SetCursorScreenPos(texturePosition);
-            ImGui::Image(ImTextureID(static_cast<size_t>(m_gameFrameBuffer->GetColorBuffer())), ImVec2(displayWidth, displayHeight));
+            ImVec2 centerOffset;
+            centerOffset.x = (windowSize.x - displayWidth) * 0.5f;
+            centerOffset.y = (windowSize.y - displayHeight) * 0.5f;
+
+            // 保存当前光标位置，然后设置到居中位置
+            ImVec2 contentRegionMin = ImGui::GetWindowContentRegionMin();
+            ImVec2 cursorPos;
+            cursorPos.x = contentRegionMin.x + centerOffset.x;
+            cursorPos.y = contentRegionMin.y + centerOffset.y;
+            ImGui::SetCursorPos(cursorPos);
+
+            ImGui::Image(ImTextureID(static_cast<size_t>(m_gameFrameBuffer->GetColorBuffer())), ImVec2(displayWidth, displayHeight),
+                         ImVec2(0, 1), ImVec2(1, 0)); // OpenGL纹理坐标系是左下角为原点
 
             // 设置ImGuizmo的渲染区域为GameView窗口
             if (true)
             {
                 ImGuizmo::SetDrawlist();
-                ImGuizmo::SetRect(0, 0, displayWidth, displayHeight);
+                // 获取当前窗口在屏幕中的位置和内容区域偏移
+                ImVec2 windowPos = ImGui::GetWindowPos();
+                ImVec2 contentRegionMinAbs = ImVec2(windowPos.x + contentRegionMin.x, windowPos.y + contentRegionMin.y);
+                // 设置 ImGuizmo 的渲染区域，使用绝对屏幕坐标
+                ImGuizmo::SetRect(contentRegionMinAbs.x + centerOffset.x, contentRegionMinAbs.y + centerOffset.y, displayWidth, displayHeight);
             }
         }
 

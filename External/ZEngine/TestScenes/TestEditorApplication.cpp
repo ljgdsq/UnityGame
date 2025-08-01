@@ -88,12 +88,16 @@ void framework::TestEditorApplication::HandleInput()
 void framework::TestEditorApplication::BegineFrame()
 {
     gameFrameBuffer->BindBuffer();
+    // 设置视口为 FrameBuffer 的大小
+    glViewport(0, 0, gameFrameBuffer->GetWidth(), gameFrameBuffer->GetHeight());
 }
 #include "ImGuizmo.h"
 
 void framework::TestEditorApplication::EndFrame()
 {
     gameFrameBuffer->UnbindBuffer();
+    // 恢复主窗口的视口
+    glViewport(0, 0, m_window->GetWidth(), m_window->GetHeight());
     m_renderer->Clear();
 
     // 开始ImGui渲染

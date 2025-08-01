@@ -19,8 +19,6 @@ namespace framework
         LOG_INFO("Initializing BasicTestScene");
 
         auto shaderAsset = AssetManager::GetInstance().LoadAsset<ShaderAsset>("Shaders/BaseLight");
-        //        // 创建着色器
-        //        auto shader = new Shader("Shaders/BaseLight.vs", "Shaders/BaseLight.fs");
 
         auto texture = AssetManager::GetInstance().LoadAsset<TextureAsset>("Textures/container.png");
         auto material = std::make_shared<Material>("TestMaterial");
@@ -48,6 +46,8 @@ namespace framework
         camera->GetComponent<Camera>()->SetMainCamera(true);
         camera->GetComponent<Camera>()->SetProjectionType(ProjectionType::Perspective);
         camera->GetComponent<Camera>()->SetPerspectiveProjection(45.0f, 16.0f / 9.0f, 0.1f, 100.0f);
+        // camera->GetComponent<Camera>()->SetOrthographicProjection(-16.0f, 16.0f, -9.0f, 9.0f, 0.1f, 100.0f);
+
         camera->GetTransform()->SetPosition(glm::vec3(0.0f, 0.0f, 3.0f));
     }
 
