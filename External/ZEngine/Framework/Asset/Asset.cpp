@@ -5,19 +5,15 @@
 #include <sstream>
 #include <iomanip>
 
-namespace framework
-{
+namespace framework {
     Asset::Asset(const std::string &name, AssetType type)
-        : m_name(name), m_type(type)
-    {
+            : m_name(name), m_type(type) {
         m_assetId = GenerateAssetId();
     }
 
 
-    void Asset::Release(bool force)
-    {
-        if (force || --m_refCount <= 0)
-        {
+    void Asset::Release(bool force) {
+        if (force || --m_refCount <= 0) {
             Logger::Log("Releasing asset: {}", m_name);
             ReleaseThumbnail();
             delete this;
@@ -25,10 +21,8 @@ namespace framework
     }
 
 
-    void Asset::ReleaseThumbnail()
-    {
-        if (m_thumbnailTextureId)
-        {
+    void Asset::ReleaseThumbnail() {
+        if (m_thumbnailTextureId) {
             // 释放缩略图资源
             // 这里需要根据具体的图形API来实现释放逻辑
             // 例如 OpenGL: glDeleteTextures(1, &m_thumbnailTextureId);
@@ -36,8 +30,7 @@ namespace framework
         }
     }
 
-    std::string Asset::GenerateAssetId() const
-    {
+    std::string Asset::GenerateAssetId() const {
         return m_name;
 //        // 基于名称、类型和时间戳生成唯一ID
 //        auto now = std::chrono::system_clock::now();
@@ -48,8 +41,7 @@ namespace framework
 //        return oss.str();
     }
 
-    rapidjson::Value Asset::Serialize(rapidjson::Document::AllocatorType &allocator) const
-    {
+    rapidjson::Value Asset::Serialize(rapidjson::Document::AllocatorType &allocator) const {
         rapidjson::Value jsonValue(rapidjson::kObjectType);
 
         // 基本信息
@@ -62,11 +54,9 @@ namespace framework
         jsonValue.AddMember("lastModified", static_cast<int64_t>(m_lastModified), allocator);
 
         // 依赖关系
-        if (!m_dependencies.empty())
-        {
+        if (!m_dependencies.empty()) {
             rapidjson::Value dependenciesArray(rapidjson::kArrayType);
-            for (const auto &dep : m_dependencies)
-            {
+            for (const auto &dep: m_dependencies) {
                 dependenciesArray.PushBack(rapidjson::Value(dep.c_str(), allocator), allocator);
             }
             jsonValue.AddMember("dependencies", dependenciesArray, allocator);
@@ -75,93 +65,80 @@ namespace framework
         return jsonValue;
     }
 
-    void Asset::Deserialize(const rapidjson::Value &json)
-    {
-        if (json.HasMember("assetId") && json["assetId"].IsString())
-        {
+    void Asset::Deserialize(const rapidjson::Value &json) {
+        if (json.HasMember("assetId") && json["assetId"].IsString()) {
             m_assetId = json["assetId"].GetString();
         }
 
-        if (json.HasMember("name") && json["name"].IsString())
-        {
+        if (json.HasMember("name") && json["name"].IsString()) {
             m_name = json["name"].GetString();
         }
 
-        if (json.HasMember("type") && json["type"].IsString())
-        {
+        if (json.HasMember("type") && json["type"].IsString()) {
             m_type = StringToAssetType(json["type"].GetString());
         }
 
-        if (json.HasMember("filePath") && json["filePath"].IsString())
-        {
+        if (json.HasMember("filePath") && json["filePath"].IsString()) {
             m_filePath = json["filePath"].GetString();
         }
 
-        if (json.HasMember("lastModified") && json["lastModified"].IsInt64())
-        {
+        if (json.HasMember("lastModified") && json["lastModified"].IsInt64()) {
             m_lastModified = json["lastModified"].GetInt64();
         }
 
         // 加载依赖关系
-        if (json.HasMember("dependencies") && json["dependencies"].IsArray())
-        {
+        if (json.HasMember("dependencies") && json["dependencies"].IsArray()) {
             m_dependencies.clear();
             const auto &depsArray = json["dependencies"];
-            for (rapidjson::SizeType i = 0; i < depsArray.Size(); ++i)
-            {
-                if (depsArray[i].IsString())
-                {
+            for (rapidjson::SizeType i = 0; i < depsArray.Size(); ++i) {
+                if (depsArray[i].IsString()) {
                     m_dependencies.push_back(depsArray[i].GetString());
                 }
             }
         }
     }
 
-    void Asset::AddDependency(const std::string &assetId)
-    {
-        if (std::find(m_dependencies.begin(), m_dependencies.end(), assetId) == m_dependencies.end())
-        {
+    void Asset::AddDependency(const std::string &assetId) {
+        if (std::find(m_dependencies.begin(), m_dependencies.end(), assetId) == m_dependencies.end()) {
             m_dependencies.push_back(assetId);
         }
     }
 
-    void Asset::RemoveDependency(const std::string &assetId)
-    {
+    void Asset::RemoveDependency(const std::string &assetId) {
         auto it = std::find(m_dependencies.begin(), m_dependencies.end(), assetId);
-        if (it != m_dependencies.end())
-        {
+        if (it != m_dependencies.end()) {
             m_dependencies.erase(it);
         }
     }
 
 
     // 辅助函数实现
-    std::string AssetTypeToString(AssetType type)
-    {
-        switch (type)
-        {
-        case AssetType::Texture:
-            return "Texture";
-        case AssetType::Shader:
-            return "Shader";
-        case AssetType::Mesh:
-            return "Mesh";
-        case AssetType::Material:
-            return "Material";
-        case AssetType::Audio:
-            return "Audio";
-        case AssetType::Animation:
-            return "Animation";
-        case AssetType::Font:
-            return "Font";
-        case AssetType::Unknown:
-        default:
-            return "Unknown";
+    std::string AssetTypeToString(AssetType type) {
+        switch (type) {
+            case AssetType::Texture:
+                return "Texture";
+            case AssetType::Shader:
+                return "Shader";
+            case AssetType::Mesh:
+                return "Mesh";
+            case AssetType::Material:
+                return "Material";
+            case AssetType::Audio:
+                return "Audio";
+            case AssetType::Animation:
+                return "Animation";
+            case AssetType::Font:
+                return "Font";
+            case AssetType::Scene:
+                return "Scene";
+
+            case AssetType::Unknown:
+            default:
+                return "Unknown";
         }
     }
 
-    AssetType StringToAssetType(const std::string &typeStr)
-    {
+    AssetType StringToAssetType(const std::string &typeStr) {
         if (typeStr == "Texture")
             return AssetType::Texture;
         if (typeStr == "Shader")
@@ -176,6 +153,8 @@ namespace framework
             return AssetType::Animation;
         if (typeStr == "Font")
             return AssetType::Font;
+        if (typeStr == "Scene")
+            return AssetType::Scene;
         return AssetType::Unknown;
     }
 }

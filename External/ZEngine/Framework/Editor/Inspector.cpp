@@ -6,7 +6,9 @@
 #include "Framework/Editor/Inspector/LightInspector.h"
 #include "Framework/Editor/ComponentMenuHelper.h"
 #include "Framework/Editor/AssetInspectorRegistry.h"
+#include "Framework/Editor/Inspector/CameraInspector.h"
 #include <imgui_internal.h>
+#include "Framework/Manager/CameraManager.h"
 namespace editor
 {
 
@@ -20,6 +22,7 @@ namespace editor
         m_inspectors.push_back(new MeshFilterInspector());
 
         m_inspectors.push_back(new LightInspector()); // 添加光照检查器
+        m_inspectors.push_back(new CameraInspector()); // 添加相机检查器
     }
 
     void Inspector::Initialize()
@@ -51,20 +54,25 @@ namespace editor
     void Inspector::Render()
     {
         ImGui::Begin(name.c_str());
-        if (m_selectedGameObject)
-        {
-            ImGui::Text("Selected GameObject: %s", m_selectedGameObject->GetName().c_str());
-            RenderInspectorContent();
+        if (CameraManager::GetInstance().HasMainCamera()){
+            if (m_selectedGameObject)
+            {
+                ImGui::Text("Selected GameObject: %s", m_selectedGameObject->GetName().c_str());
+                RenderInspectorContent();
+            }
+            else if (m_selectedAsset)
+            {
+                ImGui::Text("Selected Asset: %s", m_selectedAsset->GetName().c_str());
+                AssetInspectorRegistry::GetInstance().GetInspector(m_selectedAsset->GetType())->Inspect(m_selectedAsset);
+            }
+            else
+            {
+                ImGui::Text("Not selected any GameObject or Asset");
+            }
+        }else{
+            ImGui::Text("No main camera. Please set a main camera to view the inspector.");
         }
-        else if (m_selectedAsset)
-        {
-            ImGui::Text("Selected Asset: %s", m_selectedAsset->GetName().c_str());
-            AssetInspectorRegistry::GetInstance().GetInspector(m_selectedAsset->GetType())->Inspect(m_selectedAsset);
-        }
-        else
-        {
-            ImGui::Text("Not selected any GameObject or Asset");
-        }
+
         ImGui::End();
     }
     void Inspector::Shutdown()

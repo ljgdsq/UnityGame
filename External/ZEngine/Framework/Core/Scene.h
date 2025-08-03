@@ -37,9 +37,6 @@ namespace framework
         virtual void RemoveGameObject(GameObject *gameObject);
 
     private:
-        // 禁止拷贝和赋值
-        Scene(const Scene &) = delete;
-        Scene &operator=(const Scene &) = delete;
         std::vector<GameObject *> m_gameObjects;    // 存储场景中的游戏对象
         std::vector<GameObject *> m_newGameObjects; // 存储新添加的游戏对象
         void CollectRenderComponents(std::vector<RenderComponent *> &renderComponents);

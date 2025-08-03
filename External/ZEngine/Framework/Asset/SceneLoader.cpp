@@ -32,7 +32,6 @@ namespace framework
         try
         {
             rapidjson::Document doc;
-            auto scene = std::make_shared<Scene>();
             doc.Parse(data.c_str());
             if (doc.HasParseError()) {
                 Logger::Error("Failed to parse scene data: {}",(int)doc.GetParseError());
@@ -40,8 +39,7 @@ namespace framework
                 return sceneAsset;
             }
 
-            scene->Deserialize(doc); // 假设 Scene 类有 Deserialize 方法来解析数据
-            sceneAsset->SetScene(scene);
+            sceneAsset->Deserialize(doc); // 假设 Scene 类有 Deserialize 方法来解析数据
         }
         catch(const std::exception& e)
         {

@@ -3,6 +3,7 @@
 #include "Framework/Core/GameObject.h"
 #include "Framework/Editor/ContextMenu.h"
 #include "Framework/Editor/EditorContext.h"
+#include "Framework/Editor/ObjectCreator.h"
 namespace fk = framework;
 
 namespace editor
@@ -58,6 +59,11 @@ namespace editor
 
         // 空白区域的右键菜单 - 创建新的上下文菜单
         emptyAreaContextMenu = new ContextMenu("EmptyAreaContextMenu");
+        emptyAreaContextMenu->AddAction("Create Cube", [=](void *)
+                                        {
+            ObjectCreator::CreateCube("New Cube");
+        }, 0);
+
         emptyAreaContextMenu->AddAction("Create GameObject", [=](void *)
                                         {
             // 创建空的GameObject

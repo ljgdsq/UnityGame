@@ -7,10 +7,8 @@
 #include "rapidjson/document.h"
 #include "rapidjson/writer.h"
 
-namespace framework
-{
-    enum class AssetType
-    {
+namespace framework {
+    enum class AssetType {
         Unknown = 0, // 未知类型
         Texture,
         Shader,
@@ -25,16 +23,14 @@ namespace framework
         Count // 用于计数
     };
 
-    enum class LoadState
-    {
+    enum class LoadState {
         NotLoaded = 0,
         Loading,
         Loaded,
         Failed
     };
 
-    class Asset
-    {
+    class Asset {
     public:
         Asset(const std::string &name, AssetType type);
 
@@ -50,6 +46,7 @@ namespace framework
         const std::string &GetFilePath() const { return m_filePath; }
 
         void SetFilePath(const std::string &filePath) { m_filePath = filePath; }
+
         // 加载状态管理
         bool IsLoaded() const { return m_loadState == LoadState::Loaded; }
 
@@ -58,6 +55,7 @@ namespace framework
         bool IsFailed() const { return m_loadState == LoadState::Failed; }
 
         LoadState GetLoadState() const { return m_loadState; }
+
         void SetLoadState(LoadState state) { m_loadState = state; }
 
         // 引用计数管理
@@ -65,8 +63,7 @@ namespace framework
 
         int GetRefCount() const { return m_refCount; }
 
-        void Release(bool force=false);
-
+        void Release(bool force = false);
 
 
         virtual long GetSize() const = 0;

@@ -109,13 +109,13 @@ void framework::TestEditorApplication::EndFrame()
     ImGui::DockSpaceOverViewport(id, ImGui::GetMainViewport());
     ImGuiIO &io = ImGui::GetIO();
     ImGuizmo::SetRect(0, 0, io.DisplaySize.x, io.DisplaySize.y);
+    logView->Render();
 
-    hierarchyWidget->Render();
-    gameView->Render();
-    inspectorWidget->Render();
     contentBrowser->Render();
     editorMenuBar->Render();
-    logView->Render();
+    gameView->Render();
+    hierarchyWidget->Render();
+    inspectorWidget->Render();
 
     ImGui::Begin("state");
     ImGui::Text("FPS: %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);

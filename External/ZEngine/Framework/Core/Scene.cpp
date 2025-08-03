@@ -130,9 +130,6 @@ namespace framework
     rapidjson::Value Scene::Serialize(rapidjson::MemoryPoolAllocator<> &allocator) const
     {
         rapidjson::Value jsonValue(rapidjson::kObjectType);
-        jsonValue.AddMember("name", rapidjson::Value(GetName().c_str(), allocator), allocator);
-        jsonValue.AddMember("path", rapidjson::Value(GetPath().c_str(), allocator), allocator);
-
         rapidjson::Value gameObjectsArray(rapidjson::kArrayType);
         for (const auto &gameObject : m_gameObjects)
         {

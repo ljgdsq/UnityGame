@@ -2,6 +2,7 @@
 #include "glad/glad.h"
 #include "GLFW/glfw3.h"
 #include "Framework/Log/Logger.h"
+#include "Framework/Manager/CameraManager.h"
 namespace framework
 {
 
@@ -30,9 +31,15 @@ namespace framework
 
     void Renderer::Clear()
     {
-        // 清除颜色和深度缓冲
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+        auto camera=CameraManager::GetInstance().GetMainCamera();
+        if (camera){
+            auto clearColor = camera->clearColor;
+
+            // 清除颜色和深度缓冲
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+            glClearColor(clearColor.r, clearColor.g, clearColor.b, clearColor.a);
+        }
+
     }
 
     void Renderer::SwapBuffers()

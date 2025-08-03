@@ -142,4 +142,9 @@ namespace framework
         Logger::Debug("CameraManager: All cameras cleared");
     }
 
+    bool CameraManager::HasMainCamera() const
+    {
+        return m_mainCamera != nullptr;
+    }
+
 } // namespace framework

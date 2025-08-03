@@ -65,7 +65,14 @@ void editor::EditorMenuBar::Render()
             {
                 editor::AssetCreator::CreateMaterialAsset("NewMaterial.mat");
             }
-
+            if (ImGui::MenuItem("Empty Scene"))
+            {
+                editor::AssetCreator::CreateEmptyScene("NewScene.scene");
+            }
+            if (ImGui::MenuItem("Template Scene"))
+            {
+                editor::AssetCreator::CreateTemplateScene("NewTemplateScene.scene");
+            }
             ImGui::EndMenu();
         }
 
@@ -110,9 +117,12 @@ void editor::EditorMenuBar::Render()
 
             auto relativePath = std::filesystem::relative(filePathName, std::filesystem::current_path()).string();
 
-            scene->SetPath(relativePath);
+            auto asset = new framework::SceneAsset(scene->GetName());
+            asset->SetFilePath(relativePath);
+            asset->SetScene(std::make_shared<framework::Scene>(*scene));
+
             rapidjson::Document::AllocatorType allocator;
-            auto result = scene->Serialize(allocator);
+            auto result = asset->Serialize(allocator);
 
             rapidjson::StringBuffer buffer;
             rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);

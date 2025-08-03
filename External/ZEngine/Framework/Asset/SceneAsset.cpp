@@ -20,11 +20,30 @@ namespace framework
     }
 
     rapidjson::Value SceneAsset::Serialize(rapidjson::MemoryPoolAllocator<> &allocator) const {
-        return Asset::Serialize(allocator);
+        rapidjson::Value jsonValue = Asset::Serialize(allocator);
+        if (m_Scene)
+        {
+            jsonValue.AddMember("scene", m_Scene->Serialize(allocator), allocator);
+        }
+        return jsonValue;
     }
 
     void SceneAsset::Deserialize(const rapidjson::Value &json) {
         Asset::Deserialize(json);
+        if (m_Scene == nullptr) {
+            m_Scene = std::make_shared<Scene>();
+        }
+        if(!json.HasMember("scene")) {
+            LOG_ERROR("SceneAsset::Deserialize: Missing 'scene' member in JSON");
+            return;
+        }
+
+        if (!json["scene"].IsObject()) {
+            LOG_ERROR("SceneAsset::Deserialize: 'scene' member is not an object");
+            return;
+        }
+
+        m_Scene->Deserialize(json["scene"]);
     }
 
     // Additional methods for SceneAsset can be added here
