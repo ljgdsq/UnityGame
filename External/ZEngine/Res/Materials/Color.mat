@@ -1,0 +1,1 @@
+{"name":"Color","shader":"Res/Shaders\\Color","filePath":"Res\\Materials\\Color.mat","binding":[{"name":"texture_0","slot":0,"type":0,"texture":"Res\\Textures\\container2.png"}]}

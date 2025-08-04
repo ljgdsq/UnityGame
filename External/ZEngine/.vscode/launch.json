@@ -5,7 +5,7 @@
         "name": "Debug win32",
         "type": "cppvsdbg",
         "request": "launch",
-        "program": "${workspaceFolder}/build/zengine.exe",
+        "program": "${workspaceFolder}/build/debug/zengine.exe",
         "args": [],
         "cwd": "${workspaceFolder}",
         "stopAtEntry": false,

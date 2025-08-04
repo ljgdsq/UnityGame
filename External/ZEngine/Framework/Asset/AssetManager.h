@@ -48,9 +48,9 @@ namespace framework
         std::shared_ptr<T> LoadAsset(const std::string &assetPath)
         {
             auto assetName = FileUtil::ExtractFileName(assetPath);
-            if (HasAsset(assetName))
+            if (HasAsset(assetPath))
             {
-                return std::dynamic_pointer_cast<T>(GetAsset(assetName));
+                return std::dynamic_pointer_cast<T>(GetAsset(assetPath));
             }
 
             for (const auto &loader : m_loaders)
@@ -60,7 +60,7 @@ namespace framework
                     auto asset = loader->LoadAsset(assetPath);
                     if (asset)
                     {
-                        m_assets[assetName] = asset;
+                        m_assets[assetPath] = asset;
                         Logger::Log("Loaded asset: {} with type {}", assetPath, loader->GetName());
                         return std::dynamic_pointer_cast<T>(asset);
                     }
@@ -77,7 +77,7 @@ namespace framework
                 auto asset = m_unknownAssetLoader->LoadAsset(assetPath);
                 if (asset)
                 {
-                    m_assets[assetName] = asset;
+                    m_assets[assetPath] = asset;
                     Logger::Log("Loaded unknown asset: {}", assetPath);
                     return std::dynamic_pointer_cast<T>(asset);
                 }
@@ -123,7 +123,6 @@ namespace framework
         //        void SetCacheSize(size_t maxSize) { m_maxCacheSize = maxSize; }
         //        void GarbageCollect(); // 清理未使用的资源
 
-    private:
     private:
         std::vector<std::shared_ptr<AssetLoader>> m_loaders; // 加载器列表
         std::unordered_map<std::string, std::shared_ptr<Asset>> m_assets;

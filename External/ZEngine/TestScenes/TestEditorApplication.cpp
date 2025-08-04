@@ -30,7 +30,7 @@ void framework::TestEditorApplication::InitScenes()
     // 注册所有组件
     RegisterAllComponents();
 
-    gameFrameBuffer = new FrameBuffer(1280, 720);
+    gameFrameBuffer = new FrameBuffer(800, 600);
 
     hierarchyWidget->Initialize();
     gameView = new editor::GameView();

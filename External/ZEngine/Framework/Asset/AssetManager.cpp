@@ -49,9 +49,9 @@ namespace framework
     std::shared_ptr<Asset> AssetManager::LoadAsset(const std::string &assetPath, AssetType type)
     {
         auto assetName = FileUtil::ExtractFileName(assetPath);
-        if (HasAsset(assetName))
+        if (HasAsset(assetPath))
         {
-            return GetAsset(assetName);
+            return GetAsset(assetPath);
         }
 
         for (const auto &loader : m_loaders)
@@ -77,7 +77,7 @@ namespace framework
             auto asset = m_unknownAssetLoader->LoadAsset(assetPath);
             if (asset)
             {
-                m_assets[assetName] = asset;
+                m_assets[assetPath] = asset;
                 Logger::Log("Loaded unknown asset: {}", assetPath);
                 return asset;
             }

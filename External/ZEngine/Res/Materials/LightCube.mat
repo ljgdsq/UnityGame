@@ -1,0 +1,13 @@
+{
+    "name": "LightCube",
+    "shader": "Res/Shaders\\1LightCube",
+    "filePath": "Res\\Materials\\LightCube.mat",
+    "binding": [
+        {
+            "name": "texture_0",
+            "slot": 0,
+            "type": 0,
+            "texture": "Res\\Textures\\container2.png"
+        }
+    ]
+}

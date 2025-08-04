@@ -29,6 +29,30 @@ namespace editor
     {
         float padding = 6.0f;
         auto materialAsset = meshRenderer->GetMaterial();
+        {
+            ImGui::Dummy(ImVec2(ImGui::GetContentRegionAvail().x, 40)); // 空白区域
+            ImVec2 rectMin = ImGui::GetItemRectMin();
+            ImVec2 rectMax = ImGui::GetItemRectMax();
+            ImDrawList *drawList = ImGui::GetWindowDrawList();
+            drawList->AddRect(rectMin, rectMax, IM_COL32(180, 180, 180, 128), 6.0f, 0, 2.0f);
+            ImGui::SetCursorScreenPos(ImVec2(rectMin.x + 12, rectMin.y + 12));
+            ImGui::TextDisabled("Drag Material Here");
+            DragDropPayload payload;
+
+            if (AssetDragDropSystem::AcceptDragDrop(DragDropType::Material, payload))
+            {
+                if (payload.IsValid())
+                {
+                    auto asset = framework::AssetManager::GetInstance().GetAsset<framework::MaterialAsset>(payload.dataId);
+                    if (asset)
+                    {
+                        meshRenderer->SetMaterial(asset);
+                    }
+                }
+            }
+        }
+        ImGui::Spacing();
+
         if (materialAsset)
         {
             auto material = materialAsset->GetMaterial();
@@ -55,29 +79,7 @@ namespace editor
 
             ImGui::PopStyleColor(2);
         }
-        else
-        {
-            ImGui::Dummy(ImVec2(ImGui::GetContentRegionAvail().x, 40)); // 空白区域
-            ImVec2 rectMin = ImGui::GetItemRectMin();
-            ImVec2 rectMax = ImGui::GetItemRectMax();
-            ImDrawList *drawList = ImGui::GetWindowDrawList();
-            drawList->AddRect(rectMin, rectMax, IM_COL32(180, 180, 180, 128), 6.0f, 0, 2.0f);
-            ImGui::SetCursorScreenPos(ImVec2(rectMin.x + 12, rectMin.y + 12));
-            ImGui::TextDisabled("Drag Material Here");
-            DragDropPayload payload;
 
-            if (AssetDragDropSystem::AcceptDragDrop(DragDropType::Material, payload))
-            {
-                if (payload.IsValid())
-                {
-                    auto asset = framework::AssetManager::GetInstance().GetAsset<framework::MaterialAsset>(payload.dataId);
-                    if (asset)
-                    {
-                        meshRenderer->SetMaterial(asset);
-                    }
-                }
-            }
-        }
     }
 
     void MeshRendererInspector::RenderMaterialTextures(framework::Material *material)

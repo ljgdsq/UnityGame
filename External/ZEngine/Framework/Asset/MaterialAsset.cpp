@@ -64,8 +64,6 @@ namespace framework
     void MaterialAsset::Deserialize(const rapidjson::Value &json)
     {
 
-
-
         if (json.HasMember("name") && json["name"].IsString())
         {
             m_name = json["name"].GetString();

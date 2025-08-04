@@ -116,7 +116,6 @@ namespace editor
             }
         }
     }
-
     bool ContentBrowser::RenderAssetDragSource(const std::string &filePath, const std::string &filename, const std::string &extension)
     {
         // 检查文件扩展名以确定资源类型
@@ -143,21 +142,21 @@ namespace editor
             {
 
                 return AssetDragDropSystem::RenderDragSource(filename, DragDropType::Texture,
-                                                             textureAsset->GetAssetId(),
+                                                             textureAsset->GetFilePath(),
                                                              textureAsset->GetName(),
                                                              thumbnailId);
             }
             else if (auto meshAsset = std::dynamic_pointer_cast<framework::MeshAsset>(asset))
             {
                 return AssetDragDropSystem::RenderDragSource(filename, DragDropType::Mesh,
-                                                             meshAsset->GetAssetId(),
+                                                             meshAsset->GetFilePath(),
                                                              meshAsset->GetName(),
                                                              thumbnailId);
             }
             else if (auto materialAsset = std::dynamic_pointer_cast<framework::MaterialAsset>(asset))
             {
                 return AssetDragDropSystem::RenderDragSource(filename, DragDropType::Material,
-                                                             materialAsset->GetAssetId(),
+                                                             materialAsset->GetFilePath(),
                                                              materialAsset->GetName(),
                                                              thumbnailId);
             }

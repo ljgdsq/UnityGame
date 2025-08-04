@@ -4,7 +4,7 @@
 		{
 			"type": "shell",
 			"label": "Build Project (batch)",
-			"command": "${workspaceFolder}\\build.bat",
+			"command": "${workspaceFolder}\\Scripts\\build.bat",
 			"group": {
 				"kind": "build",
 				"isDefault": true
