@@ -59,4 +59,27 @@ namespace framework
             }
         }
     }
+    std::optional<int> ShaderReflection::GetUniformLocation(const std::string &name) const
+    {
+        for (const auto &uniform : m_uniforms)
+        {
+            if (uniform.name == name)
+            {
+                return uniform.location;
+            }
+        }
+        return std::nullopt;
+    }
+    
+    std::optional<int> ShaderReflection::GetSamplerLocation(const std::string &name) const
+    {
+        for (const auto &sampler : m_samplers)
+        {
+            if (sampler.name == name)
+            {
+                return sampler.location;
+            }
+        }
+        return std::nullopt;
+    }
 }

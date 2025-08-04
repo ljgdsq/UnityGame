@@ -1,8 +1,12 @@
 #pragma once
 #include <string>
-
+#include <unordered_map>
+#include <optional>
+#include <memory>
 #include "glm/glm.hpp"
 #include "glm/gtc/type_ptr.hpp"
+#include "Framework/Graphic/ShaderReflection.h"
+#include "Framework/Core/SerializableValue.h"
 namespace framework {
     class Shader {
     public:
@@ -30,9 +34,19 @@ namespace framework {
         void    SetMatrix4(const char* name, const glm::mat4& matrix, bool useShader = false);
         void    SetMat4(const char* name, const glm::mat4& matrix, bool useShader = false);
         void    SetInt(const char* name, int value, bool useShader = false) { SetInteger(name, value, useShader); }
+        void    SetTexture(const char *name,  int slot = 0, bool useShader = false);
+
+        void    SetProperty(const char *name, const SerializableValue &value, bool useShader = false);
+
     private:
         // Checks if compilation or linking failed and if so, print the error logs
         void    checkCompileErrors(int object, std::string type);
+        std::unordered_map<std::string, std::optional<int>> uniforms;
+        std::shared_ptr<ShaderReflection> shaderInfo;
+
+    public:
+
+        std::shared_ptr<ShaderReflection> GetShaderReflection() const { return shaderInfo; }
     };
 
 }

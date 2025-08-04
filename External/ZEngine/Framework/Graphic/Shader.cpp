@@ -53,6 +53,9 @@ namespace framework
             glAttachShader(this->id, gShader);
         glLinkProgram(this->id);
         checkCompileErrors(this->id, "PROGRAM");
+
+        shaderInfo = std::make_shared<ShaderReflection>(this->id);
+
         // Delete the shaders as they're linked into our program now and no longer necessery
         glDeleteShader(sVertex);
         glDeleteShader(sFragment);
@@ -60,64 +63,124 @@ namespace framework
             glDeleteShader(gShader);
     }
 
+    void Shader::SetTexture(const char *name, int slot, bool useShader)
+    {
+        if (useShader)
+            this->Use();
+        if (auto location = shaderInfo->GetSamplerLocation(name))
+        {
+            glUniform1i(*location, slot);
+            //glActiveTexture(GL_TEXTURE0 + slot);
+        }
+    }
+
+
     void Shader::SetFloat(const char *name, float value, bool useShader)
     {
         if (useShader)
             this->Use();
-        glUniform1f(glGetUniformLocation(this->id, name), value);
+        if (auto location = shaderInfo->GetUniformLocation(name))
+            glUniform1f(*location, value);
     }
+
     void Shader::SetInteger(const char *name, int value, bool useShader)
     {
         if (useShader)
             this->Use();
-        glUniform1i(glGetUniformLocation(this->id, name), value);
+        if (auto location = shaderInfo->GetUniformLocation(name))
+            glUniform1i(*location, value);
     }
+
     void Shader::SetVector2f(const char *name, float x, float y, bool useShader)
     {
         if (useShader)
             this->Use();
-        glUniform2f(glGetUniformLocation(this->id, name), x, y);
+        if (auto location = shaderInfo->GetUniformLocation(name))
+            glUniform2f(*location, x, y);
     }
+
     void Shader::SetVector2f(const char *name, const glm::vec2 &value, bool useShader)
     {
         if (useShader)
             this->Use();
-        glUniform2f(glGetUniformLocation(this->id, name), value.x, value.y);
+        if (auto location = shaderInfo->GetUniformLocation(name))
+            glUniform2f(*location, value.x, value.y);
     }
+
     void Shader::SetVector3f(const char *name, float x, float y, float z, bool useShader)
     {
         if (useShader)
             this->Use();
-        glUniform3f(glGetUniformLocation(this->id, name), x, y, z);
+        if (auto location = shaderInfo->GetUniformLocation(name))
+            glUniform3f(*location, x, y, z);
     }
+
     void Shader::SetVector3f(const char *name, const glm::vec3 &value, bool useShader)
     {
         if (useShader)
             this->Use();
-        glUniform3f(glGetUniformLocation(this->id, name), value.x, value.y, value.z);
+        if (auto location = shaderInfo->GetUniformLocation(name))
+            glUniform3f(*location, value.x, value.y, value.z);
     }
+
     void Shader::SetVector4f(const char *name, float x, float y, float z, float w, bool useShader)
     {
         if (useShader)
             this->Use();
-        glUniform4f(glGetUniformLocation(this->id, name), x, y, z, w);
+        if (auto location = shaderInfo->GetUniformLocation(name))
+            glUniform4f(*location, x, y, z, w);
     }
+
     void Shader::SetVector4f(const char *name, const glm::vec4 &value, bool useShader)
     {
         if (useShader)
             this->Use();
-        glUniform4f(glGetUniformLocation(this->id, name), value.x, value.y, value.z, value.w);
+        if (auto location = shaderInfo->GetUniformLocation(name))
+            glUniform4f(*location, value.x, value.y, value.z, value.w);
     }
+
     void Shader::SetMatrix4(const char *name, const glm::mat4 &matrix, bool useShader)
     {
         if (useShader)
             this->Use();
-        glUniformMatrix4fv(glGetUniformLocation(this->id, name), 1, GL_FALSE, glm::value_ptr(matrix));
+        if (auto location = shaderInfo->GetUniformLocation(name))
+            glUniformMatrix4fv(*location, 1, GL_FALSE, glm::value_ptr(matrix));
     }
+    
     void Shader::SetMat4(const char *name, const glm::mat4 &matrix, bool useShader)
     {
         SetMatrix4(name, matrix, useShader);
     }
+
+    void Shader::SetProperty(const char *name, const SerializableValue &value, bool useShader)
+    {
+        if (useShader)
+            this->Use();
+        if (auto location = shaderInfo->GetUniformLocation(name))
+        {
+            switch (value.GetType())
+            {
+                case SerializableValueType::Float:
+                    glUniform1f(*location, value.GetValue<float>());
+                    break;
+                case SerializableValueType::Int:
+                    glUniform1i(*location, value.GetValue<int>());
+                    break;
+                case SerializableValueType::Vec2:
+                    glUniform2fv(*location, 1, glm::value_ptr(value.GetValue<glm::vec2>()));
+                    break;
+                case SerializableValueType::Vec3:
+                    glUniform3fv(*location, 1, glm::value_ptr(value.GetValue<glm::vec3>()));
+                    break;
+                case SerializableValueType::Vec4:
+                    glUniform4fv(*location, 1, glm::value_ptr(value.GetValue<glm::vec4>()));
+                    break;
+                default:
+                    Logger::Error("Unsupported SerializableValue type for shader property: {}", (int)value.GetType());
+            }
+        }
+    }
+
 
     void Shader::checkCompileErrors(int object, std::string type)
     {

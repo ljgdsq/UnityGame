@@ -20,15 +20,9 @@ namespace framework
         }
     }
 
-    void Material::SetShader(class Shader *shader)
-    {
-        m_shader = shader;
-        Logger::Debug("Material: Set shader directly");
-    }
-
     void Material::SetShader(std::shared_ptr<class Shader> shader)
     {
-        m_shader = shader.get();
+        m_shader = shader;
         Logger::Debug("Material: Set shader from shared_ptr");
     }
 
@@ -432,7 +426,7 @@ namespace framework
                 if (texture)
                 {
                     texture->Bind(binding.slot);
-                    m_shader->SetInt(binding.name.c_str(), binding.slot);
+                    m_shader->SetTexture(binding.name.c_str(), binding.slot);
                 }
                 else
                 {

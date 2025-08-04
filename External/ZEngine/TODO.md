@@ -2,7 +2,7 @@
 
 ## 🚀 优先任务
 - [ ] Content Browser 显示优化
-- [ ] Editor Gizemo
+- [ ] Editor Gizemo (translate rotate scale)
 - [ ] Assimp
 - [ ] Thumbnail save & load
 - [ ] LogView add filter

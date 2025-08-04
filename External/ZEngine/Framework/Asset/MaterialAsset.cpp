@@ -84,7 +84,7 @@ namespace framework
                 m_shader = asset->GetShader();
             }
             m_material = std::make_shared<Material>(m_name);
-            m_material->SetShader(m_shader.get());
+            m_material->SetShader(m_shader);
         }
         else
         {

@@ -1,6 +1,7 @@
 #pragma once
 #include <vector>
 #include <string>
+#include <optional>
 namespace framework
 {
     class ShaderReflection
@@ -26,6 +27,8 @@ namespace framework
         std::vector<Uniform> GetUniforms() const;
         std::vector<Sampler> GetSamplers() const;
 
+        std::optional<int> GetUniformLocation(const std::string &name) const;
+        std::optional<int> GetSamplerLocation(const std::string &name) const;
     private:
         int m_shaderId;
         std::vector<Uniform> m_uniforms;

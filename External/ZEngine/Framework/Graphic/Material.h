@@ -6,6 +6,7 @@
 #include "Framework/Asset/TextureAsset.h"
 #include "glm/glm.hpp"
 #include "rapidjson/document.h"
+#include "Framework/Core/SerializableValue.h"
 
 namespace framework
 {
@@ -55,8 +56,8 @@ namespace framework
         void Use();
 
         // 设置着色器
-        void SetShader(class Shader *shader);
         void SetShader(std::shared_ptr<class Shader> shader);
+        std::shared_ptr<class Shader> GetShader() const{return m_shader;};
 
         // 纹理管理 - 新的AssetReference版本
         void SetTexture(const std::string &name, const std::string &textureAssetId, int slot = 0, TextureType type = TextureType::DIFFUSE);
@@ -85,10 +86,27 @@ namespace framework
         const AssetTextureBinding *GetTextureAtIndex(size_t index) const;
 
         // 设置材质属性
+        [[deprecated("do not use this")]]
         virtual void SetFloat(const std::string &name, float value);
+        [[deprecated("do not use this")]]
         virtual void SetInt(const std::string &name, int value);
+        [[deprecated("do not use this")]]
         virtual void SetVector(const std::string &name, const glm::vec3 &value);
+        [[deprecated("do not use this")]]
         virtual void SetMatrix(const std::string &name, const glm::mat4 &value);
+
+        template <typename T>
+        void SetProperty(const std::string &name, const T &value){
+            m_properties[name] = SerializableValue(name,value);
+            m_propertiesDirty = true; // 标记属性已修改
+        }
+
+        template <typename T>
+        T GetProperty(const std::string &name, const T &defaultValue = T{}) const
+        {
+            auto it = m_properties.find(name);
+            return (it != m_properties.end()) ? it->second.GetValue<T>() : defaultValue;
+        }
 
         // 获取材质名称
         virtual const std::string &GetName() const;
@@ -105,7 +123,7 @@ namespace framework
         void Deserialize(const rapidjson::Value &json);
 
     private:
-        class Shader *m_shader = nullptr; // 使用指针避免循环依赖
+        std::shared_ptr<class Shader> m_shader = nullptr; // 使用指针避免循环依赖
         std::string m_name;               // 材质名称
 
         std::vector<AssetTextureBinding> m_textureBindings;           // 纹理绑定列表（使用AssetReference）
@@ -119,6 +137,11 @@ namespace framework
         void UpdateTextureNameToIndexMapping();
         AssetTextureBinding *FindTextureBinding(const std::string &name);
         const AssetTextureBinding *FindTextureBinding(const std::string &name) const;
+
+
+        // property management
+        std::unordered_map<std::string, SerializableValue> m_properties; // 材质属性
+        bool m_propertiesDirty = false; // 属性是否被修改
     };
 
 } // namespace framework

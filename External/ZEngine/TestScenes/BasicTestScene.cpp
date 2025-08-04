@@ -22,7 +22,7 @@ namespace framework
 
         auto texture = AssetManager::GetInstance().LoadAsset<TextureAsset>("Textures/container.png");
         auto material = std::make_shared<Material>("TestMaterial");
-        material->SetShader(shaderAsset->GetShader().get());
+        material->SetShader(shaderAsset->GetShader());
         material->SetTexture("texture_0", texture, 0, TextureType::DIFFUSE);
         auto materialAsset = std::make_shared<MaterialAsset>("TestMaterialAsset");
         materialAsset->SetMaterial(material);

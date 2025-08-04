@@ -1,7 +1,10 @@
 #pragma once
+#include <string>
+#include <memory>
 #include "Framework/Asset/Asset.h"
 #include "Framework/Graphic/Shader.h"
 #include "Framework/Core/EngineFileIO.h"
+
 namespace framework
 {
     class Material;

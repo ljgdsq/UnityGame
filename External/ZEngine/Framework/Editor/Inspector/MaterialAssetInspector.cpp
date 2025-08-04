@@ -37,7 +37,7 @@ namespace editor
             {
                 const auto &shader = shaders[i];
                 bool isSelected = (selectedShaderIndex == i);
-                if(ImGui::Selectable(shader->GetName().c_str(), isSelected))
+                if (ImGui::Selectable(shader->GetName().c_str(), isSelected))
                 {
                     selectedShaderIndex = i;
                     // 设置当前材质的着色器
@@ -130,6 +130,55 @@ namespace editor
             std::string newTextureName = "texture_" + std::to_string(textures.size());
             std::shared_ptr<TextureAsset> newTex;
             material->SetTexture(newTextureName, newTex, textures.size(), TextureType::DIFFUSE);
+        }
+
+        // render shader properties
+        {
+            ImGui::Separator();
+            ImGui::Text("Shader Properties:");
+            for (const auto &uniform : material->GetShader()->GetShaderReflection()->GetUniforms())
+            {
+                RenderPropertyControl(material.get(), uniform);
+            }
+        }
+    }
+
+    void MaterialAssetInspector::RenderPropertyControl(framework::Material *material, const Uniform &uniform)
+    {
+        if (uniform.type == GL_FLOAT)
+        {
+            float value = material->GetProperty<float>(uniform.name);
+            ImGui::InputFloat(uniform.name.c_str(), &value);
+            material->SetProperty(uniform.name.c_str(), value);
+        }
+        else if (uniform.type == GL_INT)
+        {
+            int value = material->GetProperty<int>(uniform.name.c_str());
+            ImGui::InputInt(uniform.name.c_str(), &value);
+            material->SetProperty(uniform.name.c_str(), value);
+        }else if (uniform.type == GL_BOOL)
+        {
+            bool value = material->GetProperty<bool>(uniform.name.c_str());
+            ImGui::Checkbox(uniform.name.c_str(), &value);
+            material->SetProperty(uniform.name.c_str(), value);
+        }
+        else if (uniform.type == GL_FLOAT_VEC2)
+        {
+            glm::vec2 value = material->GetProperty<glm::vec2>(uniform.name.c_str());
+            ImGui::InputFloat2(uniform.name.c_str(), &value[0]);
+            material->SetProperty(uniform.name.c_str(), value);
+        }
+        else if (uniform.type == GL_FLOAT_VEC3)
+        {
+            glm::vec3 value = material->GetProperty<glm::vec3>(uniform.name.c_str());
+            ImGui::InputFloat3(uniform.name.c_str(), &value[0]);
+            material->SetProperty(uniform.name.c_str(), value);
+        }
+        else if (uniform.type == GL_FLOAT_VEC4)
+        {
+            glm::vec4 value = material->GetProperty<glm::vec4>(uniform.name.c_str());
+            ImGui::InputFloat4(uniform.name.c_str(), &value[0]);
+            material->SetProperty(uniform.name.c_str(), value);
         }
     }
 }

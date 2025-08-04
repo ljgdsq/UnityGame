@@ -22,40 +22,10 @@ namespace framework
         Vec4
     };
 
-
-    std::string SerializableValueTypeToString(SerializableValueType type)
-    {
-        switch (type)
-        {
-            case SerializableValueType::Bool: return "Bool";
-            case SerializableValueType::Char: return "Char";
-            case SerializableValueType::Int: return "Int";
-            case SerializableValueType::Float: return "Float";
-            case SerializableValueType::Double: return "Double";
-            case SerializableValueType::String: return "String";
-            case SerializableValueType::Vec2: return "Vec2";
-            case SerializableValueType::Vec3: return "Vec3";
-            case SerializableValueType::Vec4: return "Vec4";
-            default: return "Unknown";
-        }
-    }
+    std::string SerializableValueTypeToString(SerializableValueType type);
 
     // 将字符串转换为 SerializableValueType
-    SerializableValueType StringToSerializableValueType(const std::string &typeStr)
-    {
-        if (typeStr == "Bool") return SerializableValueType::Bool;
-        if (typeStr == "Char") return SerializableValueType::Char;
-        if (typeStr == "Int") return SerializableValueType::Int;
-        if (typeStr == "Float") return SerializableValueType::Float;
-        if (typeStr == "Double") return SerializableValueType::Double;
-        if (typeStr == "String") return SerializableValueType::String;
-        if (typeStr == "Vec2") return SerializableValueType::Vec2;
-        if (typeStr == "Vec3") return SerializableValueType::Vec3;
-        if (typeStr == "Vec4") return SerializableValueType::Vec4;
-
-        throw std::invalid_argument("Unknown SerializableValueType: " + typeStr);
-    }
-
+    SerializableValueType StringToSerializableValueType(const std::string &typeStr);
 
     // 可序列化值
     class SerializableValue : public Serializable
