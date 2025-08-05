@@ -1,9 +1,9 @@
 #include "Framework/Asset/Asset.h"
 #include "Framework/Log/Logger.h"
+#include "Framework/Core/EngineFileIO.h"
 #include <algorithm>
 #include <chrono>
 #include <sstream>
-#include <iomanip>
 
 namespace framework {
     Asset::Asset(const std::string &name, AssetType type)
@@ -11,6 +11,10 @@ namespace framework {
         m_assetId = GenerateAssetId();
     }
 
+    void Asset::SetFilePath(const std::string &filePath) {
+        ??
+        m_filePath=EngineFileIO::GetRelativePath(filePath);
+    }
 
     void Asset::Release(bool force) {
         if (force || --m_refCount <= 0) {
@@ -31,7 +35,7 @@ namespace framework {
     }
 
     std::string Asset::GenerateAssetId() const {
-        return m_name;
+        return m_filePath;
 //        // 基于名称、类型和时间戳生成唯一ID
 //        auto now = std::chrono::system_clock::now();
 //        auto time_t = std::chrono::system_clock::to_time_t(now);

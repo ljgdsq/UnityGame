@@ -3,12 +3,13 @@
 #include <string>
 #include <vector>
 #include <memory>
-#include <ctime>
 #include "rapidjson/document.h"
 #include "rapidjson/writer.h"
 
-namespace framework {
-    enum class AssetType {
+namespace framework
+{
+    enum class AssetType
+    {
         Unknown = 0, // 未知类型
         Texture,
         Shader,
@@ -23,14 +24,16 @@ namespace framework {
         Count // 用于计数
     };
 
-    enum class LoadState {
+    enum class LoadState
+    {
         NotLoaded = 0,
         Loading,
         Loaded,
         Failed
     };
 
-    class Asset {
+    class Asset
+    {
     public:
         Asset(const std::string &name, AssetType type);
 
@@ -41,11 +44,11 @@ namespace framework {
 
         const std::string &GetName() const { return m_name; };
 
-        const std::string &GetAssetId() const { return m_name; }
+        const std::string &GetAssetId() const { return m_filePath; }
 
         const std::string &GetFilePath() const { return m_filePath; }
 
-        void SetFilePath(const std::string &filePath) { m_filePath = filePath; }
+        void SetFilePath(const std::string &filePath);
 
         // 加载状态管理
         bool IsLoaded() const { return m_loadState == LoadState::Loaded; }
@@ -64,7 +67,6 @@ namespace framework {
         int GetRefCount() const { return m_refCount; }
 
         void Release(bool force = false);
-
 
         virtual long GetSize() const = 0;
 
@@ -100,10 +102,6 @@ namespace framework {
         // 生成唯一的Asset ID
         std::string GenerateAssetId() const;
 
-        // 时间戳支持
-        void SetLastModified(std::time_t time) { m_lastModified = time; }
-
-        std::time_t GetLastModified() const { return m_lastModified; }
 
 #endif // ZENGINE_EDITOR
 
@@ -111,8 +109,6 @@ namespace framework {
 #if defined(ZENGINE_EDITOR)
         // 缩略图ID（用于Editor）
         void *m_thumbnailTextureId = nullptr; // 可能是OpenGL纹理ID或其他类型
-        std::time_t m_lastModified = 0;       // 最后修改时间戳
-
 #endif
 
     private:

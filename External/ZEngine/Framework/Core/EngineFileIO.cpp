@@ -74,7 +74,7 @@ namespace framework
         searchPaths.clear();
     }
 
-     std::optional<std::filesystem::path> EngineFileIO::FindResourcePath(const std::string &path)
+    std::optional<std::filesystem::path> EngineFileIO::FindResourcePath(const std::string &path)
     {
         auto fullPath = std::filesystem::path(path);
         if (fullPath.is_absolute() && std::filesystem::exists(fullPath))
@@ -82,7 +82,7 @@ namespace framework
             return fullPath;
         }
 
-        for (const auto& searchPath : EngineFileIO::searchPaths)
+        for (const auto &searchPath : EngineFileIO::searchPaths)
         {
             auto fullPath = std::filesystem::path(searchPath) / path;
             if (std::filesystem::exists(fullPath))
@@ -98,7 +98,7 @@ namespace framework
         std::filesystem::path fullPath = path;
         if (!fullPath.is_absolute())
         {
-            fullPath = std::filesystem::current_path() / path;
+            fullPath = GetEngineRootPath() / path;
         }
 
         std::ofstream file(fullPath, std::ios::out);
@@ -147,4 +147,20 @@ namespace framework
         return static_cast<unsigned int>(std::filesystem::file_size(fullPath.value()));
     }
 
+    std::string EngineFileIO::GetRelativePath(const std::string &path)
+    {
+        return std::filesystem::relative(path, GetEngineRootPath()).string();
+    }
+
+    std::filesystem::path EngineFileIO::GetEngineRootPath()
+    {
+        static std::filesystem::path rootPath = std::filesystem::current_path();
+        return rootPath;
+    }
+
+    std::filesystem::path EngineFileIO::GetEngineAssetsPath()
+    {
+        static std::filesystem::path assetsPath = GetEngineRootPath() / "res";
+        return assetsPath;
+    }
 } // namespace framework

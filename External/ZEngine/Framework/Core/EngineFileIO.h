@@ -46,6 +46,14 @@ namespace framework
         // 返回文件大小，单位为字节
         static unsigned int GetFileSize(const std::string &path);
 
+        // 获取相对路径
+        static std::string GetRelativePath(const std::string &path);
+
+        // 获取引擎根目录
+        static std::filesystem::path GetEngineRootPath();
+
+        // 获取引擎资源目录
+        static std::filesystem::path GetEngineAssetsPath();
     private:
         // 查找资源文件的实际路径
         static std::optional<std::filesystem::path> FindResourcePath(const std::string &path);
