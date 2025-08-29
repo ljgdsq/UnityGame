@@ -3,9 +3,26 @@
 This project demonstrates a minimal setup for a C++17 application using modern CMake (>=3.14) and GoogleTest for unit testing.
 
 ## 目录结构
-- src/hello.cpp: 主程序
-- tests/test_hello.cpp: 测试用例
-- CMakeLists.txt: 构建脚本
+GTestProj/
+├── CMakeLists.txt
+├── Engine/           # 引擎核心模块
+│   ├── CMakeLists.txt
+│   ├── include/Engine/
+│   └── src/
+├── Editor/           # 编辑器（工具/可视化）
+│   ├── CMakeLists.txt
+│   ├── include/Editor/
+│   └── src/
+├── Launcher/         # 启动器/演示/样例（推荐替代 Sandbox）
+│   ├── CMakeLists.txt
+│   └── src/
+├── Tests/            # 单元测试
+│   ├── CMakeLists.txt
+│   └── ...
+├── ThirdParty/       # 第三方库
+│   └── ...
+└── Docs/             # 文档
+    └── ...
 
 ## 构建与测试
 1. 安装CMake（>=3.14）和支持C++17的编译器。
@@ -23,3 +40,7 @@ This project demonstrates a minimal setup for a C++17 application using modern C
 
 ## 运行
 构建后，主程序可执行文件在 `build/bin/hello.exe`，测试可通过 `ctest` 运行。
+
+
+
+##
