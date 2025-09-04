@@ -1,11 +1,5 @@
 ## UnityGameTemplate
-## Development Environment
 
-This project is developed with:
-
-[![Rider](https://resources.jetbrains.com/storage/products/company/brand/logos/Rider_icon.svg)](https://www.jetbrains.com/rider)
-
-Thanks to JetBrains for providing an amazing .NET IDE that makes development more enjoyable and productive!
 # Unity game base framework
 1. you can find many useful code.like asset bundle system,http web system,ui fremework ...
 2. you can use this project as your project base code.
